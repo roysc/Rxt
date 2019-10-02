@@ -1,0 +1,44 @@
+#version 450
+
+uniform uvec2 worldSize;
+uniform vec2 viewportScale;
+uniform bool doRepeat = false;
+
+uniform vec2 CORNERS[4] = vec2[4](
+    vec2(0, 1), vec2(1, 1), vec2(1, 0), vec2(0, 0)
+);
+uniform uint INDICES[6] = {0, 1, 2, 2, 3, 0};
+
+layout (points) in;
+layout (triangle_strip, max_vertices = 6 * 9) out;
+
+in vec4 color_vert[];
+in vec2 tileSize[];
+
+out vec4 color_frag;
+
+void writeQuad(vec2 offset)
+{
+    for (int i = 0; i < 6; ++i) {
+        gl_Position = gl_in[0].gl_Position + vec4(CORNERS[INDICES[i]] * tileSize[0] + offset, 0, 0);
+        EmitVertex();
+    }
+    EndPrimitive();
+}
+
+void main()
+{
+    color_frag = color_vert[0];
+
+    if (!doRepeat) {
+        writeQuad(vec2(0));
+        return;
+    }
+    // replicate geometry for torus topology
+    for (int offx = 0; offx < 3; ++offx) {
+        for (int offy = 0; offy < 3; ++offy) {
+            vec2 offset = vec2(offx - 1, offy - 1) * worldSize / viewportScale;
+            writeQuad(offset);
+        }
+    }
+}
