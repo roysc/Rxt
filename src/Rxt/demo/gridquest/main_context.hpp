@@ -24,7 +24,6 @@ using std::get_if;
 using glm::ivec2;
 using glm::vec4;
 
-using namespace Rxt::util;
 namespace sdl = Rxt::sdl;
 namespace gl = Rxt::gl;
 using Rxt::dbg::print;
@@ -260,7 +259,7 @@ void main_context::update_cursor()
     if (auto select = get_mode<grid_selection>()) {
         // render cursor drag area
         if (auto& origin = select->drag_origin) {
-            auto [a, b] = ordered(*origin, cursor_position);
+            auto [a, b] = Rxt::ordered(*origin, cursor_position);
             b_quads_sticky.position.storage[0] = a;
             b_quads_sticky.size.storage[0] = b - a + 1;
         }
@@ -296,7 +295,7 @@ void main_context::h_mouse_up(SDL_MouseButtonEvent button)
     case SDL_BUTTON_LEFT: {
         if (auto select = get_mode<grid_selection>()) {
             if (auto& origin = select->drag_origin) {
-                auto [a, b] = ordered(*origin, cursor_position);
+                auto [a, b] = Rxt::ordered(*origin, cursor_position);
                 select->selection.emplace(a + viewport_position, b - a + 1);
                 select->drag_origin = {};
                 this->update_cursor();

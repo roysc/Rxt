@@ -11,10 +11,4 @@ struct runtime
 };
 
 using simple_runtime = runtime;
-
-template <class T>
-bool should_quit(const T& c)
-{
-    return c.should_quit();
-}
 }

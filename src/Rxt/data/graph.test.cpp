@@ -1,5 +1,5 @@
+#include "graph.hpp"
 #include "Rxt/_testing.hpp"
-#include "Rxt/data/graph.hpp"
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -8,7 +8,7 @@
 
 namespace Rxt
 {
-namespace _dtl
+namespace _impl
 {
 using namespace boost;
 
@@ -29,8 +29,8 @@ bool equivalent(A const& a, B const& b)
 TEST_CASE("adjacency table") {
     // create a 2-valent graph
     using namespace Rxt;
-    using _dtl::G;
-    using _dtl::GT;
+    using _impl::G;
+    using _impl::GT;
     using VD = typename GT::vertex_descriptor;
     G g;
     VD v[4];

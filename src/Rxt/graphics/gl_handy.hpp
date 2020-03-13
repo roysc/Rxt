@@ -23,7 +23,7 @@ struct buffer
 };
 
 template <class T>
-struct attribuf : public attrib<T>, buffer<T>
+struct attribuf : public attrib<T>, public buffer<T>
 {
     using attrib<T>::attrib;
 };
