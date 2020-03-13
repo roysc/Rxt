@@ -3,13 +3,6 @@
 set(_STDLIB_DIR ${Rxt_LOCAL_PREFIX}/include/c++/9.2.0)
 set(_STDLIB_LIBDIR ${Rxt_LOCAL_PREFIX}/lib64)
 
-find_package(fmt 6.0 REQUIRED)
-set(Boost_DIR ${Rxt_LOCAL_PREFIX}/include)
-find_package(Boost 1.68 REQUIRED COMPONENTS graph)
-find_package(GLEW REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(SDL2 2.0.8 REQUIRED)
-
 # Use correct std headers
 function(use_stdlib _TGT _DIR _LIBDIR)
     if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
@@ -19,15 +12,14 @@ function(use_stdlib _TGT _DIR _LIBDIR)
     endif()
 endfunction()
 
-function(_show _VAR)
-    message("** ${_VAR}=${${_VAR}}")
-endfunction()
-
 add_compile_options(-Wall -Werror=return-type) # -Wpedantic -Wunused
 
 set(_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/Rxt)
 set(_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/src)
 set(_TESTS_DIR ${_SOURCE_DIR})
+
+# Define base library
+find_package(fmt 6.0 REQUIRED)
 
 set(_UTIL_HEADERS
     ${_SOURCE_DIR}/_debug.hpp
@@ -45,7 +37,7 @@ install(FILES ${_UTIL_HEADERS} DESTINATION "${_INCLUDE_DEST}/Rxt")
 add_library(RxtBase
     ${_UTIL_HEADERS}
     ${_SOURCE_DIR}/_debug.hpp
-    )
+)
 use_stdlib(RxtBase ${_STDLIB_DIR} ${_STDLIB_LIBDIR})
 target_include_directories(RxtBase PUBLIC
     $<BUILD_INTERFACE:${_INCLUDE_DIR}>
@@ -71,5 +63,9 @@ add_subdirectory(meta)
 add_subdirectory(demo)
 
 # Packaging
-install(TARGETS RxtBase RxtData RxtGeometry RxtGraphics RxtMeta EXPORT Rxt DESTINATION ${_LIB_DEST})
+install(
+    TARGETS RxtBase RxtData RxtGeometry RxtGraphics RxtMeta
+    EXPORT Rxt
+    DESTINATION ${_LIB_DEST}
+)
 install(EXPORT Rxt DESTINATION ${_CMAKE_MODULE_DEST})

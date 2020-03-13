@@ -1,5 +1,8 @@
 # Rxt graphics
 
+find_package(GLEW REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(SDL2 2.0.8 REQUIRED)
 find_package(glm REQUIRED)
 
 set(_HEADERS
