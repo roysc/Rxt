@@ -3,10 +3,12 @@
 #include "Rxt/graphics/gl.hpp"
 #include "Rxt/graphics/gl_handy.hpp"
 
-namespace Rxt
+namespace Rxt::shader_programs
 {
-struct texture_quad
+struct texture_quad_2D
 {
+    static constexpr const char* program_name() { return "texture_quad_2D"; }
+
     gl::program& prog;
     gl::vao va;
     gl::texture tex;
@@ -14,7 +16,7 @@ struct texture_quad
     gl::attribuf<glm::vec2> tex_coord {prog, "texCoord"};
     gl::buffer<GLuint> elements;
 
-    texture_quad(gl::program& p)
+    texture_quad_2D(gl::program& p)
         : prog(p)
     {
         gl::use_guard _p(prog);

@@ -30,8 +30,9 @@ set(_HEADERS
     color.hpp
 )
 set(_HEADERS_SHADER
-    shader/texture_quad.hpp
-    shader/grid_quad.hpp
+    shader/texture_quad_2D.hpp
+    shader/grid_quad_2D.hpp
+    shader/colored_triangle_3D.hpp
 )
 add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER})
 

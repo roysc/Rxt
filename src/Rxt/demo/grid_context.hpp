@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Rxt/graphics/loader.hpp"
-#include "Rxt/graphics/sdl.hpp"
-#include "Rxt/graphics/gl.hpp"
-#include "Rxt/graphics/shader/texture_quad.hpp"
-#include "Rxt/graphics/shader/grid_quad.hpp"
+#include <Rxt/graphics/loader.hpp>
+#include <Rxt/graphics/sdl.hpp>
+#include <Rxt/graphics/gl.hpp>
+#include <Rxt/graphics/shader/texture_quad_2D.hpp>
+#include <Rxt/graphics/shader/grid_quad_2D.hpp>
 
-#include "Rxt/util.hpp"
-#include "Rxt/range.hpp"
+#include <Rxt/util.hpp>
+#include <Rxt/range.hpp>
 
 #include <glm/gtx/transform.hpp>
 
@@ -35,8 +35,8 @@ struct grid_context : public Rxt::sdl::simple_gui
     gl::program tex_prog = _loader.find_program("texture_quad");
     gl::program quad_prog = _loader.find_program("grid_quad");
 
-    Rxt::texture_quad b_texs {tex_prog};
-    Rxt::grid_quad b_quads {quad_prog};
+    Rxt::shader_programs::texture_quad_2D b_texs {tex_prog};
+    Rxt::shader_programs::grid_quad_2D b_quads {quad_prog};
 
     bool _dirty = true;
 
