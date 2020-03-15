@@ -22,7 +22,7 @@ using glm::vec4;
 namespace sdl = Rxt::sdl;
 namespace gl = Rxt::gl;
 using Rxt::dbg::print;
-using Rxt::grid_quad;
+using Rxt::shader_programs::grid_quad_2D;
 
 struct grid_selection
 {
@@ -37,7 +37,7 @@ struct main_context : public grid_context
     sdl::key_dispatcher kd;
 
     grid_coord cursor_position {0}; // relative to viewport
-    grid_quad b_quads_sticky {quad_prog};
+    grid_quad_2D b_quads_sticky {quad_prog};
 
     bool p_edge_scroll = false;
 

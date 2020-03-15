@@ -2,10 +2,12 @@
 
 #include "Rxt/graphics/gl.hpp"
 
-namespace Rxt
+namespace Rxt::shader_programs
 {
-struct grid_quad
+struct grid_quad_2D
 {
+    static constexpr const char* program_name() { return "grid_quad_2D"; }
+
     using position_vec = glm::ivec2;
     using size_vec = glm::uvec2;
     using color_vec = glm::vec4;
@@ -16,7 +18,7 @@ struct grid_quad
     gl::attribuf<size_vec> size {prog, "quadSize"};
     gl::attribuf<color_vec> color {prog, "color"};
 
-    grid_quad(gl::program& p) : prog(p)
+    grid_quad_2D(gl::program& p) : prog(p)
     {
         gl::use_guard _p(prog);
         gl::bind_vao_guard _a(va);
