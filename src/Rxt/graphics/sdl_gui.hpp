@@ -13,6 +13,8 @@ struct simple_gui
     sdl::window_ptr window;
     sdl::gl_context _gl;
 
+    bool _dirty = true;
+
     template <class T>
     simple_gui(const char* name, T size) : simple_gui(name, size[0], size[1]) {}
 
@@ -27,5 +29,13 @@ struct simple_gui
                                       SDL_WINDOW_RESIZABLE)))
         , _gl(window)
     { }
+
+    bool is_dirty() const { return _dirty; }
+    bool set_dirty(bool v = true)
+    {
+        bool ret = _dirty;
+        _dirty = v;
+        return ret;
+    }
 };
 }
