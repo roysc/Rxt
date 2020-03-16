@@ -13,6 +13,7 @@ set(_HEADERS
     _gl_debug.hpp
     gl.hpp
     gl.cpp
+
     sdl_prelude.hpp
     sdl_gl.hpp
     sdl_gui.hpp
@@ -21,9 +22,11 @@ set(_HEADERS
     sdl_input.cpp
     _sdl_debug.hpp
     sdl.hpp
+
     loader.hpp
     glm.hpp
     images.hpp
+    camera.hpp
     color.hpp
 )
 set(_HEADERS_SHADER
