@@ -13,7 +13,9 @@ set(_INCLUDE_DEST "include")
 set(_LIB_DEST "lib/Rxt")
 set(_CMAKE_MODULE_DEST "lib/cmake/Rxt")
 
-set(Rxt_LOCAL_PREFIX "$ENV{HOME}/.local")
+if(NOT Rxt_LOCAL_PREFIX)
+    set(Rxt_LOCAL_PREFIX "$ENV{HOME}/.local")
+endif()
 
 # set(CMAKE_CXX20_STANDARD_COMPILE_OPTION "-std=c++2a")
 # set(CMAKE_CXX17_STANDARD_COMPILE_OPTION "-std=c++17")

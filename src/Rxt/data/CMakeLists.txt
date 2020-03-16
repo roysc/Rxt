@@ -1,7 +1,6 @@
 # Data structures library
 
 # Depends on boost graph for graph interface. Other possibilities?
-set(Boost_DIR ${Rxt_LOCAL_PREFIX}/include)
 find_package(Boost 1.68 REQUIRED COMPONENTS graph)
 
 set(_HEADERS
