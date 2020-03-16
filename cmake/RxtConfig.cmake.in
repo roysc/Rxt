@@ -1,0 +1,15 @@
+# CMake Package configuration file
+
+get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+find_package(fmt 6.0 REQUIRED)
+set(Boost_DIR ${Rxt_LOCAL_PREFIX}/include)
+find_package(Boost 1.68 REQUIRED COMPONENTS graph)
+find_package(GLEW REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(SDL2 2.0.8 REQUIRED)
+find_package(glm REQUIRED)
+
+@PACKAGE_INIT@
+
+include(${SELF_DIR}/Rxt.cmake)
