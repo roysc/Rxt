@@ -1,5 +1,5 @@
+#include "icosphere.hpp"
 #include "Rxt/_testing.hpp"
-#include "Rxt/geometry/icosphere.hpp"
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Surface_mesh.h>

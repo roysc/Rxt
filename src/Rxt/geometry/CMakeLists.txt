@@ -9,15 +9,20 @@ set(_HEADERS
     surface.hpp
     icosphere.hpp
     helper.hpp
-    geometry.cpp
+    triangle_primitive.hpp
+    # mesh_transform.hpp
+    # segment_between.hpp
+    constants.hpp
+    util.hpp
 )
-add_library(RxtGeometry ${_HEADERS})
+add_library(RxtGeometry geometry.cpp ${_HEADERS})
 
 use_stdlib(RxtGeometry ${_STDLIB_DIR} ${_STDLIB_LIBDIR})
 target_include_directories(RxtGeometry PUBLIC
     $<BUILD_INTERFACE:${_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:${_INCLUDE_DEST}>
 )
+# TODO: should be private?
 target_include_directories(RxtGeometry PUBLIC ${CGAL_INCLUDE_DIRS})
 
 target_link_directories(RxtGeometry PUBLIC ${CGAL_LIBRARY_DIRS})

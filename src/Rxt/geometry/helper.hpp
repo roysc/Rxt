@@ -5,6 +5,8 @@
 #include <CGAL/boost/graph/iterator.h>
 #include <boost/property_map/property_map.hpp>
 
+#include <array>
+
 namespace Rxt
 {
 // https://doc.cgal.org/latest/BGL/BGL_polyhedron_3_2normals_8cpp-example.html
@@ -42,5 +44,20 @@ void calculate_face_normals(G const& g, NormalMap nm)
             nm[*fb] = n / CGAL::sqrt(n.squared_length());
         }
     }
+}
+
+// Get N vertices around a face
+template <unsigned num, class G, class Face>
+constexpr auto face_vertex_points(G const& g, Face face)
+{
+    auto points = get(CGAL::vertex_point, g);
+    using Point = typename boost::property_traits<decltype(points)>::value_type;
+    std::array<Point, num> ret;
+    auto h = halfedge(face, g);
+    for (auto& p: ret) {
+        p = points[target(h, g)];
+        h = next(h, g);
+    }
+    return ret;
 }
 }
