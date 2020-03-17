@@ -16,9 +16,9 @@ struct colored_triangle_3D
     gl::program& prog;
     gl::vao va;
 
-    gl::attribuf<position_vec> position {prog, "position"};
-    gl::attribuf<normal_vec> normal {prog, "normal"};
-    gl::attribuf<color_vec> color {prog, "color"};
+    gl::attribuf<position_vec> position {prog, "vertex_position"};
+    gl::attribuf<normal_vec> normal {prog, "vertex_normal"};
+    gl::attribuf<color_vec> color {prog, "vertex_color"};
 
     colored_triangle_3D(gl::program& p)
         : prog(p)
@@ -40,8 +40,8 @@ struct colored_triangle_3D
         gl::bind_vao_guard _a(va);
 
         gl::buffer_data(position);
-        gl::buffer_data(tex_coord);
-        gl::buffer_data(elements, GL_ELEMENT_ARRAY_BUFFER);
+        gl::buffer_data(normal);
+        gl::buffer_data(color);
     }
 
     void draw()
