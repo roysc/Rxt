@@ -15,4 +15,6 @@ std::pair<T, T> ordered(T a, T b)
 
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+auto get_second = [] (auto const& pair) { return pair.second; };
 }
