@@ -9,16 +9,16 @@
 #include <string>
 #include <utility>
 
-#ifndef RXT_GRAPHICS_PATH_DEFAULT
-#define RXT_GRAPHICS_PATH_DEFAULT "./data"
+#ifndef RXT_GRAPHICS_DATA_DEFAULT
+#define RXT_GRAPHICS_DATA_DEFAULT "./data"
 #endif
 
 namespace Rxt
 {
 struct file_loader
 {
-    std::string data_path_envvar = "RXT_GRAPHICS_PATH";
-    std::filesystem::path default_path = RXT_GRAPHICS_PATH_DEFAULT;
+    std::string data_path_envvar = "RXT_GRAPHICS_DATA";
+    std::filesystem::path default_path = RXT_GRAPHICS_DATA_DEFAULT;
 
     auto data_root() const
     {
