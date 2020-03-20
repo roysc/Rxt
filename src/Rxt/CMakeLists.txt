@@ -20,6 +20,7 @@ set(_TESTS_DIR ${_SOURCE_DIR})
 
 # Define base library
 find_package(fmt 6.0 REQUIRED)
+find_package(Boost 1.68 REQUIRED) # using iterator, range, predef
 
 set(_UTIL_HEADERS
     ${_SOURCE_DIR}/_debug.hpp
@@ -45,6 +46,8 @@ target_include_directories(RxtBase PUBLIC
 )
 
 target_link_libraries(RxtBase fmt::fmt)
+# target_link_libraries(RxtBase Boost)
+
 set(_LIBDIR ${Rxt_LOCAL_PREFIX}/lib)
 target_link_options(RxtBase PUBLIC -L${_LIBDIR} -Wl,-rpath,${_LIBDIR})
 
@@ -55,6 +58,10 @@ function(make_test _NAME _SOURCES)
     add_test(NAME test_${_NAME} COMMAND ${_NAME})
 endfunction()
 
+make_test(range range.test.cpp)
+target_link_libraries(test_range RxtBase)
+
+# Component libs
 add_subdirectory(data)
 add_subdirectory(geometry)
 add_subdirectory(graphics)
