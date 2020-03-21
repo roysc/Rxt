@@ -11,6 +11,7 @@ struct grid_quad_2D
     using position_vec = glm::ivec2;
     using size_vec = glm::uvec2;
     using color_vec = glm::vec4;
+    static constexpr GLenum draw_mode = GL_POINTS;
 
     gl::program& prog;
     gl::vao va;
@@ -50,7 +51,7 @@ struct grid_quad_2D
     {
         gl::use_guard _p(prog);
         gl::bind_vao_guard _a(va);
-        glDrawArrays(GL_POINTS, 0, std::size(position.storage));
+        glDrawArrays(draw_mode, 0, std::size(position.storage));
     }
 
     void push(position_vec p, size_vec s, color_vec c)

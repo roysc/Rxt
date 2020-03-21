@@ -9,6 +9,11 @@ struct texture_quad_2D
 {
     static constexpr const char* program_name() { return "texture_quad_2D"; }
 
+    using position_vec = glm::vec2;
+    using tex_coord_vec = glm::vec2;
+    static constexpr GLenum draw_mode = GL_TRIANGLES;
+    static constexpr auto draw_function = &glDrawElements;
+
     gl::program& prog;
     gl::vao va;
     gl::texture tex;
@@ -49,7 +54,7 @@ struct texture_quad_2D
         gl::bind_vao_guard _a(va);
         gl::bind_texture_guard _t(GL_TEXTURE_2D, tex);
         gl::bind_buffer_guard _b(GL_ELEMENT_ARRAY_BUFFER, elements.vbo);
-        glDrawElements(GL_TRIANGLES, std::size(elements.storage), GL_UNSIGNED_INT, 0);
+        glDrawElements(draw_mode, std::size(elements.storage), GL_UNSIGNED_INT, 0);
     }
 };
 }
