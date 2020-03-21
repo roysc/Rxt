@@ -35,7 +35,6 @@ struct key_descriptor
 template <bool echo>
 struct _key_dispatcher
 {
-    using key_descriptor = key_descriptor;
     using callback = std::function<void()>;
     using fallback = std::function<void(key_descriptor)>;
     using callback_map = std::map<key_descriptor, callback>;

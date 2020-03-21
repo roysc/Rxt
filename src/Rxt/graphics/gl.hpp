@@ -143,7 +143,7 @@ struct attrib_traits
     {
         value_type id = glGetAttribLocation(p, n);
         // _debug_assert(id != -1);
-        if (id == -1) {
+        if (id == value_type(-1)) {
             dbg::print("warning: attrib '{0}' is undefined\n", n);
         }
         return id;
@@ -158,7 +158,7 @@ struct uniform_traits
     {
         value_type id = glGetUniformLocation(p, n);
         // _debug_assert(id != -1);
-        if (id == -1) {
+        if (id == value_type(-1)) {
             dbg::print("warning: uniform '{0}' is undefined\n", n);
         }
         return id;
