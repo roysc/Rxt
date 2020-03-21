@@ -12,6 +12,7 @@ struct colored_triangle_3D
     using position_vec = glm::vec3;
     using normal_vec = glm::vec3;
     using color_vec = glm::vec3;
+    static constexpr GLenum draw_mode = GL_TRIANGLES;
 
     gl::program& prog;
     gl::vao va;
@@ -48,7 +49,7 @@ struct colored_triangle_3D
     {
         gl::use_guard _p(prog);
         gl::bind_vao_guard _a(va);
-        glDrawArrays(GL_TRIANGLES, 0, std::size(position.storage));
+        glDrawArrays(draw_mode, 0, std::size(position.storage));
     }
 
     void clear()
