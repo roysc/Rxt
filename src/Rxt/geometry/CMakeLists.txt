@@ -7,10 +7,11 @@ include(${CGAL_USE_FILE})
 
 set(_HEADERS
     surface.hpp
-    icosphere.hpp
+    shapes.hpp
     helper.hpp
     triangle_primitive.hpp
     # mesh_transform.hpp
+    mesh_traits.hpp
     # segment_between.hpp
     constants.hpp
     util.hpp
@@ -34,7 +35,7 @@ target_link_libraries(RxtGeometry ${CGAL_LIBRARIES})
 # target_compile_definitions(RxtGeometry PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_FEATURES)
 
 # make_test(surface)
-make_test(icosphere icosphere.test.cpp)
-target_link_libraries(test_icosphere RxtGeometry)
+make_test(shapes shapes.test.cpp)
+target_link_libraries(test_shapes RxtGeometry)
 
 install(FILES ${_HEADERS} DESTINATION "${_INCLUDE_DEST}/Rxt/geometry")
