@@ -3,7 +3,7 @@
 #include <Rxt/_debug.hpp>
 #include <Rxt/graphics/glm.hpp>
 #include <Rxt/geometry/helper.hpp>
-#include <Rxt/geometry/icosphere.hpp>
+#include <Rxt/geometry/shapes.hpp>
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Surface_mesh.h>
@@ -108,7 +108,7 @@ void run_context::update_model()
 
     Mesh sm;
     FaceNormalMap face_normals;
-    Rxt::create_icosphere(1.0, 0, sm);
+    Rxt::make_icosphere(sm, 1.0, 0);
     Rxt::calculate_face_normals(sm, boost::make_assoc_property_map(face_normals));
 
     auto pm = get(CGAL::vertex_point, sm);
