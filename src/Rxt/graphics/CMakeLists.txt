@@ -38,8 +38,8 @@ add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER})
 
 # target_compile_definitions(RxtGraphics PUBLIC RXT_GRAPHICS_PATH_DEFAULT "\"${PROJECT_SOURCE_DIR}\"")
 target_compile_definitions(RxtGraphics PUBLIC
-    RXT_GRAPHICS_PATH_DEFAULT="$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/data>$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${_LIB_DEST}>"
-    )
+    RXT_GRAPHICS_DATA_DEFAULT="$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/data>$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${_LIB_DEST}>"
+)
 
 use_stdlib(RxtGraphics ${_STDLIB_DIR} ${_STDLIB_LIBDIR})
 target_include_directories(RxtGraphics PUBLIC

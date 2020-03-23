@@ -1,13 +1,27 @@
 # CMake Package configuration file
 
+include(CMakeFindDependencyMacro)
+
 get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
-find_package(fmt 6.0 REQUIRED)
-find_package(Boost 1.68 REQUIRED COMPONENTS graph)
-find_package(GLEW REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(SDL2 2.0.8 REQUIRED)
-find_package(glm REQUIRED)
+# TODO - components
+# foreach(component ${Rxt_FIND_COMPONENTS})
+#   # For requested component, execute its "config" script
+#   include(${CMAKE_CURRENT_LIST_DIR}/${component}Config.cmake)
+# endforeach()
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
+
+# Base
+find_dependency(fmt 6.0 REQUIRED)
+# Data
+find_dependency(Boost 1.68 REQUIRED COMPONENTS graph)
+# Graphics
+find_dependency(GLEW REQUIRED)
+find_dependency(OpenGL REQUIRED)
+find_dependency(SDL2 2.0.8 REQUIRED)
+find_dependency(glm REQUIRED)
+# Geometry
+find_dependency(CGAL REQUIRED)
 
 @PACKAGE_INIT@
 

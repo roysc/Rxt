@@ -4,6 +4,9 @@
 # set(CGAL_DIR $ENV{HOME}/fork/CGAL/build)
 find_package(CGAL REQUIRED)
 include(${CGAL_USE_FILE})
+find_package(Boost 1.68 REQUIRED) # using property_map
+
+set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 
 set(_HEADERS
     surface.hpp
@@ -16,7 +19,10 @@ set(_HEADERS
     constants.hpp
     util.hpp
 )
-add_library(RxtGeometry geometry.cpp ${_HEADERS})
+set(_SOURCES
+    geometry.cpp
+)
+add_library(RxtGeometry ${_HEADERS} ${_SOURCES})
 
 use_stdlib(RxtGeometry ${_STDLIB_DIR} ${_STDLIB_LIBDIR})
 target_include_directories(RxtGeometry PUBLIC
