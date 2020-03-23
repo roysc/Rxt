@@ -85,7 +85,7 @@ run_context::~run_context()
 
 void run_context::update_camera()
 {
-    // std::cout << "camera=" << camera.position << "\n";
+    std::cout << "camera=" << camera.position << "\n";
 
     gl::uniform<glm::mat4> m(prog, "M"), v(prog, "V"), mvp(prog, "MVP");
 

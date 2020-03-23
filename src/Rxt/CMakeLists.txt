@@ -20,7 +20,7 @@ set(_TESTS_DIR ${_SOURCE_DIR})
 
 # Define base library
 find_package(fmt 6.0 REQUIRED)
-find_package(Boost 1.68 REQUIRED) # using iterator, range, predef
+find_package(Boost 1.68 REQUIRED) # using iterator, range
 
 set(_UTIL_HEADERS
     ${_SOURCE_DIR}/_debug.hpp
