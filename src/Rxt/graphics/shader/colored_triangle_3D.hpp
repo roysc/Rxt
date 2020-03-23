@@ -21,6 +21,11 @@ struct colored_triangle_3D
     gl::attribuf<normal_vec> normal {prog, "vertex_normal"};
     gl::attribuf<color_vec> color {prog, "vertex_color"};
 
+    gl::uniform<glm::mat4> model_matrix {prog, "M"};
+    gl::uniform<glm::mat4> view_matrix {prog, "V"};
+    gl::uniform<glm::mat4> mvp_matrix {prog, "MVP"};
+    gl::uniform<glm::vec3> light_position {prog, "light_position"};
+
     colored_triangle_3D(gl::program& p)
         : prog(p)
     {

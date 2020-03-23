@@ -23,9 +23,22 @@ inline rgba rgb_hex(unsigned v, float a)
 
 namespace colors
 {
+inline const rgb red   {1,0,0};
+inline const rgb green {0,1,0};
+inline const rgb blue  {0,0,1};
+
+inline const rgb cyan   {0,1,1};
+inline const rgb violet {1,0,1};
+inline const rgb yellow {1,1,0};
+
+inline const rgb black {0};
+inline const rgb white {1};
+inline const rgb gray  {.5};
+
+inline const rgb brick = rgb_hex(0x963838);
+inline const rgb sand = rgb_hex(0xCABB90);
+inline const rgb water = rgb_hex(0xB3D1E5);
 inline const rgb hot_pink = rgb_hex(0xFF69B4);
 inline const rgb russet = rgb_hex(0x80461B);
-
-inline const rgb gray = rgb(0.5);
 }
 }
