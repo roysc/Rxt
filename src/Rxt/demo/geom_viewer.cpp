@@ -7,6 +7,8 @@
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Surface_mesh.h>
+#include <CGAL/IO/Color.h>
+
 #include <iostream>
 #include <functional>
 
@@ -118,7 +120,7 @@ void run_context::update_model()
         for (auto vd: vertices_around_face(halfedge(fd, sm), sm)) {
             position.storage.emplace_back(to_glm(pm[vd]));
             normal.storage.emplace_back(to_glm(n));
-            color.storage.emplace_back(to_glm(CGAL::GREEN));
+            color.storage.emplace_back(to_glm(CGAL::green()));
             count++;
         }
         assert(count % 3 == 0);
