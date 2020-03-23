@@ -10,7 +10,7 @@ set(_HEADERS
     shapes.hpp
     helper.hpp
     triangle_primitive.hpp
-    # mesh_transform.hpp
+    mesh_transform.hpp
     mesh_traits.hpp
     # segment_between.hpp
     constants.hpp

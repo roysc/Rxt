@@ -3,3 +3,4 @@
     name_& operator=(const name_&) = delete;    \
     name_(name_&&) = default;                   \
     name_& operator=(name_&&) = default         \
+

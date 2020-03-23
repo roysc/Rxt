@@ -6,7 +6,7 @@ namespace Rxt::shader_programs
 {
 struct grid_quad_2D
 {
-    static constexpr const char* program_name() { return "grid_quad_2D"; }
+    static const char* program_name() { return "grid_quad_2D"; }
 
     using position_vec = glm::ivec2;
     using size_vec = glm::uvec2;
@@ -51,6 +51,7 @@ struct grid_quad_2D
     {
         gl::use_guard _p(prog);
         gl::bind_vao_guard _a(va);
+        // gl::bind_ubo_guard _u(ub); // TODO
         glDrawArrays(draw_mode, 0, std::size(position.storage));
     }
 

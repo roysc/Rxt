@@ -4,7 +4,7 @@
 
 namespace Rxt
 {
-namespace constants
+namespace cgal
 {
 template <class K>
 constexpr CGAL::Point_3<K> zero {CGAL::ORIGIN};

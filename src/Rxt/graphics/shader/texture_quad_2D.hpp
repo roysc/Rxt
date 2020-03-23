@@ -7,7 +7,7 @@ namespace Rxt::shader_programs
 {
 struct texture_quad_2D
 {
-    static constexpr const char* program_name() { return "texture_quad_2D"; }
+    static const char* program_name() { return "texture_quad_2D"; }
 
     using position_vec = glm::vec2;
     using tex_coord_vec = glm::vec2;
