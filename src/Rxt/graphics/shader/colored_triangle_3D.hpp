@@ -7,7 +7,7 @@ namespace Rxt::shader_programs
 {
 struct colored_triangle_3D
 {
-    static constexpr const char* program_name() { return "colored_triangle_3D"; }
+    static const char* program_name() { return "colored_triangle_3D"; }
 
     using position_vec = glm::vec3;
     using normal_vec = glm::vec3;

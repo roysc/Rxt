@@ -33,29 +33,29 @@ struct transform_comap_faces
     // Paint source face comapping for new faces:
     // Walk halfedges to find new halfedge; recurse on face of the new opposite halfedge.
     template <class Faces>
-    static bool set_source_face_aux(target_face face, target_mesh const& m, Faces&& chain,
+    static bool set_source_face_aux(target_face fd, target_mesh const& m, Faces&& chain,
                                     FComap& fcomap, HComap& hcomap)
     {
-        if (auto fi = fcomap.find(face); fi != end(fcomap)) {
+        if (auto fi = fcomap.find(fd); fi != end(fcomap)) {
             for (auto sib_face: chain) // map all sibling faces to source
                 fcomap.emplace(sib_face, fi->second);
             return true;
         }
         // find an incident halfedge with no comapping; fail if none
-        auto h = halfedge(face, m), h_end = h;
+        auto h = halfedge(fd, m), h_end = h;
         while (hcomap.find(h) != end(hcomap)) {
             h = next(h, m);
             if (h == h_end) return false;
         }
         // continue searching on adjacent face
-        chain.push_back(face);
-        auto face_opp = face(opposite(h, m), m);
-        return set_source_face_aux(face_opp, m, chain, fcomap, hcomap);
+        chain.push_back(fd);
+        auto fd_opp = face(opposite(h, m), m);
+        return set_source_face_aux(fd_opp, m, chain, fcomap, hcomap);
     }
 
-    static void set_source_face(target_face face, target_mesh const& m, FComap& fcomap, HComap& hcomap)
+    static void set_source_face(target_face fd, target_mesh const& m, FComap& fcomap, HComap& hcomap)
     {
-        assert(set_source_face_aux(face, m, std::vector<target_face>{}, fcomap, hcomap));
+        assert(set_source_face_aux(fd, m, std::vector<target_face>{}, fcomap, hcomap));
     }
 
     template <class F>
@@ -76,8 +76,8 @@ struct transform_comap_faces
         // Do transformation
         transform(tgt);
 
-        for (auto face: faces(tgt)) {
-            set_source_face(face, tgt, fcomap, hcomap);
+        for (auto fd: faces(tgt)) {
+            set_source_face(fd, tgt, fcomap, hcomap);
         }
         return fcomap;
     }

@@ -31,7 +31,7 @@ void calculate_face_normals(G const& g, NormalMap nm)
         if (edg == edgb) {
             nm[*fb] = CGAL::unit_normal(p1, p2, p0);
         } else {
-            Normal n(CGAL::NULL_VECTOR);
+            Normal n{CGAL::NULL_VECTOR};
             do {
                 n = n + CGAL::normal(p1, p2, p0);
                 p0 = p1;
