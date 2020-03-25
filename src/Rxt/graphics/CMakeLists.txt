@@ -34,7 +34,12 @@ set(_HEADERS_SHADER
     shader/grid_quad_2D.hpp
     shader/colored_triangle_3D.hpp
 )
-add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER})
+
+set(_SOURCES
+    loader.cpp
+)
+
+add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER} ${_SOURCES})
 
 # target_compile_definitions(RxtGraphics PUBLIC RXT_GRAPHICS_PATH_DEFAULT "\"${PROJECT_SOURCE_DIR}\"")
 target_compile_definitions(RxtGraphics PUBLIC
