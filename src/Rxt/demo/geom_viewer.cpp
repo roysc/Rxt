@@ -37,7 +37,7 @@ inline glm::vec3 to_glm(glm::vec3 v)   { return v; }
 void turn(Rxt::focused_camera& cam, float d, const glm::vec3 axis)
 {
     glm::quat rot = glm::angleAxis(d, axis);
-    cam.rotate(rot);
+    cam.orbit(rot);
 }
 
 run_context::run_context(sdl::window_ptr w)
@@ -87,7 +87,7 @@ run_context::~run_context()
 
 void run_context::update_camera()
 {
-    std::cout << "camera=" << camera.position << "\n";
+    std::cout << "camera=" << camera.position() << "\n";
 
     gl::uniform<glm::mat4> m(prog, "M"), v(prog, "V"), mvp(prog, "MVP");
 
