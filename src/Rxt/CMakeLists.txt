@@ -30,6 +30,7 @@ set(_HEADERS
     ${_SOURCE_DIR}/runtime.hpp
     ${_SOURCE_DIR}/time.hpp
     ${_SOURCE_DIR}/util.hpp
+    ${_SOURCE_DIR}/vec.hpp
 )
 
 install(FILES ${_HEADERS} DESTINATION "${_INCLUDE_DEST}/Rxt")

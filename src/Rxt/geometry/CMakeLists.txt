@@ -16,7 +16,6 @@ set(_HEADERS
     mesh_transform.hpp
     mesh_traits.hpp
     # segment_between.hpp
-    constants.hpp
     util.hpp
 )
 set(_SOURCES
