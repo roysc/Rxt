@@ -10,6 +10,8 @@
 
 namespace Rxt
 {
+namespace _gfx
+{
 using glm::vec2;
 using glm::vec3;
 using glm::vec4;
@@ -31,45 +33,48 @@ struct focused_camera
 {
     static constexpr float field_of_view = M_PI/4;
 
-    vec3 position;
+    vec3 _position;
     vec3 focus;
     vec3 up;
 
     focused_camera(vec3 pos, vec3 f = vec3 {0}, vec3 u = vec3 {0, 0, 1})
-        : position(pos)
+        : _position(pos)
         , focus(f)
         , up(u)
     { }
 
+    vec3 position() const { return _position; }
+    void position(vec3 pos) { _position = pos; }
+
     // Rotate about focal point
-    void rotate(quat rot)
+    void orbit(quat rot)
     {
         auto rotmat = glm::mat4_cast(rot);
-        position = vec3 {rotmat * vec4 {position - focus, 0}} + focus;
-        up = vec3 {rotmat * vec4{up, 0}};
+        _position = vec3{rotmat * vec4{_position - focus, 0}} + focus;
+        up = vec3{rotmat * vec4{up, 0}};
     }
 
     void translate(vec3 t)
     {
         auto tmat = glm::translate(t);
-        position = vec3 {tmat * vec4 {position, 1}};
-        focus = vec3 {tmat * vec4 {focus, 1}};
+        _position = vec3{tmat * vec4{_position, 1}};
+        focus = vec3{tmat * vec4{focus, 1}};
     }
 
     void forward(float d)
     {
         auto tmat = glm::translate(d * orientation());
-        position = vec3 {tmat * vec4 {position, 1}};
+        _position = vec3{tmat * vec4{_position, 1}};
     }
 
     mat4 model_matrix() const
     {
-        return glm::translate(- position);
+        return glm::translate(- _position);
     }
 
     mat4 view_matrix() const
     {
-        return glm::lookAt(position, focus, up);
+        return glm::lookAt(_position, focus, up);
     }
 
     mat4 projection_matrix() const
@@ -80,35 +85,43 @@ struct focused_camera
 
     vec3 orientation() const
     {
-        return normalize(focus - position);
+        return normalize(focus - _position);
     }
 };
 
-
-vec3 unview(vec4 view, mat4 view_matrix)
+template <class Cam>
+vec3 unview(vec4 view, Cam const& cam)
 {
-    return vec3 {inverse(view_matrix) * view};
+    return vec3{inverse(cam.view_matrix()) * view};
 }
 
-vec4 unproject(vec4 hcs, mat4 projection_matrix)
+template <class Cam>
+vec4 unproject(vec4 hcs, Cam const& cam)
 {
-    return vec4 {inverse(projection_matrix) * hcs};
+    return vec4{inverse(cam.projection_matrix()) * hcs};
 }
 
 // Source: http://antongerdelan.net/opengl/raycasting.html
-std::pair<vec3, vec3> raycast(vec2 point_nds, vec3 cam, mat4 vm, mat4 pm)
+template <class Cam>
+std::pair<vec3, vec3> cast_ray(vec2 point_nds, Cam const& cam)
 {
     // Homogeneous clip space (projected) -> View space -> Camera/world
     vec4 ray_hcs {point_nds, -1, 0};
-    vec4 ray_view = unproject(ray_hcs, pm);
+    vec4 ray_view = unproject(ray_hcs, cam.projection_matrix());
     ray_view = vec4{ray_view.x, ray_view.y, -1, 0};
 
-    vec3 ray_cam = unview(ray_view, vm);
+    vec3 ray_cam = unview(ray_view, cam.view_matrix());
     ray_view = vec4{ray_view.x, ray_view.y, -1, 1};
-    vec3 eye_cam = unview(ray_view, vm);
-    vec3 eye_world = cam + eye_cam;
+    vec3 eye_cam = unview(ray_view, cam.view_matrix());
+    vec3 eye_world = cam.position() + eye_cam;
     // return points describing a ray A->B
     return {eye_world, eye_world + normalize(ray_cam)};
 }
+}
 
+using _gfx::focused_camera;
+using _gfx::unview;
+using _gfx::unproject;
+using _gfx::cast_ray;
+using _gfx::rotation_between;
 }
