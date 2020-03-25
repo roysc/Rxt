@@ -16,6 +16,7 @@ template <class K>
 CGAL::Segment_3<K> segment_between(CGAL::Segment_3<K> a, CGAL::Segment_3<K> b)
 {
     using Seg = CGAL::Segment_3<K>;
+    auto dot = [] (auto a, auto b) { return a * b; };
 
     // TODO: names come from formulas - improve
     auto ra = a.source(), rb = b.source(); // Point_3
@@ -23,13 +24,13 @@ CGAL::Segment_3<K> segment_between(CGAL::Segment_3<K> a, CGAL::Segment_3<K> b)
     auto da = normalize(a.to_vector()), db = normalize(b.to_vector());
     typename K::FT t_a = 0, t_b = 0;
 
-    auto denom = 1 - (da * db) * (da * db);
+    auto denom = 1 - dot(da, db) * dot(da, db);
     // check if approx. parallel
     if (denom < _impl::epsilon) {
         return Seg{ra, rb}; // arbitrary t
     } else {
-        t_a = ((rab * da) - (rab * db) * (da * db)) / denom;
-        t_b = - ((rab * db) - (rab * da) * (da * db)) / denom;
+        t_a = (dot(rab, da) - dot(rab, db) * dot(da, db)) / denom;
+        t_b = - (dot(rab, db) - dot(rab, da) * dot(da, db)) / denom;
     }
     // TODO: TEST
     auto la = std::sqrt(a.squared_length());

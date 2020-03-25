@@ -115,6 +115,7 @@ auto make_looper(T* c, F&& f)
 }
 
 // SDL coords -> normalized device space
+inline
 std::pair<float, float> nds_coords(SDL_Window& window, int x, int y)
 {
     int w, h;
@@ -123,6 +124,7 @@ std::pair<float, float> nds_coords(SDL_Window& window, int x, int y)
     return {nds_x, nds_y};
 }
 
+inline
 auto nds_coords(SDL_Window& window)
 {
     int x, y;

@@ -51,11 +51,12 @@ target_include_directories(RxtGraphics PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE
 
 target_link_libraries(RxtGraphics
     RxtBase
+    RxtMeta
     OpenGL::GL
     ${GLEW_LIBRARIES}
-    SDL2::SDL2
     glm
-    RxtMeta)
+    SDL2::SDL2
+)
 
 install(FILES ${_HEADERS} DESTINATION "${_INCLUDE_DEST}/Rxt/graphics")
 install(FILES ${_HEADERS_SHADER} DESTINATION "${_INCLUDE_DEST}/Rxt/graphics/shader")
