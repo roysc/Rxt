@@ -22,7 +22,7 @@ set(_TESTS_DIR ${_SOURCE_DIR})
 find_package(fmt 6.0 REQUIRED)
 find_package(Boost 1.68 REQUIRED) # using iterator, range
 
-set(_UTIL_HEADERS
+set(_HEADERS
     ${_SOURCE_DIR}/_debug.hpp
     ${_SOURCE_DIR}/io.hpp
     ${_SOURCE_DIR}/range.hpp
@@ -30,14 +30,14 @@ set(_UTIL_HEADERS
     ${_SOURCE_DIR}/runtime.hpp
     ${_SOURCE_DIR}/time.hpp
     ${_SOURCE_DIR}/util.hpp
-    )
+)
 
-install(FILES ${_UTIL_HEADERS} DESTINATION "${_INCLUDE_DEST}/Rxt")
+install(FILES ${_HEADERS} DESTINATION "${_INCLUDE_DEST}/Rxt")
 
 # "Base" library includes fmt for debugging
 add_library(RxtBase
-    ${_UTIL_HEADERS}
-    ${_SOURCE_DIR}/_debug.hpp
+    ${_HEADERS}
+    ${_SOURCES}
 )
 use_stdlib(RxtBase ${_STDLIB_DIR} ${_STDLIB_LIBDIR})
 target_include_directories(RxtBase PUBLIC
