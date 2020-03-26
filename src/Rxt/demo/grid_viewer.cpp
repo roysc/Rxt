@@ -1,14 +1,12 @@
-#include "Rxt/graphics/loader.hpp"
-#include "Rxt/graphics/images.hpp"
-#include "Rxt/graphics/sdl.hpp"
-#include "Rxt/graphics/gl.hpp"
-#include "Rxt/graphics/gl_handy.hpp"
+#include <Rxt/graphics/images.hpp>
+#include <Rxt/graphics/sdl.hpp>
+#include <Rxt/graphics/gl.hpp>
 
 namespace sdl = Rxt::sdl;
 namespace gl = Rxt::gl;
 // using Rxt::print;
 
-struct run_context : public Rxt::file_loader
+struct run_context : public gl::program_loader
 {
     sdl::window_ptr window;
     sdl::key_dispatcher kd;

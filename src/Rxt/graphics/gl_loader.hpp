@@ -1,13 +1,10 @@
 #pragma once
 
-#include "_gl_debug.hpp"
-#include "Rxt/io.hpp"
+#include "gl_core.hpp"
 
 #include <cstdlib>
 #include <filesystem>
-#include <memory>
 #include <string>
-#include <utility>
 
 #ifndef RXT_GRAPHICS_DATA_DEFAULT
 #define RXT_GRAPHICS_DATA_DEFAULT "./data"
@@ -34,33 +31,8 @@ struct file_loader
         return data_root() / "shader";
     }
 
-    // Assumes shaders like: name.vert, name.frag
-    gl::program find_program(std::string name) const
-    {
-        gl::program ret;
-        auto paths = {
-            std::pair(GL_VERTEX_SHADER, (shader_root()/(name + ".vert"))),
-            {GL_GEOMETRY_SHADER, shader_root()/(name + ".geom")},
-            {GL_FRAGMENT_SHADER, shader_root()/(name + ".frag")},
-        };
-
-        for (auto [kind, path]: paths) {
-            if (!exists(path)) {
-                if (kind == GL_GEOMETRY_SHADER)
-                    continue;
-                throw std::invalid_argument(path);
-            }
-
-            gl::shader sh(kind, Rxt::read_file(path).c_str());
-            _log_result(sh, GL_COMPILE_STATUS, path.c_str());
-            glAttachShader(ret, sh);
-        }
-
-        glLinkProgram(ret);
-        _log_result(ret, GL_LINK_STATUS, "program");
-        return ret;
-    }
+    // Assumes shaders named like: name.vert, name.frag
+    gl::program find_program(std::string name) const;
 };
-
-file_loader const& thread_file_loader();
+using program_loader = file_loader; // fixme
 }
