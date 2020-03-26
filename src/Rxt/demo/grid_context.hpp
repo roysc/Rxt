@@ -24,7 +24,7 @@ grid_coord nds_to_grid(vec2 nds, vec2 scale) { return floor(nds * scale); }
 
 struct grid_context : public Rxt::sdl::simple_gui
 {
-    gl::file_loader _loader;
+    gl::program_loader _loader;
 
     grid_size world_size;
     grid_size viewport_size;

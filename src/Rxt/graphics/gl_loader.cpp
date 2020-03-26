@@ -1,16 +1,34 @@
+#include "_gl_debug.hpp"
 #include "gl_loader.hpp"
+#include "Rxt/io.hpp"
 
-#include <memory>
+#include <utility>
 
 namespace Rxt::gl
 {
-file_loader const& thread_file_loader()
+gl::program file_loader::find_program(std::string name) const
 {
-    thread_local std::unique_ptr<file_loader> ret;
+    gl::program ret;
+    auto paths = {
+        std::pair(GL_VERTEX_SHADER, (shader_root()/(name + ".vert"))),
+        {GL_GEOMETRY_SHADER, shader_root()/(name + ".geom")},
+        {GL_FRAGMENT_SHADER, shader_root()/(name + ".frag")},
+    };
 
-    if (!ret) {
-        ret.reset(new file_loader {});
+    for (auto [kind, path]: paths) {
+        if (!exists(path)) {
+            if (kind == GL_GEOMETRY_SHADER)
+                continue;
+            throw std::invalid_argument(path);
+        }
+
+        gl::shader sh(kind, Rxt::read_file(path).c_str());
+        _log_result(sh, GL_COMPILE_STATUS, path.c_str());
+        glAttachShader(ret, sh);
     }
-    return *ret;
+
+    glLinkProgram(ret);
+    _log_result(ret, GL_LINK_STATUS, "program");
+    return ret;
 }
 }
