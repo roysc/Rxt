@@ -11,10 +11,11 @@ set(_HEADERS
     gl_handy.hpp
     gl_handy.cpp
     _gl_debug.hpp
+    gl_core.hpp
+    gl_core.cpp
     gl.hpp
-    gl.cpp
 
-    sdl_prelude.hpp
+    sdl_core.hpp
     sdl_gl.hpp
     sdl_gui.hpp
     sdl_events.hpp

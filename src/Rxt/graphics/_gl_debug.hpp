@@ -1,5 +1,5 @@
 #pragma once
-// #include "../_debug.hpp"
+
 #include <vector>
 
 namespace Rxt::gl

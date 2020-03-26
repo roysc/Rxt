@@ -1,6 +1,7 @@
 #pragma once
+
 #include "sdl_gl.hpp"
-#include "sdl_prelude.hpp"
+#include "sdl_core.hpp"
 
 namespace Rxt::sdl
 {

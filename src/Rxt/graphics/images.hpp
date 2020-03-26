@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../_debug.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION

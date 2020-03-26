@@ -1,5 +1,6 @@
 #pragma once
-#include "gl.hpp"
+
+#include "gl_core.hpp"
 #include "gl_data.hpp"
 #include "gl_guard.hpp"
 

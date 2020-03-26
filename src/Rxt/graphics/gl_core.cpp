@@ -1,4 +1,4 @@
-#include "gl.hpp"
+#include "gl_core.hpp"
 
 namespace Rxt::gl
 {

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "gl.hpp"
 #include "gl_guard.hpp"
 

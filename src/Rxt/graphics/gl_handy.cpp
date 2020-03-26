@@ -1,5 +1,5 @@
 #include "gl_handy.hpp"
-#include "gl.hpp"
+#include "gl_core.hpp"
 #include "Rxt/io.hpp"
 #include "Rxt/graphics/_gl_debug.hpp"
 
