@@ -1,7 +1,7 @@
 #pragma once
 
-#include "sdl_prelude.hpp"
-#include "gl.hpp"
+#include "sdl_core.hpp"
+#include "gl_core.hpp"
 #include "gl_handy.hpp"
 #include "_sdl_debug.hpp"
 

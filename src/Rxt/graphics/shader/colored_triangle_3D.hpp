@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Rxt/graphics/gl.hpp"
+#include "Rxt/graphics/gl_core.hpp"
 #include "Rxt/graphics/gl_handy.hpp"
 
 namespace Rxt::shader_programs

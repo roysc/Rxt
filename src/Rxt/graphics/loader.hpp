@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Rxt/graphics/gl_handy.hpp"
 #include "Rxt/graphics/_gl_debug.hpp"
 #include "Rxt/io.hpp"
