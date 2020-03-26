@@ -3,11 +3,11 @@
 #include "space.hpp"
 #include "../grid_context.hpp"
 
-#include "Rxt/graphics/sdl.hpp"
-#include "Rxt/graphics/color.hpp"
-#include "Rxt/graphics/glm.hpp"
-#include "Rxt/runtime.hpp"
-#include "Rxt/time.hpp"
+#include <Rxt/graphics/sdl.hpp>
+#include <Rxt/graphics/color.hpp>
+#include <Rxt/graphics/glm.hpp>
+#include <Rxt/runtime.hpp>
+#include <Rxt/time.hpp>
 
 #include <entt/entt.hpp>
 #include <glm/gtx/transform.hpp>
@@ -61,8 +61,8 @@ struct main_context : public grid_context
     time_point t_last = steady_clock::now();
 
     grid_coord cursor_position {0}; // relative to viewport
-    grid_quad_2D b_quads_sticky {quad_prog};
-    grid_quad_2D b_entities {quad_prog};
+    grid_quad_2D::data b_quads_sticky {quad_prog};
+    grid_quad_2D::data b_entities {quad_prog};
 
     bool p_edge_scroll = false;
 

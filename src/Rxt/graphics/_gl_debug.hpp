@@ -1,5 +1,7 @@
 #pragma once
 
+#include "gl_core.hpp"
+
 #include <vector>
 
 namespace Rxt::gl

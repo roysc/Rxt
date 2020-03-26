@@ -1,10 +1,10 @@
-#include "loader.hpp"
+#include "gl_loader.hpp"
 
 #include <memory>
 
-namespace Rxt
+namespace Rxt::gl
 {
-file_loader const& default_file_loader()
+file_loader const& thread_file_loader()
 {
     thread_local std::unique_ptr<file_loader> ret;
 

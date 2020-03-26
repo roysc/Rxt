@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Rxt/graphics/gl_handy.hpp"
-#include "Rxt/graphics/_gl_debug.hpp"
+#include "_gl_debug.hpp"
 #include "Rxt/io.hpp"
 
 #include <cstdlib>
@@ -14,7 +13,7 @@
 #define RXT_GRAPHICS_DATA_DEFAULT "./data"
 #endif
 
-namespace Rxt
+namespace Rxt::gl
 {
 struct file_loader
 {
@@ -63,5 +62,5 @@ struct file_loader
     }
 };
 
-file_loader const& default_file_loader();
+file_loader const& thread_file_loader();
 }

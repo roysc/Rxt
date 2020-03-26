@@ -1,11 +1,13 @@
 #pragma once
 
-#include "Rxt/graphics/gl_core.hpp"
-#include "Rxt/graphics/gl_handy.hpp"
+#include <Rxt/graphics/gl_handy.hpp>
 
 namespace Rxt::shader_programs
 {
-struct colored_triangle_3D
+struct colored_triangle_3D_data;
+using colored_triangle_3D = gl::derived_program<colored_triangle_3D_data>;
+
+struct colored_triangle_3D_data
 {
     static const char* program_name() { return "colored_triangle_3D"; }
 
@@ -14,7 +16,7 @@ struct colored_triangle_3D
     using color_vec = glm::vec3;
     static constexpr GLenum draw_mode = GL_TRIANGLES;
 
-    gl::program& prog;
+    colored_triangle_3D& prog;
     gl::vao va;
 
     gl::attribuf<position_vec> position {prog, "vertex_position"};
@@ -26,7 +28,7 @@ struct colored_triangle_3D
     gl::uniform<glm::mat4> mvp_matrix {prog, "MVP"};
     gl::uniform<glm::vec3> light_position {prog, "light_position"};
 
-    colored_triangle_3D(gl::program& p)
+    colored_triangle_3D_data(colored_triangle_3D& p)
         : prog(p)
     {
         gl::use_guard _p(prog);
