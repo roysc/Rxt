@@ -1,12 +1,15 @@
 #pragma once
 
-#include "gl_core.hpp"
-#include "gl_handy.hpp"
+#include <Rxt/graphics/gl_handy.hpp>
 
-namespace Rxt
+namespace Rxt::shader_programs
 {
+template <GLenum> struct solid_color_3D_data;
 template <GLenum mode>
-struct solid_color_3D
+using solid_color_3D = gl::derived_program<solid_color_3D_data<mode>>;
+
+template <GLenum mode>
+struct solid_color_3D_data
 {
     static const char* program_name() { return "solid_color_3D"; }
 
@@ -14,18 +17,15 @@ struct solid_color_3D
     using color_vec = glm::vec3;
     static constexpr GLenum draw_mode = mode;
 
-    static_assert(draw_mode == GL_POINTS ||
-                  draw_mode == GL_LINES);
+    static_assert(draw_mode == GL_POINTS || draw_mode == GL_LINES);
 
-    gl::program& prog;
+    solid_color_3D<mode>& prog;
     gl::vao va;
-
     gl::attribuf<position_vec> position {prog, "vertexPosition"};
     gl::attribuf<color_vec> color {prog, "vertexColor"};
-
     gl::uniform<glm::mat4> mvp_matrix {prog, "MVP"};
 
-    solid_color_3D(gl::program& p)
+    solid_color_3D_data(solid_color_3D<mode>& p)
         : prog(p)
     {
         gl::use_guard _p(prog);

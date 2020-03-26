@@ -45,4 +45,15 @@ void attrib_buffer(attribuf<T>& b)
                           gl::data_traits<T>::gl_type,
                           GL_FALSE, 0, nullptr); // normalized, stride, array buffer offset
 }
+
+template <class Data>
+struct derived_program : public program
+{
+    using data = Data;
+
+    template <class Loader>
+    derived_program(Loader const& loader)
+        : program{loader.find_program(data::program_name())}
+    {}
+};
 }

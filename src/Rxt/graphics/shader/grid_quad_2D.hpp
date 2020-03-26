@@ -1,10 +1,13 @@
 #pragma once
 
-#include "Rxt/graphics/gl.hpp"
+#include <Rxt/graphics/gl.hpp>
 
 namespace Rxt::shader_programs
 {
-struct grid_quad_2D
+struct grid_quad_2D_data;
+using grid_quad_2D = gl::derived_program<grid_quad_2D_data>;
+
+struct grid_quad_2D_data
 {
     static const char* program_name() { return "grid_quad_2D"; }
 
@@ -13,13 +16,13 @@ struct grid_quad_2D
     using color_vec = glm::vec4;
     static constexpr GLenum draw_mode = GL_POINTS;
 
-    gl::program& prog;
+    grid_quad_2D& prog;
     gl::vao va;
     gl::attribuf<position_vec> position {prog, "gridPosition"};
     gl::attribuf<size_vec> size {prog, "quadSize"};
     gl::attribuf<color_vec> color {prog, "color"};
 
-    grid_quad_2D(gl::program& p) : prog(p)
+    grid_quad_2D_data(grid_quad_2D& p) : prog(p)
     {
         gl::use_guard _p(prog);
         gl::bind_vao_guard _a(va);

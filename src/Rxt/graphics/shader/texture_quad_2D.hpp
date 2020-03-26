@@ -1,11 +1,13 @@
 #pragma once
 
-#include "Rxt/graphics/gl_core.hpp"
-#include "Rxt/graphics/gl_handy.hpp"
+#include <Rxt/graphics/gl_handy.hpp>
 
 namespace Rxt::shader_programs
 {
-struct texture_quad_2D
+struct texture_quad_2D_data;
+using texture_quad_2D = gl::derived_program<texture_quad_2D_data>;
+
+struct texture_quad_2D_data
 {
     static const char* program_name() { return "texture_quad_2D"; }
 
@@ -14,14 +16,14 @@ struct texture_quad_2D
     static constexpr GLenum draw_mode = GL_TRIANGLES;
     static constexpr auto draw_function = &glDrawElements;
 
-    gl::program& prog;
+    texture_quad_2D& prog;
     gl::vao va;
     gl::texture tex;
     gl::attribuf<glm::vec2> position {prog, "position"};
     gl::attribuf<glm::vec2> tex_coord {prog, "texCoord"};
     gl::buffer<GLuint> elements;
 
-    texture_quad_2D(gl::program& p)
+    texture_quad_2D_data(texture_quad_2D& p)
         : prog(p)
     {
         gl::use_guard _p(prog);

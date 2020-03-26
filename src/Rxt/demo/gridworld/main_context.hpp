@@ -37,7 +37,7 @@ struct main_context : public grid_context
     sdl::key_dispatcher kd;
 
     grid_coord cursor_position {0}; // relative to viewport
-    grid_quad_2D b_quads_sticky {quad_prog};
+    grid_quad_2D::data b_quads_sticky {quad_prog};
 
     bool p_edge_scroll = false;
 

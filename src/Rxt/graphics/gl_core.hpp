@@ -1,9 +1,9 @@
 #pragma once
 
+#include "../_debug.hpp"
+
 #include <GL/glew.h>            // must be included before gl.h
 #include <cassert>
-
-#include "../_debug.hpp"
 
 #define _debug_assert assert
 

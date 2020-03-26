@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Rxt/graphics/loader.hpp>
 #include <Rxt/graphics/sdl.hpp>
 #include <Rxt/graphics/gl.hpp>
 #include <Rxt/graphics/shader/texture_quad_2D.hpp>
@@ -16,6 +15,7 @@ using grid_size = glm::uvec2;
 
 using glm::vec2;
 namespace gl = Rxt::gl;
+namespace shad = Rxt::shader_programs;
 
 template <class V>
 auto invert_y(V v) { v.y = -v.y; return v; }
@@ -24,7 +24,7 @@ grid_coord nds_to_grid(vec2 nds, vec2 scale) { return floor(nds * scale); }
 
 struct grid_context : public Rxt::sdl::simple_gui
 {
-    Rxt::file_loader const& _loader;
+    gl::file_loader _loader;
 
     grid_size world_size;
     grid_size viewport_size;
@@ -32,18 +32,16 @@ struct grid_context : public Rxt::sdl::simple_gui
 
     grid_coord viewport_position {0};
 
-    gl::program tex_prog = _loader.find_program("texture_quad");
-    gl::program quad_prog = _loader.find_program("grid_quad");
+    shad::texture_quad_2D tex_prog {_loader};
+    shad::grid_quad_2D quad_prog {_loader};
 
-    Rxt::shader_programs::texture_quad_2D b_texs {tex_prog};
-    Rxt::shader_programs::grid_quad_2D b_quads {quad_prog};
+    shad::texture_quad_2D::data b_texs {tex_prog};
+    shad::grid_quad_2D::data b_quads {quad_prog};
 
     bool _dirty = true;
 
-    grid_context(const char* title, grid_size world_size, glm::uvec2 tile_px,
-                 Rxt::file_loader const& fl = Rxt::default_file_loader())
+    grid_context(const char* title, grid_size world_size, glm::uvec2 tile_px)
         : simple_gui(title, tile_px * world_size)
-        , _loader(fl)
         , world_size(world_size)
         , viewport_size(world_size)
         , tile_size_px(tile_px)

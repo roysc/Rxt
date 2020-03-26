@@ -6,13 +6,14 @@ find_package(SDL2 2.0.8 REQUIRED)
 find_package(glm REQUIRED)
 
 set(_HEADERS
+    gl_core.hpp
+    gl_core.cpp
     gl_data.hpp
     gl_guard.hpp
     gl_handy.hpp
     gl_handy.cpp
+    gl_loader.hpp
     _gl_debug.hpp
-    gl_core.hpp
-    gl_core.cpp
     gl.hpp
 
     sdl_core.hpp
@@ -24,7 +25,6 @@ set(_HEADERS
     _sdl_debug.hpp
     sdl.hpp
 
-    loader.hpp
     glm.hpp
     images.hpp
     camera.hpp
@@ -37,7 +37,7 @@ set(_HEADERS_SHADER
 )
 
 set(_SOURCES
-    loader.cpp
+    gl_loader.cpp
 )
 
 add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER} ${_SOURCES})
