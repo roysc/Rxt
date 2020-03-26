@@ -21,8 +21,8 @@ struct object
 
     object(const object&) = delete;
     object& operator=(const object&) = delete;
-    object(object&&) = default;
-    object& operator=(object&&) = default;
+    object(object&& o) : _value{o._value} { o._value = {}; }
+    object& operator=(object&& o) = delete;
 
     operator typename Traits::value_type() const { return _value; }
 };
