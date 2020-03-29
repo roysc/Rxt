@@ -31,6 +31,8 @@ struct simple_gui
         , _gl(window)
     { }
 
+    virtual ~simple_gui() {}
+
     bool is_dirty() const { return _dirty; }
     bool set_dirty(bool v = true)
     {
