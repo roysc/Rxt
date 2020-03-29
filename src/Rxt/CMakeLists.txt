@@ -25,6 +25,7 @@ find_package(Boost 1.68 REQUIRED) # using iterator, range
 set(_HEADERS
     ${_SOURCE_DIR}/_debug.hpp
     ${_SOURCE_DIR}/io.hpp
+    ${_SOURCE_DIR}/iterator.hpp
     ${_SOURCE_DIR}/range.hpp
     ${_SOURCE_DIR}/error.hpp
     ${_SOURCE_DIR}/runtime.hpp
