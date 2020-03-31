@@ -37,7 +37,7 @@ struct focused_camera
     vec3 focus;
     vec3 up;
 
-    focused_camera(vec3 pos, vec3 f = vec3 {0}, vec3 u = vec3 {0, 0, 1})
+    focused_camera(vec3 pos = vec3{0}, vec3 f = vec3{0}, vec3 u = vec3{0, 0, 1})
         : _position(pos)
         , focus(f)
         , up(u)
@@ -102,20 +102,22 @@ vec4 unproject(vec4 hcs, Cam const& cam)
 }
 
 // Source: http://antongerdelan.net/opengl/raycasting.html
+// Given a coordinate in NDS and a camera object, returns ray pointing into space
+// as (source point, normalized direction vector)
 template <class Cam>
-std::pair<vec3, vec3> cast_ray(vec2 point_nds, Cam const& cam)
+std::pair<vec3, vec3> cast_ray(vec2 coord_nds, Cam const& cam)
 {
     // Homogeneous clip space (projected) -> View space -> Camera/world
-    vec4 ray_hcs {point_nds, -1, 0};
-    vec4 ray_view = unproject(ray_hcs, cam.projection_matrix());
+    vec4 ray_hcs {coord_nds, -1, 0};
+    vec4 ray_view = unproject(ray_hcs, cam);
     ray_view = vec4{ray_view.x, ray_view.y, -1, 0};
 
-    vec3 ray_cam = unview(ray_view, cam.view_matrix());
+    vec3 ray_cam = unview(ray_view, cam);
     ray_view = vec4{ray_view.x, ray_view.y, -1, 1};
-    vec3 eye_cam = unview(ray_view, cam.view_matrix());
+    vec3 eye_cam = unview(ray_view, cam);
     vec3 eye_world = cam.position() + eye_cam;
-    // return points describing a ray A->B
-    return {eye_world, eye_world + normalize(ray_cam)};
+
+    return {eye_world, normalize(ray_cam)};
 }
 }
 
