@@ -1,12 +1,15 @@
 #pragma once
 
+#include "mesh_traits.hpp"
+
 #include <Rxt/iterator.hpp>
 #include <Rxt/geometry/helper.hpp>
 
 #include <CGAL/Point_3.h>
 #include <CGAL/Triangle_3.h>
+#include <CGAL/Kernel_traits.h>
 
-#include <functional>
+#include <utility>
 
 namespace Rxt
 {
@@ -18,33 +21,43 @@ struct mesh_iterator_adaptor
     using descriptor_iterator = Rxt::chain_iterator<MeshIter, DescIter, get_face_range>;
 };
 
-template <class K, class Iter>
+template <class MeshContainer>
 struct triangle_primitive
 {
+    using Mesh = typename MeshContainer::value_type;
+    using Face = typename boost::graph_traits<Mesh>::face_descriptor;
+    using K = typename CGAL::Kernel_traits<typename mesh_traits<Mesh>::point>::Kernel;
+
     // Interface types
-    using Id = Iter;
+    using Id = std::pair<typename MeshContainer::size_type, Face>;
     using Point = CGAL::Point_3<K>;
     using Datum = CGAL::Triangle_3<K>;
+    using Point_reference = CGAL::Point_3<K> const&;
+    using Datum_reference = CGAL::Triangle_3<K> const&;
+    using Shared_data = MeshContainer const*;
 
-    // Primitive must allow access to mesh and face
-    Id prim_iter;
-    // Must be constructible from iterator passed to AABB_tree
-    triangle_primitive(Id i)
-        : prim_iter{i} {}
+    Id key;
 
-    Id id() const { return prim_iter; }
+    triangle_primitive(Id i) : key{i} {}
 
-    Datum datum() const
+    Id id() const { return key; }
+
+    Datum_reference datum(Shared_data const& meshes) const
     {
-        auto [meshp, fdp] = prim_iter;
-        auto [p0, p1, p2] = face_vertex_points<3>(*meshp, *fdp);
+        auto [index, fd] = key;
+        auto [p0, p1, p2] = face_vertex_points<3>(meshes->at(index), fd);
         return {p0, p1, p2};
     }
 
-    Point reference_point() const
+    Point_reference reference_point(Shared_data const& meshes) const
     {
-        auto [meshp, fdp] = prim_iter;
-        return face_vertex_points<1>(*meshp, *fdp)[0];
+        auto [index, fd] = key;
+        return face_vertex_points<1>(meshes->at(index), fd)[0];
+    }
+
+    static Shared_data construct_shared_data(Shared_data const& meshes)
+    {
+        return meshes;
     }
 };
 }

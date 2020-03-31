@@ -33,7 +33,7 @@ template <class Mesh>
 auto make_icosphere(Mesh& mesh, float r, unsigned n)
 {
     // constexpr float circsphere_radius = 0.951056516295; ?
-    using Point = typename mesh_traits<Mesh>::point_type;
+    using Point = typename mesh_traits<Mesh>::point;
     const Point center {CGAL::ORIGIN};
 
     make_icosahedron(mesh, center, r);
