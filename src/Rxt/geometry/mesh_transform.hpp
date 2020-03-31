@@ -29,6 +29,11 @@ struct transform_comap_faces
     using HComap = std::unordered_map<target_halfedge, source_halfedge>;
 
     using face_comap = FComap;
+    using transform_function = bool (*)(target_mesh&);
+
+    transform_function transformation {};
+
+    transform_comap_faces(transform_function f) : transformation{f} {}
 
     // Paint source face comapping for new faces:
     // Walk halfedges to find new halfedge; recurse on face of the new opposite halfedge.
@@ -58,8 +63,7 @@ struct transform_comap_faces
         assert(set_source_face_aux(fd, m, std::vector<target_face>{}, fcomap, hcomap));
     }
 
-    template <class F>
-    face_comap operator()(F&& transform, source_mesh const& src, target_mesh& tgt)
+    face_comap operator()(source_mesh const& src, target_mesh& tgt)
     {
         FMap fmap;
         HMap hmap;
@@ -74,7 +78,7 @@ struct transform_comap_faces
         for (auto [s, t]: fmap) fcomap.emplace(t, s);
         for (auto [s, t]: hmap) hcomap.emplace(t, s);
         // Do transformation
-        transform(tgt);
+        transformation(tgt);
 
         for (auto fd: faces(tgt)) {
             set_source_face(fd, tgt, fcomap, hcomap);
