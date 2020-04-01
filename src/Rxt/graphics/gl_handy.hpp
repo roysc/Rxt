@@ -9,6 +9,12 @@
 
 namespace Rxt::gl
 {
+struct debug_context
+{
+    bool enable_logging = true;
+};
+inline debug_context g_debug_context;
+
 void setup_glew();
 void setup_debug();
 // void setup_3d();

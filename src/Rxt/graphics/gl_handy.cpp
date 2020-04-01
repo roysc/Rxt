@@ -20,7 +20,7 @@ void setup_debug()
 {
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(_debug_callback, nullptr);
+    glDebugMessageCallback(_debug_callback, &g_debug_context);
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
     auto flags = get<GLint>(GL_CONTEXT_FLAGS);
@@ -55,8 +55,11 @@ program make_program(make_program_arg shaders)
 }
 
 void _debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-                     const GLchar* message, const void* userParam)
+                     const GLchar* message, void const* user_param)
 {
+    auto& data = *static_cast<debug_context const*>(user_param);
+    if (!data.enable_logging) return;
+
     const char* kind = "INFO";
     switch (severity)
     {
