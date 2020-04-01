@@ -32,8 +32,8 @@ struct triangle_primitive
     using Id = std::pair<typename MeshContainer::size_type, Face>;
     using Point = CGAL::Point_3<K>;
     using Datum = CGAL::Triangle_3<K>;
-    using Point_reference = CGAL::Point_3<K> const&;
-    using Datum_reference = CGAL::Triangle_3<K> const&;
+    using Point_reference = Point;
+    using Datum_reference = Datum;
     using Shared_data = MeshContainer const*;
 
     Id key;
@@ -42,14 +42,14 @@ struct triangle_primitive
 
     Id id() const { return key; }
 
-    Datum_reference datum(Shared_data const& meshes) const
+    Datum datum(Shared_data const& meshes) const
     {
         auto [index, fd] = key;
         auto [p0, p1, p2] = face_vertex_points<3>(meshes->at(index), fd);
         return {p0, p1, p2};
     }
 
-    Point_reference reference_point(Shared_data const& meshes) const
+    Point reference_point(Shared_data const& meshes) const
     {
         auto [index, fd] = key;
         return face_vertex_points<1>(meshes->at(index), fd)[0];
