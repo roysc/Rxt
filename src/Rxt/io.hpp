@@ -14,7 +14,7 @@ using fmt::print;
 
 inline std::string read_file(std::string const& p)
 {
-    std::ifstream in(p);
+    std::ifstream in{p};
     in.exceptions(std::ios::failbit | std::ios::badbit);
 
     std::stringstream buf;

@@ -1,16 +1,13 @@
 #pragma once
 
-#include <CGAL/Surface_mesh.h>
-#include <CGAL/Point_3.h>
+#include <CGAL/boost/graph/helpers.h>
 
 namespace Rxt
 {
 template <class Mesh>
-struct mesh_traits;
-
-template <class Point>
-struct mesh_traits<CGAL::Surface_mesh<Point>>
+struct mesh_traits
 {
-    using point = Point;
+    using point_property_map = typename boost::property_map<Mesh, CGAL::vertex_point_t>::type;
+    using point = typename boost::property_traits<point_property_map>::value_type;
 };
 }

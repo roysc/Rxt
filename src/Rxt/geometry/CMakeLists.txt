@@ -6,8 +6,6 @@ find_package(CGAL REQUIRED)
 include(${CGAL_USE_FILE})
 find_package(Boost 1.68 REQUIRED) # using property_map
 
-set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
-
 set(_HEADERS
     surface.hpp
     shapes.hpp

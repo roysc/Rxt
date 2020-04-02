@@ -13,14 +13,6 @@
 
 namespace Rxt
 {
-template <class MeshIter, class DescIter, auto get_face_range>
-struct mesh_iterator_adaptor
-{
-    using mesh_iterator = MeshIter;
-    using mesh = typename mesh_iterator::value_type;
-    using descriptor_iterator = Rxt::chain_iterator<MeshIter, DescIter, get_face_range>;
-};
-
 template <class MeshContainer>
 struct triangle_primitive
 {
