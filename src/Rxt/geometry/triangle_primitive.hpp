@@ -8,6 +8,7 @@
 #include <CGAL/Point_3.h>
 #include <CGAL/Triangle_3.h>
 #include <CGAL/Kernel_traits.h>
+#include <CGAL/boost/graph/helpers.h>
 
 #include <utility>
 
@@ -17,11 +18,12 @@ template <class MeshContainer>
 struct triangle_primitive
 {
     using Mesh = typename MeshContainer::value_type;
+    using MeshIndex = typename MeshContainer::size_type;
     using Face = typename boost::graph_traits<Mesh>::face_descriptor;
     using K = typename CGAL::Kernel_traits<typename mesh_traits<Mesh>::point>::Kernel;
 
     // Interface types
-    using Id = std::pair<typename MeshContainer::size_type, Face>;
+    using Id = std::pair<MeshIndex, Face>;
     using Point = CGAL::Point_3<K>;
     using Datum = CGAL::Triangle_3<K>;
     using Point_reference = Point;
@@ -31,6 +33,7 @@ struct triangle_primitive
     Id key;
 
     triangle_primitive(Id i) : key{i} {}
+    triangle_primitive(MeshIndex ix, Face fd) : key{ix, fd} {}
 
     Id id() const { return key; }
 
