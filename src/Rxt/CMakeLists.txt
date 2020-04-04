@@ -71,6 +71,7 @@ set(_HEADERS
     ${_SOURCE_DIR}/iterator.hpp
     ${_SOURCE_DIR}/range.hpp
     ${_SOURCE_DIR}/runtime.hpp
+    ${_SOURCE_DIR}/math.hpp
     ${_SOURCE_DIR}/time.hpp
     ${_SOURCE_DIR}/util.hpp
     ${_SOURCE_DIR}/vec.hpp
@@ -127,6 +128,9 @@ target_link_libraries(test_math Rxt${Rxt_BASE})
 
 make_test(demangle demangle.test.cpp)
 target_link_libraries(test_demangle Rxt${Rxt_BASE})
+
+make_test(math math.test.cpp)
+target_link_libraries(test_math RxtBase)
 
 # Component libs
 add_subdirectory(data)
