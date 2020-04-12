@@ -5,6 +5,9 @@ find_package(Boost 1.68 REQUIRED COMPONENTS graph)
 
 set(_HEADERS
     graph.hpp
+    grid_graph.hpp
+)
+set(_SOURCES
     _graph_dummy.cpp
 )
 
@@ -22,8 +25,8 @@ target_link_libraries(RxtData ${Rxt_BASE_LIBRARY} Boost::graph)
 make_test(graph graph.test.cpp)
 target_link_libraries(test_graph RxtData)
 
-make_test(grid grid.test.cpp)
-target_link_libraries(test_grid RxtData)
+make_test(grid_graph grid_graph.test.cpp)
+target_link_libraries(test_grid_graph RxtData)
 
 install(FILES ${_HEADERS}
     DESTINATION "${_INCLUDE_DEST}/Rxt/data"
