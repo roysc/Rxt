@@ -1,0 +1,1 @@
+find_dependency(Boost 1.68 REQUIRED COMPONENTS graph)

@@ -42,6 +42,7 @@ set(_SOURCES
 )
 
 add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER} ${_SOURCES})
+add_library(Rxt::Graphics ALIAS RxtGraphics)
 
 # target_compile_definitions(RxtGraphics PUBLIC RXT_GRAPHICS_PATH_DEFAULT "\"${PROJECT_SOURCE_DIR}\"")
 target_compile_definitions(RxtGraphics PUBLIC
@@ -57,13 +58,20 @@ target_include_directories(RxtGraphics PUBLIC
 target_include_directories(RxtGraphics PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>)
 
 target_link_libraries(RxtGraphics
-    RxtBase
-    RxtMeta
+    ${Rxt_BASE_LIBRARY}
     OpenGL::GL
     ${GLEW_LIBRARIES}
     glm
     SDL2::SDL2
 )
 
-install(FILES ${_HEADERS} DESTINATION "${_INCLUDE_DEST}/Rxt/graphics")
-install(FILES ${_HEADERS_SHADER} DESTINATION "${_INCLUDE_DEST}/Rxt/graphics/shader")
+install(FILES ${_HEADERS}
+    DESTINATION "${_INCLUDE_DEST}/Rxt/graphics"
+    COMPONENT Graphics)
+install(FILES ${_HEADERS_SHADER}
+    DESTINATION "${_INCLUDE_DEST}/Rxt/graphics/shader"
+    COMPONENT Graphics)
+
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/data/shader/" DESTINATION ${_LIB_DEST}/shader)
+
+install_component(Graphics)
