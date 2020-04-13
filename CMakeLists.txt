@@ -3,12 +3,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(Rxt VERSION 0.1)
 
-include(CTest)
-
-function(_debug _VAR)
-    message("** ${_VAR}=${${_VAR}}")
-endfunction()
-
 set(_INCLUDE_DEST "include")
 set(_LIB_DEST "lib/Rxt")
 set(_CMAKE_MODULE_DEST "lib/cmake/Rxt")
@@ -32,7 +26,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 option(BUILD_DEMOS "Build executable graphics demos" OFF)
 # option(BUILD_TESTS "Build tests" ON)
 
-add_subdirectory(src/Rxt)
-add_subdirectory(cmake)
+include(CTest)
+include(CMakePackageConfigHelpers)
 
-install(DIRECTORY data/shader/ DESTINATION ${_LIB_DEST}/shader)
+add_subdirectory(src/Rxt)

@@ -10,4 +10,3 @@ Contents
   * Data: data structures
   * Geometry: computational geometry (wraps [CGAL](https://www.cgal.org))
   * Graphics: graphics interface & related tools
-  * Meta: meta-programming tools

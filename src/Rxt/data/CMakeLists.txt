@@ -7,7 +7,9 @@ set(_HEADERS
     graph.hpp
     _graph_dummy.cpp
 )
-add_library(RxtData ${_HEADERS})
+
+add_library(RxtData ${_HEADERS} ${_SOURCES})
+add_library(Rxt::Data ALIAS RxtData)
 
 use_stdlib(RxtData ${_STDLIB_DIR} ${_STDLIB_LIBDIR})
 target_include_directories(RxtData PUBLIC
@@ -15,10 +17,7 @@ target_include_directories(RxtData PUBLIC
     $<INSTALL_INTERFACE:${_INCLUDE_DEST}>
 )
 
-target_link_libraries(RxtData RxtBase)
-target_link_libraries(RxtData Boost::graph)
-# set(_LIBDIR ${Rxt_LOCAL_PREFIX}/lib)
-# target_link_options(RxtData PUBLIC -L${_LIBDIR} -Wl,-rpath,${_LIBDIR})
+target_link_libraries(RxtData ${Rxt_BASE_LIBRARY} Boost::graph)
 
 make_test(graph graph.test.cpp)
 target_link_libraries(test_graph RxtData)
@@ -26,4 +25,8 @@ target_link_libraries(test_graph RxtData)
 make_test(grid grid.test.cpp)
 target_link_libraries(test_grid RxtData)
 
-install(FILES ${_HEADERS} DESTINATION "${_INCLUDE_DEST}/Rxt/data")
+install(FILES ${_HEADERS}
+    DESTINATION "${_INCLUDE_DEST}/Rxt/data"
+    COMPONENT Data)
+
+install_component(Data)
