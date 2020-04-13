@@ -13,13 +13,14 @@ set(_HEADERS
     triangle_primitive.hpp
     mesh_transform.hpp
     mesh_traits.hpp
-    # segment_between.hpp
+    segment_between.hpp
     util.hpp
 )
 set(_SOURCES
     geometry.cpp
 )
 add_library(RxtGeometry ${_HEADERS} ${_SOURCES})
+add_library(Rxt::Geometry ALIAS RxtGeometry)
 
 use_stdlib(RxtGeometry ${_STDLIB_DIR} ${_STDLIB_LIBDIR})
 target_include_directories(RxtGeometry PUBLIC
@@ -41,4 +42,8 @@ target_link_libraries(RxtGeometry ${CGAL_LIBRARIES})
 make_test(shapes shapes.test.cpp)
 target_link_libraries(test_shapes RxtGeometry)
 
-install(FILES ${_HEADERS} DESTINATION "${_INCLUDE_DEST}/Rxt/geometry")
+install(FILES ${_HEADERS}
+    DESTINATION "${_INCLUDE_DEST}/Rxt/geometry"
+    COMPONENT Geometry)
+
+install_component(Geometry)
