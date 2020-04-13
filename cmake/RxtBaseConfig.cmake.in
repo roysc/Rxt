@@ -1,0 +1,1 @@
+find_dependency(fmt 6.0 REQUIRED)

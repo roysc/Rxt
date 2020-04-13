@@ -1,0 +1,4 @@
+find_dependency(GLEW REQUIRED)
+find_dependency(OpenGL REQUIRED)
+find_dependency(SDL2 2.0.8 REQUIRED)
+find_dependency(glm REQUIRED)
