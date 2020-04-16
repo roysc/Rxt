@@ -1,1 +1,3 @@
-find_dependency(fmt 6.0 REQUIRED)
+if(NOT @DISABLE_FMT@)
+    find_dependency(fmt 6.0 REQUIRED)
+endif()

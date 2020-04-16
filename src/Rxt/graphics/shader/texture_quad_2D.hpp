@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Rxt/graphics/gl_handy.hpp>
+#include <tuple>
 
 namespace Rxt::shader_programs
 {
@@ -11,10 +12,12 @@ struct texture_quad_2D_data
 {
     static const char* program_name() { return "texture_quad_2D"; }
 
+    static constexpr GLenum draw_mode = GL_TRIANGLES;
+    // static constexpr auto draw_function = &glDrawElements;
+
     using position_vec = glm::vec2;
     using tex_coord_vec = glm::vec2;
-    static constexpr GLenum draw_mode = GL_TRIANGLES;
-    static constexpr auto draw_function = &glDrawElements;
+    using vertex = std::tuple<position_vec, tex_coord_vec>;
 
     texture_quad_2D& prog;
     gl::vao va;
@@ -23,16 +26,16 @@ struct texture_quad_2D_data
     gl::attribuf<glm::vec2> tex_coord {prog, "texCoord"};
     gl::buffer<GLuint> elements;
 
+    // gl::uniform<glm::mat4> view_matrix{prog, "viewMatrix"}; // todo ubo
+
     texture_quad_2D_data(texture_quad_2D& p)
         : prog(p)
     {
         gl::use_guard _p(prog);
         gl::bind_vao_guard _a(va);
 
-        gl::attrib_buffer(position);
-        gl::attrib_buffer(tex_coord);
-        glEnableVertexArrayAttrib(va, position);
-        glEnableVertexArrayAttrib(va, tex_coord);
+        position.enable(va);
+        tex_coord.enable(va);
 
         gl::set_uniform(prog, "texUnit", 0);
     }

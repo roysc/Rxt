@@ -52,6 +52,7 @@ bool equivalent(R r, std::vector<int> vec)
     return ret && (vit == vec.end());
 }
 
+#ifndef RXT_DISABLE_RANGE_INDEXING
 TEST_CASE("make_indexed_range_map(map)")
 {
     using M = std::map<int, int>;
@@ -75,4 +76,5 @@ TEST_CASE("make_indexed_range_map(multimap)")
     REQUIRE(equivalent(mr[1], {10, 30}));
     REQUIRE(equivalent(mr[2], {20}));
 }
+#endif
 }
