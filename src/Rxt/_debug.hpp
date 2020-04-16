@@ -6,6 +6,6 @@ namespace Rxt
 {
 namespace dbg
 {
-using fmt::print;
+using Rxt::print;
 }
 }

@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../_debug.hpp"
-#include <SDL2/SDL.h>
-#include <fmt/format.h>
+#include "sdl_core.hpp"
+
 #include <utility>
 #include <map>
 #include <memory>
 #include <string_view>
 #include <functional>
+#include <iostream>
 
 namespace Rxt::sdl
 {
@@ -76,23 +77,15 @@ struct _key_dispatcher
 using key_dispatcher = _key_dispatcher<false>;
 }
 
-namespace fmt
+namespace std
 {
-using Rxt::sdl::key_descriptor;
-
-template <>
-struct formatter<key_descriptor> {
-    template <class ParseContext>
-    constexpr auto parse(ParseContext& ctx) { return ctx.begin(); }
-
-    template <class FormatContext>
-    auto format(const key_descriptor& km, FormatContext& ctx) {
-        std::string mod;
-        if (km.mod != KMOD_NONE) {
-            mod = Rxt::sdl::repr_keymods(km.mod);
-            mod += '-';
-        }
-        return format_to(ctx.out(), R"("{0}{1}")", mod, SDL_GetKeyName(km.code));
+template <class Ch, class Tr>
+basic_ostream<Ch, Tr>& operator<<(basic_ostream<Ch, Tr>& o, Rxt::sdl::key_descriptor const& kd)
+{
+    if (kd.mod != KMOD_NONE) {
+        o << Rxt::sdl::repr_keymods(kd.mod);
+        o << '-';
     }
-};
+    return o << SDL_GetKeyName(kd.code);
+}
 }

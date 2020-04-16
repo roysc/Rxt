@@ -10,7 +10,7 @@
 
 namespace Rxt
 {
-namespace _gfx
+namespace _impl
 {
 using glm::vec2;
 using glm::vec3;
@@ -121,9 +121,9 @@ std::pair<vec3, vec3> cast_ray(vec2 coord_nds, Cam const& cam)
 }
 }
 
-using _gfx::focused_camera;
-using _gfx::unview;
-using _gfx::unproject;
-using _gfx::cast_ray;
-using _gfx::rotation_between;
+using _impl::focused_camera;
+using _impl::unview;
+using _impl::unproject;
+using _impl::cast_ray;
+using _impl::rotation_between;
 }

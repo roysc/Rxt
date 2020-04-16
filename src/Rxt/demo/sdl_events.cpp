@@ -1,5 +1,5 @@
-#include "Rxt/graphics/sdl_gl.hpp"
-#include "Rxt/graphics/sdl.hpp"
+#include <Rxt/graphics/sdl.hpp>
+
 #include <iostream>
 #include <utility>
 
@@ -19,7 +19,7 @@ struct loop_state
     loop_state(sdl::window_ptr w) : window(w) {}
     void handle(SDL_Event);
     bool should_quit() const { return _quit; } // fixme
-    void step();
+    void step(SDL_Event);
 };
 
 extern "C" void step_loop(void* c)
@@ -31,7 +31,7 @@ int main()
 {
     const unsigned width = 500, height = 500;
     auto window = sdl::make_shared(
-        SDL_CreateWindow("demo: basic_gl",
+        SDL_CreateWindow("demo: sdl_events",
                          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                          width, height,
                          SDL_WINDOW_OPENGL));
@@ -42,10 +42,8 @@ int main()
     loop();
 }
 
-void loop_state::step()
+void loop_state::step(SDL_Event event)
 {
-    SDL_Event event;
-    SDL_WaitEvent(&event);
     handle(event);
 
     SDL_GL_SwapWindow(window.get());

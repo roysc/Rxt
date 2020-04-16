@@ -3,7 +3,12 @@
 #include <Rxt/graphics/sdl.hpp>
 #include <Rxt/graphics/gl.hpp>
 #include <Rxt/graphics/shader/texture_quad_2D.hpp>
-#include <Rxt/graphics/shader/grid_quad_2D.hpp>
+
+#ifdef RXT_WEBGL2
+  #include <Rxt/graphics/shader/webgl_grid_quad_2D.hpp>
+#else
+  #include <Rxt/graphics/shader/grid_quad_2D.hpp>
+#endif
 
 #include <Rxt/util.hpp>
 #include <Rxt/range.hpp>
@@ -12,15 +17,21 @@
 
 using grid_coord = glm::ivec2;
 using grid_size = glm::uvec2;
+using grid_offset = glm::ivec2;
 
-using glm::vec2;
 namespace gl = Rxt::gl;
-namespace shad = Rxt::shader_programs;
+
+using Rxt::shader_programs::texture_quad_2D;
+#ifdef RXT_WEBGL2
+using Rxt::shader_programs::webgl::grid_quad_2D;
+#else
+using Rxt::shader_programs::grid_quad_2D;
+#endif
 
 template <class V>
 auto invert_y(V v) { v.y = -v.y; return v; }
 
-grid_coord nds_to_grid(vec2 nds, vec2 scale) { return floor(nds * scale); }
+inline grid_coord nds_to_grid(glm::vec2 nds, glm::vec2 scale) { return floor(nds * scale); }
 
 struct grid_context : public Rxt::sdl::simple_gui
 {
@@ -32,11 +43,11 @@ struct grid_context : public Rxt::sdl::simple_gui
 
     grid_coord viewport_position {0};
 
-    shad::texture_quad_2D tex_prog {_loader};
-    shad::grid_quad_2D quad_prog {_loader};
+    texture_quad_2D tex_prog {_loader};
+    grid_quad_2D quad_prog {_loader};
 
-    shad::texture_quad_2D::data b_texs {tex_prog};
-    shad::grid_quad_2D::data b_quads {quad_prog};
+    texture_quad_2D::data b_texs {tex_prog};
+    grid_quad_2D::data b_quads {quad_prog};
 
     bool _dirty = true;
 
@@ -47,7 +58,7 @@ struct grid_context : public Rxt::sdl::simple_gui
         , tile_size_px(tile_px)
     {}
 
-    virtual ~grid_context() {}
+    ~grid_context() override {}
 
     bool is_dirty() const { return _dirty; }
     bool set_dirty(bool v = true)
@@ -66,9 +77,9 @@ struct grid_context : public Rxt::sdl::simple_gui
 
     void h_move_viewport(int dx, int dy)
     {
-        viewport_position += grid_coord {dx, dy};
+        viewport_position += grid_coord{dx, dy};
         if constexpr (is_torus()) {
-            viewport_position %= grid_coord(world_size);
+            viewport_position %= grid_coord{world_size};
         }
         update_viewport();
     }
@@ -123,8 +134,7 @@ void grid_context::update_model()
     b_texs.elements.storage = {0, 1, 2, 2, 3, 0};
     b_texs.update();
 
-    gl::set_uniform(quad_prog, "worldSize", world_size);
-    gl::set_uniform(quad_prog, "doRepeat", is_torus());
+    // gl::set_uniform(quad_prog, "worldSize", world_size); // will need for instancing
 
     set_dirty();
 }
@@ -141,9 +151,10 @@ void grid_context::update_viewport()
         glm::scale(vec3(invert_y(vp_rel_size), 0)) *
         glm::translate(vec3(-.5, -.5, 0));
 
-    gl::set_uniform(tex_prog, "viewMatrix", tex_view_matrix);
-    gl::set_uniform(quad_prog, "viewportPosition", viewport_position);
-    gl::set_uniform(quad_prog, "viewportScale", vec2(viewport_size) / 2.f);
+    set_uniform(tex_prog, "viewMatrix", tex_view_matrix);
+
+    set_uniform(quad_prog, "viewportPosition", viewport_position);
+    set_uniform(quad_prog, "viewportSize", viewport_size);
 
     set_dirty();
 }

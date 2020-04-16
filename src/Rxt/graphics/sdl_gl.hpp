@@ -5,7 +5,7 @@
 #include "gl_handy.hpp"
 #include "_sdl_debug.hpp"
 
-#include "Rxt/meta/constructor.hpp"
+#include <Rxt/meta.hpp>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -23,19 +23,19 @@ struct sdl_context
             log_and_fail("SDL_Init");
         }
 
-        /* Request opengl 3.3 context.
-         * SDL doesn't have the ability to choose which profile at this time of writing,
-         * but it should default to the core profile */
+#ifdef RXT_WEBGL2
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#else
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
-
-        /* Turn on double buffering with a 24bit Z buffer.
-         * You may need to change this to 16 or 32 for your system */
+#endif
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     }
 
-    Rxt_CTORS_MOVE_ONLY(sdl_context);
+    RXT_CTORS_MOVE_ONLY(sdl_context);
 };
 
 struct gl_context
@@ -53,7 +53,9 @@ struct gl_context
         if (auto r = SDL_GL_MakeCurrent(window.get(), _gl) < 0) {
             log_and_fail("SDL_GL_MakeCurrent");
         }
+#ifndef __EMSCRIPTEN__
         SDL_GL_SetSwapInterval(1);
+#endif
 
         gl::setup_glew();
         gl::setup_debug();
@@ -64,16 +66,39 @@ struct gl_context
         SDL_GL_DeleteContext(_gl);
     }
 
-    Rxt_CTORS_MOVE_ONLY(gl_context);
+    RXT_CTORS_MOVE_ONLY(gl_context);
 };
 
 // convenience
 template <class C>
 void step(void* c)
 {
+#ifdef __EMSCRIPTEN__
+    // Emscripten wants main loop set before swap interval
+    thread_local bool _initialized = false;
+    if (!_initialized) {
+        SDL_GL_SetSwapInterval(1);
+        _initialized = true;
+    }
+#endif
+
     C& context = *(C*) c;
+    SDL_Event event;
     // SDL_PumpEvents();
-    context.step();
+
+#ifdef __EMSCRIPTEN__
+    if (context.should_quit()) {
+        emscripten_cancel_main_loop(); // asynchronous apparently, so also return early
+        return;
+    }
+
+    if (!SDL_PollEvent(&event))
+        return;
+#else
+    SDL_WaitEvent(&event);
+#endif
+
+    context.step(event);
 }
 
 // Emscripten-compatible abstraction over main loop
@@ -103,7 +128,7 @@ struct emscripten_looper
             step(&*context);
         }
 #else
-        emscripten_set_main_loop_arg(loop_step, (void*)context, 0, false);
+        emscripten_set_main_loop_arg(step, (void*)context, 0, true);
 #endif
     }
 };

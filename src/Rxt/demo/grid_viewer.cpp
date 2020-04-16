@@ -23,7 +23,7 @@ struct run_context : public gl::program_loader
     run_context(sdl::window_ptr, unsigned, unsigned);
 
     bool should_quit() const { return !_running; }
-    void step();
+    void step(SDL_Event);
 
     void update_model();
     void update_texture();
@@ -54,13 +54,11 @@ run_context::run_context(sdl::window_ptr w, unsigned width, unsigned height)
 {
     kd.on_press["R"] = [this] { _dirty = true; };
 
+    position.enable(va);
+    tex_coord.enable(va);
+
     gl::use_guard _p(prog);
     gl::bind_vao_guard _a(va);
-
-    gl::attrib_buffer(position);
-    glEnableVertexArrayAttrib(va, position);
-    gl::attrib_buffer(tex_coord);
-    glEnableVertexArrayAttrib(va, tex_coord);
 
     gl::set_uniform(prog, "tex", 0);
     update_texture();
@@ -71,23 +69,23 @@ void run_context::update_texture()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // or GL_CLAMP_TO_BORDER
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     using Vec4u8 = glm::tvec4<GLubyte, glm::packed_highp>;
     int width = 8, height = 8;
     std::vector<Vec4u8> image;
+    image.reserve(width * height);
+    // checkerboard
     for (int w = 0; w < width; ++w) {
         for (int h = 0; h < height; ++h) {
-            image.emplace_back(static_cast<GLubyte>((w + h) % 2 == 0) * 0xFF);
+            image.emplace_back(static_cast<GLubyte>((w + h) % 2) * 0xFF);
         }
     }
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, data(image));
+                 GL_UNSIGNED_BYTE, std::data(image));
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }
@@ -117,11 +115,8 @@ void run_context::draw()
     SDL_GL_SwapWindow(window.get());
 }
 
-void run_context::step()
+void run_context::step(SDL_Event event)
 {
-    SDL_Event event;
-    SDL_WaitEvent(&event);
-
     kd.scan();
 
     switch (event.type) {
