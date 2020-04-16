@@ -2,8 +2,12 @@
 
 #include "util.hpp"
 
-#include <boost/iterator/transform_iterator.hpp>
-#include <boost/range/iterator_range.hpp>
+#ifndef RXT_DISABLE_BOOST
+    #include <boost/iterator/transform_iterator.hpp>
+    #include <boost/range/iterator_range.hpp>
+#else
+    #define RXT_DISABLE_RANGE_INDEXING
+#endif
 
 #include <map>
 #include <utility>
@@ -46,6 +50,7 @@ void index_ranges(Map const& m, OutIt out)
     }
 }
 
+#ifndef RXT_DISABLE_RANGE_INDEXING
 // Given map M (k -> v), return a map of (k -> R v) of keys to ranges of equivalent values
 template <class Map>
 auto make_indexed_range_map(Map const& m)
@@ -67,4 +72,5 @@ auto make_indexed_range_map(Map const& m)
     }
     return ret;
 }
+#endif
 }

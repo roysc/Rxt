@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Rxt/graphics/gl_handy.hpp>
+#include <tuple>
 
 namespace Rxt::shader_programs
 {
@@ -11,10 +12,13 @@ struct colored_triangle_3D_data
 {
     static const char* program_name() { return "colored_triangle_3D"; }
 
+    static constexpr GLenum draw_mode = GL_TRIANGLES;
+
     using position_vec = glm::vec3;
     using normal_vec = glm::vec3;
     using color_vec = glm::vec3;
-    static constexpr GLenum draw_mode = GL_TRIANGLES;
+    using vertex = std::tuple<position_vec, normal_vec, color_vec>;
+    using size_type = std::size_t;
 
     colored_triangle_3D& prog;
     gl::vao va;
@@ -31,15 +35,9 @@ struct colored_triangle_3D_data
     colored_triangle_3D_data(colored_triangle_3D& p)
         : prog(p)
     {
-        gl::use_guard _p(prog);
-        gl::bind_vao_guard _a(va);
-
-        gl::attrib_buffer(position);
-        gl::attrib_buffer(normal);
-        gl::attrib_buffer(color);
-        glEnableVertexArrayAttrib(va, position);
-        glEnableVertexArrayAttrib(va, normal);
-        glEnableVertexArrayAttrib(va, color);
+        position.enable(va);
+        normal.enable(va);
+        color.enable(va);
     }
 
     void update()

@@ -1,7 +1,13 @@
 #include "gl_handy.hpp"
+#include "_gl_debug.hpp"
 #include "gl_core.hpp"
-#include "Rxt/io.hpp"
-#include "Rxt/graphics/_gl_debug.hpp"
+
+#ifndef glDebugMessageCallback  // OpenGL < 4.3
+#define glDebugMessageCallback(...)                                     \
+    ::Rxt::dbg::print("[Emscripten] glDebugMessageCallback not supported")
+#define glDebugMessageControl(...)                                      \
+    ::Rxt::dbg::print("[Emscripten] glDebugMessageControl not supported")
+#endif
 
 namespace Rxt::gl
 {
@@ -18,6 +24,9 @@ void _debug_callback(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar*, con
 
 void setup_debug()
 {
+#ifdef __EMSCRIPTEN__
+    dbg::print("OpenGL debugging not supported\n");
+#else
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(_debug_callback, &g_debug_context);
@@ -25,18 +34,9 @@ void setup_debug()
 
     auto flags = get<GLint>(GL_CONTEXT_FLAGS);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
-        dbg::print("GL debug is enabled\n");
+        dbg::print("OpenGL debugging is enabled\n");
     }
-}
-
-void setup_3d()
-{
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_PROGRAM_POINT_SIZE);
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#endif
 }
 
 program make_program(make_program_arg shaders)
@@ -45,12 +45,12 @@ program make_program(make_program_arg shaders)
 
     for (auto [type, path]: shaders) {
         gl::shader sh(type, Rxt::read_file(path).c_str());
-        _log_result(sh, GL_COMPILE_STATUS, path.c_str());
+        log_result(sh, GL_COMPILE_STATUS, path.c_str());
         glAttachShader(ret, sh);
     }
 
     glLinkProgram(ret);
-    _log_result(ret, GL_LINK_STATUS, "program");
+    log_result(ret, GL_LINK_STATUS, "program");
     return ret;
 }
 

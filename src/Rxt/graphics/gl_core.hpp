@@ -3,6 +3,7 @@
 #include "../_debug.hpp"
 
 #include <GL/glew.h>            // must be included before gl.h
+
 #include <cassert>
 
 #define _debug_assert assert
@@ -32,8 +33,8 @@ struct program_traits
 {
     using value_type = GLuint;
 
-    static constexpr auto getparam = &glGetProgramiv;
-    static constexpr auto getinfolog = &glGetProgramInfoLog;
+    static constexpr auto get_param = &glGetProgramiv;
+    static constexpr auto get_info_log = &glGetProgramInfoLog;
 
     static value_type create()
     {
@@ -53,8 +54,8 @@ struct shader_traits
 {
     using value_type = GLuint;
 
-    static constexpr auto getparam = &glGetShaderiv;
-    static constexpr auto getinfolog = &glGetShaderInfoLog;
+    static constexpr auto get_param = &glGetShaderiv;
+    static constexpr auto get_info_log = &glGetShaderInfoLog;
 
     static value_type create(GLenum type, const char* source)
     {

@@ -14,17 +14,15 @@
 
 extern "C" void step_state(void* c)
 {
-    sdl::step<run_context>(c);
+    sdl::step<geom_viewer>(c);
 }
 
 int main()
 {
-    sdl::simple_gui gui("demo: geom viewer", 500, 500);
-    auto loop = sdl::make_looper(new run_context {gui.window}, step_state);
+    auto loop = sdl::make_looper(new geom_viewer(), step_state);
     loop();
 }
 
-// { // TODO move to ... where?
 template <class K>
 glm::vec3 to_glm(CGAL::Point_3<K> v)  { return {v.x(), v.y(), v.z()}; }
 template <class K>
@@ -32,7 +30,6 @@ glm::vec3 to_glm(CGAL::Vector_3<K> v) { return {v.x(), v.y(), v.z()}; }
 
 inline glm::vec3 to_glm(CGAL::Color c) { return glm::vec3 {c.red(), c.green(), c.blue()} / 256.f; }
 inline glm::vec3 to_glm(glm::vec3 v)   { return v; }
-// }
 
 void turn(Rxt::focused_camera& cam, float d, const glm::vec3 axis)
 {
@@ -40,69 +37,48 @@ void turn(Rxt::focused_camera& cam, float d, const glm::vec3 axis)
     cam.orbit(rot);
 }
 
-run_context::run_context(sdl::window_ptr w)
-    : window(w)
-    , camera(glm::vec3 {2})
-    , prog(find_program("colored_triangle_3D"))
-    , position(prog, "vertex_position")
-    , normal(prog, "vertex_normal")
-    , color(prog, "vertex_color")
+geom_viewer::geom_viewer()
+    : simple_gui{"demo: geom_viewer", 500, 500}
+    , camera(glm::vec3{2})
 {
+    auto camera_right = [this] (float d) {
+        turn(camera, 0.1 * d, gl::AXIS_Z);
+        update_camera();
+    };
+
+    keys.on_scan["Right"] = std::bind(camera_right, +1);
+    keys.on_scan["Left"] = std::bind(camera_right, -1);
+    keys.on_press["C-W"] = [this] { should_quit(true); };
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
-    glEnable(GL_PROGRAM_POINT_SIZE);
     // glEnable(GL_BLEND);
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    auto camera_right =
-        [this] (float d) {
-            turn(camera, 0.1 * d, gl::AXIS_Z);
-            update_camera();
-            draw();
-        };
+    set(b_triangles.light_position, glm::vec3{15, 0, 15});
 
-    kd.on_scan["Right"] = std::bind(camera_right, +1);
-    kd.on_scan["Left"] = std::bind(camera_right, -1);
-    kd.on_press["C-W"] = [this] { _quit = true; };
-
-    glUseProgram(prog);
-
-    gl::uniform<glm::vec3> light(prog, "light_position");
-    set(light, glm::vec3 {15, 0, 15});
-
+    update_model();
     update_camera();
-
-    glBindVertexArray(va);
-    for (auto* ab: {&position, &normal, &color}) {
-        attrib_buffer(*ab);
-        glEnableVertexArrayAttrib(va, *ab);
-    }
 }
 
-run_context::~run_context()
+void geom_viewer::update_camera()
 {
-    glUseProgram(0);
-}
-
-void run_context::update_camera()
-{
-    std::cout << "camera=" << camera.position() << "\n";
-
-    gl::uniform<glm::mat4> m(prog, "M"), v(prog, "V"), mvp(prog, "MVP");
+    // dbg::print("camera at {}\n", camera.position());
 
     auto view_matrix  = camera.view_matrix();
     auto model_matrix = camera.model_matrix();
     auto mvp_matrix   = camera.projection_matrix() * view_matrix * model_matrix;
 
-    set(m, model_matrix);
-    set(v, view_matrix);
-    set(mvp, mvp_matrix);
+    set(b_triangles.model_matrix, model_matrix);
+    set(b_triangles.view_matrix, view_matrix);
+    set(b_triangles.mvp_matrix, mvp_matrix);
+
+    set_dirty();
 }
 
-void run_context::update_model()
+void geom_viewer::update_model()
 {
-    // {
     using K = CGAL::Simple_cartesian<double>;
     using Mesh = CGAL::Surface_mesh<K::Point_3>;
     using GT = boost::graph_traits<Mesh>;
@@ -110,52 +86,46 @@ void run_context::update_model()
 
     Mesh sm;
     FaceNormalMap face_normals;
+
     Rxt::make_icosphere(sm, 1.0, 0);
     Rxt::calculate_face_normals(sm, boost::make_assoc_property_map(face_normals));
-
     auto pm = get(CGAL::vertex_point, sm);
     unsigned count = 0;
+
+    b_triangles.clear();
     for (auto fd: faces(sm)) {
         auto n = face_normals[fd];
         for (auto vd: vertices_around_face(halfedge(fd, sm), sm)) {
-            position.storage.emplace_back(to_glm(pm[vd]));
-            normal.storage.emplace_back(to_glm(n));
-            color.storage.emplace_back(to_glm(CGAL::green()));
+            b_triangles.push(to_glm(pm[vd]), to_glm(n), to_glm(CGAL::green()));
             count++;
         }
         assert(count % 3 == 0);
     }
-    // }
-
-    for (auto* ab: {&position, &normal, &color}) {
-        gl::buffer_data(*ab);
-    }
+    b_triangles.update();
+    set_dirty();
 }
 
-void run_context::draw()
+void geom_viewer::draw()
 {
     glClearColor(0.69, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDrawArrays(GL_TRIANGLES, 0, std::size(position.storage));
+
+    b_triangles.draw();
 
     SDL_GL_SwapWindow(window.get());
 }
 
-void run_context::step()
+void geom_viewer::step(SDL_Event event)
 {
-    SDL_Event event;
-    SDL_WaitEvent(&event);
-
-    kd.scan();
-
     switch (event.type) {
-    case SDL_QUIT: { _quit = true; return; }
-    case SDL_KEYDOWN: { kd.press(event.key.keysym); break; }
+    case SDL_QUIT: { should_quit(true); return; }
+    case SDL_KEYDOWN: { keys.press(event.key.keysym); break; }
     }
 
-    if (_dirty) {
-        _dirty = false;
-        update_model();
+    keys.scan();
+
+    if (is_dirty()) {
         draw();
+        set_dirty(false);
     }
 }

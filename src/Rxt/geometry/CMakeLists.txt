@@ -1,10 +1,12 @@
 # Rxt geometry
 
-# set(CGAL_DIR "/usr/lib/x86_64-linux-gnu/cmake/CGAL")
-# set(CGAL_DIR $ENV{HOME}/fork/CGAL/build)
-find_package(CGAL REQUIRED)
+if(EMSCRIPTEN)
+    message(WARNING "Rxt::Geometry does not support Emscripten and will not be built")
+    return()
+endif()
+
+find_package(CGAL 5.0 REQUIRED)
 include(${CGAL_USE_FILE})
-find_package(Boost 1.68 REQUIRED) # using property_map
 
 set(_HEADERS
     surface.hpp
@@ -19,21 +21,16 @@ set(_HEADERS
 set(_SOURCES
     geometry.cpp
 )
+
 add_library(RxtGeometry ${_HEADERS} ${_SOURCES})
-add_library(Rxt::Geometry ALIAS RxtGeometry)
+_add_component(Geometry)
 
-use_stdlib(RxtGeometry ${_STDLIB_DIR} ${_STDLIB_LIBDIR})
-target_include_directories(RxtGeometry PUBLIC
-    $<BUILD_INTERFACE:${_INCLUDE_DIR}>
-    $<INSTALL_INTERFACE:${_INCLUDE_DEST}>
-)
-# TODO: should be private?
 target_include_directories(RxtGeometry PUBLIC ${CGAL_INCLUDE_DIRS})
+_link_boost(RxtGeometry) # using property_map
 
+# also: CGAL_ImageIO, CGAL_3RD_PARTY_LIBRARIES
 target_link_directories(RxtGeometry PUBLIC ${CGAL_LIBRARY_DIRS})
 target_link_libraries(RxtGeometry ${CGAL_LIBRARIES})
-# target_link_libraries(RxtGeometry CGAL_ImageIO)
-# target_link_libraries(RxtGeometry ${CGAL_3RD_PARTY_LIBRARIES})
 
 # target_compile_definitions(RxtGeometry PRIVATE ${CGAL_CXX_FLAGS_DEBUG_INIT}) # XXX adds "-D-g"
 # target_compile_definitions(RxtGeometry PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_FEATURES)
@@ -46,4 +43,4 @@ install(FILES ${_HEADERS}
     DESTINATION "${_INCLUDE_DEST}/Rxt/geometry"
     COMPONENT Geometry)
 
-install_component(Geometry)
+_install_component(Geometry)

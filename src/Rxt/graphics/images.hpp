@@ -21,7 +21,7 @@ auto load_image(std::string path, int& width, int& height)
         dbg::print("Failed to load image (at {0})\n", path.c_str());
     }
 
-    std::unique_ptr<unsigned char, void(*)(void*)> ret(image, &stbi_image_free);
+    std::unique_ptr<unsigned char, void(*)(void*)> ret{image, &stbi_image_free};
     return ret;
 }
 }

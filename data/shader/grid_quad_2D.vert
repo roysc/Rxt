@@ -1,20 +1,20 @@
 #version 450
+precision highp float;
 
 uniform ivec2 viewportPosition;
-uniform vec2 viewportScale;
 
-in ivec2 gridPosition;
-in ivec2 quadSize;
+in ivec2 quadPosition;
+in uvec2 quadSize;
 in vec4 color;
 
 out vec4 color_vert;
-out vec2 tileSize;
+out uvec2 tileSize;
 
 void main()
 {
-    vec2 p = (gridPosition - viewportPosition) / vec2(viewportScale);
-    gl_Position = vec4(p, 0, 1);
+    vec2 pos = vec2(quadPosition - viewportPosition);
+    gl_Position = vec4(pos, 0, 0);
 
     color_vert = color;
-    tileSize = vec2(quadSize) / viewportScale;
+    tileSize = quadSize;
 }

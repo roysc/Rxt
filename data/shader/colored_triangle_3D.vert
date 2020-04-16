@@ -1,4 +1,5 @@
-#version 450
+#version 300 es
+precision highp float;
 
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec3 vertex_normal;
@@ -18,7 +19,6 @@ uniform vec3 light_position;
 void main()
 {
     gl_Position = MVP * vec4(vertex_position, 1);
-    // gl_PointSize = 5.0;
 
     position_world = (M * vec4(vertex_position, 1)).xyz;
     normal_camera = (V * M * vec4(vertex_normal, 0)).xyz;
