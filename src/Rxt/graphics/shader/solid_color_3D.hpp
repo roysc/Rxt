@@ -5,36 +5,31 @@
 namespace Rxt::shader_programs
 {
 template <GLenum> struct solid_color_3D_data;
-template <GLenum mode>
-using solid_color_3D = gl::derived_program<solid_color_3D_data<mode>>;
+template <GLenum Mode>
+using solid_color_3D = gl::derived_program<solid_color_3D_data<Mode>>;
 
-template <GLenum mode>
+template <GLenum Mode>
 struct solid_color_3D_data
 {
     static const char* program_name() { return "solid_color_3D"; }
 
+    static constexpr GLenum draw_mode = Mode;
+
     using position_vec = glm::vec3;
     using color_vec = glm::vec3;
-    static constexpr GLenum draw_mode = mode;
+    using vertex = std::tuple<position_vec, color_vec>;
 
-    static_assert(draw_mode == GL_POINTS || draw_mode == GL_LINES);
-
-    solid_color_3D<mode>& prog;
+    solid_color_3D<draw_mode>& prog;
     gl::vao va;
     gl::attribuf<position_vec> position {prog, "vertexPosition"};
     gl::attribuf<color_vec> color {prog, "vertexColor"};
     gl::uniform<glm::mat4> mvp_matrix {prog, "MVP"};
 
-    solid_color_3D_data(solid_color_3D<mode>& p)
+    solid_color_3D_data(solid_color_3D<draw_mode>& p)
         : prog(p)
     {
-        gl::use_guard _p(prog);
-        gl::bind_vao_guard _a(va);
-
-        gl::attrib_buffer(position);
-        gl::attrib_buffer(color);
-        glEnableVertexArrayAttrib(va, position);
-        glEnableVertexArrayAttrib(va, color);
+        position.enable(va);
+        color.enable(va);
     }
 
     void update()

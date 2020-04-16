@@ -1,31 +1,28 @@
 #pragma once
 
+#include <Rxt/runtime.hpp>
 #include <Rxt/graphics/sdl.hpp>
 #include <Rxt/graphics/gl.hpp>
 #include <Rxt/graphics/camera.hpp>
+#include <Rxt/graphics/shader/colored_triangle_3D.hpp>
 
 namespace sdl = Rxt::sdl;
 namespace gl = Rxt::gl;
+using Rxt::shader_programs::colored_triangle_3D;
 
-struct run_context : public gl::program_loader
+struct geom_viewer : public virtual sdl::simple_gui
+                   , public virtual Rxt::runtime
 {
-    sdl::window_ptr window;
-    sdl::key_dispatcher kd;
+    sdl::key_dispatcher keys;
     Rxt::focused_camera camera;
-    bool _quit = false;
-    bool _dirty = true;
 
-    using AB = gl::attribuf<glm::vec3>;
-    gl::program prog;
-    gl::vao va;
-    gl::vbo vb;
-    AB position, normal, color;
+    gl::program_loader loader;
+    colored_triangle_3D prog{loader};
+    colored_triangle_3D::data b_triangles{prog};
 
-    run_context(sdl::window_ptr);
-    ~run_context();
-    bool should_quit() const { return _quit; }
-    void step();
+    geom_viewer();
 
+    void step(SDL_Event);
     void draw();
     void update_camera();
     void update_model();

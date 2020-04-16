@@ -1,4 +1,5 @@
-#version 450
+#version 300 es
+precision highp float;
 
 in vec3 color;
 in vec3 position_world;
@@ -23,8 +24,8 @@ void main()
     vec3 L = normalize(light_dir_camera);
     vec3 E = normalize(eye_dir_camera);
     vec3 R = reflect(-L, N);
-    float cos_theta = clamp(dot(N, L), 0, 1);
-    float cos_alpha = clamp(dot(E, R), 0, 1);
+    float cos_theta = clamp(dot(N, L), 0., 1.);
+    float cos_alpha = clamp(dot(E, R), 0., 1.);
 
     vec3 to_light = light_position - position_world;
     float light_dist2 = dot(to_light, to_light);
@@ -32,5 +33,5 @@ void main()
     out_color.rgb =
         material_ambient_color +
         material_diffuse_color * light_color * light_power * cos_theta / light_dist2 +
-        material_specular_color * light_color * light_power * pow(cos_alpha, 5) / light_dist2;
+        material_specular_color * light_color * light_power * pow(cos_alpha, 5.) / light_dist2;
 }

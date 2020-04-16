@@ -23,12 +23,12 @@ gl::program file_loader::find_program(std::string name) const
         }
 
         gl::shader sh(kind, Rxt::read_file(path).c_str());
-        _log_result(sh, GL_COMPILE_STATUS, path.c_str());
+        log_result(sh, GL_COMPILE_STATUS, path.c_str());
         glAttachShader(ret, sh);
     }
 
     glLinkProgram(ret);
-    _log_result(ret, GL_LINK_STATUS, "program");
+    log_result(ret, GL_LINK_STATUS, "program");
     return ret;
 }
 }
