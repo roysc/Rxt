@@ -103,11 +103,11 @@ void grid_world::draw()
     this->b_texs.draw();
     this->b_quads.draw();
 
-    { // todo: use UBOs and ubo_guard
-        Rxt::gl::uniform<grid_coord> u_vpos {quad_prog, "viewportPosition"};
-        set(u_vpos, grid_coord{0});
+    {
+        auto& vp = quad_prog.u_.viewport_position;
+        set(vp, grid_coord{0});
         this->b_quads_sticky.draw();
-        set(u_vpos, viewport_position);
+        set(vp, viewport_position);
     }
     SDL_GL_SwapWindow(window.get());
 }
@@ -134,7 +134,7 @@ void grid_world::update_cursor()
     if (auto select = get_mode<grid_selection>()) {
         // render cursor drag area
         if (auto& origin = select->drag_origin) {
-            auto [a, b] = Rxt::ordered(*origin, cursor_position);
+            auto [a, b] = Rxt::box(*origin, cursor_position);
             pos = a;
             size = b - a + 1;
         }
@@ -173,7 +173,7 @@ void grid_world::h_mouse_up(SDL_MouseButtonEvent button)
     case SDL_BUTTON_LEFT: {
         if (auto select = get_mode<grid_selection>()) {
             if (auto& origin = select->drag_origin) {
-                auto [a, b] = Rxt::ordered(*origin, cursor_position);
+                auto [a, b] = Rxt::box(*origin, cursor_position);
                 select->selection.emplace(a + viewport_position, b - a + 1);
                 select->drag_origin = {};
                 this->update_cursor();
@@ -194,7 +194,7 @@ void grid_world::h_edge_scroll()
     for (unsigned i = 0; i < dv.length(); ++i) {
         if (offset_pos[i] == 0) {
             dv[i] = -1;
-        } else if (offset_pos[i] + 1 == viewport_size[i]) {
+        } else if (offset_pos[i] + 1 == (int)viewport_size[i]) {
             dv[i] = +1;
         }
     }

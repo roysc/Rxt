@@ -5,8 +5,6 @@
 
 namespace Rxt::sdl
 {
-// Convenient gui class with T = user data
-// T: default constructible
 struct simple_gui
 {
     const unsigned width, height;
@@ -41,4 +39,36 @@ struct simple_gui
         return ret;
     }
 };
+
+template <class T>
+struct _input_handler
+{
+    void handle_input(SDL_Event event)
+    {
+        T& derived = static_cast<T&>(*this);
+
+        switch (event.type) {
+        case SDL_QUIT: { derived.on_quit(); break; }
+        case SDL_KEYDOWN: { derived.on_key_down(event.key.keysym); break; }
+        case SDL_MOUSEBUTTONDOWN: { derived.on_mouse_down(event.button); break; }
+        case SDL_MOUSEBUTTONUP: { derived.on_mouse_up(event.button); break; }
+        case SDL_MOUSEMOTION: { derived.on_mouse_motion(event.motion); break; }
+        case SDL_MOUSEWHEEL: { derived.on_mouse_wheel(event.wheel); break; }
+        }
+    }
+};
+
+template <class T>
+struct _null_handler : public _input_handler<T>
+{
+    void on_quit() {}
+    void on_key_down(SDL_Keysym) {}
+    void on_mouse_down(SDL_MouseButtonEvent) {}
+    void on_mouse_up(SDL_MouseButtonEvent) {}
+    void on_mouse_motion(SDL_MouseMotionEvent) {}
+    void on_mouse_wheel(SDL_MouseWheelEvent) {}
+};
+
+template <class T, bool default_members = false>
+using input_handler = std::conditional_t<default_members, _null_handler<T>, _input_handler<T>>;
 }

@@ -22,11 +22,8 @@ if(EMSCRIPTEN)
     set(RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE CMAKE_FIND_ROOT_PATH_BOTH)
 endif()
 
-# Collect a list of all registered components
-set(RXT_AVAILABLE_COMPONENTS)
-
 # Use correct std headers - FIXME better way to do it?
-function(_use_libpath _TGT _LIBPATH_PREFIX)
+function(_use_libstd_path _TGT _LIBPATH_PREFIX)
     if(EMSCRIPTEN)
         return()
     endif()
@@ -41,6 +38,10 @@ function(_use_libpath _TGT _LIBPATH_PREFIX)
 
     # FIXME better way?
     target_link_options(Rxt${_COMP} PUBLIC -L${_LIBPATH_PREFIX}/lib -Wl,-rpath,${_LIBPATH_PREFIX}/lib)
+
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+        target_compile_options(${_TGT} PUBLIC -D_GLIBCXX_DEBUG) #(-D_LIBCPP_DEBUG=1)
+    endif()
 endfunction()
 
 function(_add_component _COMP)
@@ -57,10 +58,12 @@ function(_add_component _COMP)
         target_compile_definitions(Rxt${_COMP} PUBLIC RXT_DISABLE_FMT)
     endif()
 
-    _use_libpath(Rxt${_COMP} ${_LOCAL_PREFIX})
+    _use_libstd_path(Rxt${_COMP} ${_LOCAL_PREFIX})
 endfunction()
 
-# Per-componenet package installation
+# Per-Component configuration
+# Collect a list of registered components
+set(RXT_AVAILABLE_COMPONENTS)
 function(_install_component _COMP)
     list(APPEND RXT_AVAILABLE_COMPONENTS ${_COMP})
 
@@ -98,11 +101,6 @@ function(_use_boost _TARGET)
     Rxt_emscripten_use_boost(${_TARGET})
 endfunction()
 
-add_compile_options(-Wall -Werror=return-type) # -Wpedantic -Wunused
-if(EMSCRIPTEN)
-    add_compile_options(-fno-diagnostics-color)
-endif()
-
 # Define base library
 set(_HEADERS
     ${_SOURCE_DIR}/_debug.hpp
@@ -110,10 +108,8 @@ set(_HEADERS
     ${_SOURCE_DIR}/io.hpp
     ${_SOURCE_DIR}/math.hpp
     ${_SOURCE_DIR}/range.hpp
-    ${_SOURCE_DIR}/runtime.hpp
     ${_SOURCE_DIR}/time.hpp
     ${_SOURCE_DIR}/util.hpp
-    ${_SOURCE_DIR}/vec.hpp
     ${_SOURCE_DIR}/meta.hpp
 )
 set(_SOURCES
@@ -162,11 +158,16 @@ foreach(_TEST meta io time range)
 endforeach()
 _use_boost(test_range)
 
+make_test(io io.test.cpp)
+target_link_libraries(test_io RxtBase)
+
+make_test(meta meta.test.cpp)
+target_link_libraries(test_meta RxtBase)
+
 # Component libs
 add_subdirectory(data)
 add_subdirectory(geometry)
 add_subdirectory(graphics)
-add_subdirectory(demo)
 
 # Packaging
 set(_config_file "${PROJECT_BINARY_DIR}/cmake/RxtConfig.cmake")

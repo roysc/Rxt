@@ -5,10 +5,10 @@
 
 namespace Rxt
 {
+// sort the corners and return canonical form
 template <class T>
-std::pair<T, T> ordered(T a, T b)
+std::pair<T, T> box(T a, T b)
 {
-    using std::swap;
     auto a_ = min(a, b);
     auto b_ = max(a, b);
     return std::make_pair(a_, b_);
@@ -43,4 +43,19 @@ struct lazy_action
         return 0;
     }
 };
+
+struct runtime
+{
+    bool _running = true;
+
+    bool should_quit() const { return !_running; }
+    void should_quit(bool v) { _running = !v; }
+
+    virtual ~runtime() {}
+};
+
+using simple_runtime = runtime;
+
+template <class R>
+bool exited(R const& rt) { return rt.should_quit(); }
 }

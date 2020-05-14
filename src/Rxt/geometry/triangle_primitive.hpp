@@ -1,9 +1,7 @@
 #pragma once
 
 #include "mesh_traits.hpp"
-
-#include <Rxt/iterator.hpp>
-#include <Rxt/geometry/helper.hpp>
+#include "helper.hpp"
 
 #include <CGAL/Point_3.h>
 #include <CGAL/Triangle_3.h>

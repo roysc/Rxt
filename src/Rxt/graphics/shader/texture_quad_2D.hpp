@@ -10,6 +10,7 @@ using texture_quad_2D = gl::derived_program<texture_quad_2D_data>;
 
 struct texture_quad_2D_data
 {
+    using program_type = texture_quad_2D;
     static const char* program_name() { return "texture_quad_2D"; }
 
     static constexpr GLenum draw_mode = GL_TRIANGLES;
@@ -19,30 +20,38 @@ struct texture_quad_2D_data
     using tex_coord_vec = glm::vec2;
     using vertex = std::tuple<position_vec, tex_coord_vec>;
 
-    texture_quad_2D& prog;
+    program_type& prog;
     gl::vao va;
     gl::texture tex;
-    gl::attribuf<glm::vec2> position {prog, "position"};
-    gl::attribuf<glm::vec2> tex_coord {prog, "texCoord"};
+    gl::attribuf<glm::vec2> position {program(), "position"};
+    gl::attribuf<glm::vec2> tex_coord {program(), "texCoord"};
     gl::buffer<GLuint> elements;
 
-    // gl::uniform<glm::mat4> view_matrix{prog, "viewMatrix"}; // todo ubo
+    struct uniforms
+    {
+        program_type& prog;
+        gl::uniform<glm::mat4> view_matrix{prog, "viewMatrix"}; // todo ubo
+    };
 
-    texture_quad_2D_data(texture_quad_2D& p)
+    program_type& program() { return prog; }
+    // uniforms* operator->() { return &program().u_; }
+
+    texture_quad_2D_data(program_type& p)
+        // : program_buffers<program_type>(p)
         : prog(p)
     {
-        gl::use_guard _p(prog);
+        gl::use_guard _p(program());
         gl::bind_vao_guard _a(va);
 
         position.enable(va);
         tex_coord.enable(va);
 
-        gl::set_uniform(prog, "texUnit", 0);
+        gl::set_uniform(program(), "texUnit", 0);
     }
 
     void update()
     {
-        gl::use_guard _p(prog);
+        gl::use_guard _p(program());
         gl::bind_vao_guard _a(va);
 
         position.storage = {{-1, 1}, {1, 1}, {1, -1}, {-1, -1}};
@@ -55,7 +64,7 @@ struct texture_quad_2D_data
 
     void draw()
     {
-        gl::use_guard _p(prog);
+        gl::use_guard _p(program());
         gl::bind_vao_guard _a(va);
         gl::bind_texture_guard _t(GL_TEXTURE_2D, tex);
         gl::bind_buffer_guard _b(GL_ELEMENT_ARRAY_BUFFER, elements.vbo);

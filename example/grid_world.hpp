@@ -3,9 +3,9 @@
 #include "grid_space.hpp"
 #include "grid_context.hpp"
 
-#include <Rxt/graphics/sdl.hpp>
-#include <Rxt/graphics/color.hpp>
-#include <Rxt/runtime.hpp>
+#include "Rxt/graphics/sdl.hpp"
+#include "Rxt/graphics/color.hpp"
+#include "Rxt/util.hpp"
 
 #include <optional>
 #include <variant>

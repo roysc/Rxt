@@ -24,7 +24,7 @@ bool equivalent(A const& a, B const& b)
     auto ai = begin(a);
     using Set = std::set<std::decay_t<decltype((*ai))>>;
     return Set{begin(a), end(a)} == Set{begin(b), end(b)};
-};
+}
 
 TEST_CASE("adjacency table") {
     // create a 2-valent graph

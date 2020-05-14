@@ -35,4 +35,10 @@ struct file_loader
     gl::program find_program(std::string name) const;
 };
 using program_loader = file_loader; // fixme
+
+inline file_loader& default_program_loader()
+{
+    thread_local file_loader thread_loader;
+    return thread_loader;
+}
 }

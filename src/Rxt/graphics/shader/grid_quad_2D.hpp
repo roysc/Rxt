@@ -4,6 +4,10 @@
 
 #include <tuple>
 
+#ifdef RXT_WEBGL2
+  #include "webgl_grid_quad_2D.hpp"
+#else
+
 namespace Rxt::shader_programs
 {
 struct grid_quad_2D_data;
@@ -11,9 +15,8 @@ using grid_quad_2D = gl::derived_program<grid_quad_2D_data>;
 
 struct grid_quad_2D_data
 {
+    using program_type = grid_quad_2D;
     static const char* program_name() { return "grid_quad_2D"; }
-
-    static constexpr GLenum draw_mode = GL_POINTS;
 
     using position_vec = glm::ivec2;
     using size_vec = glm::uvec2;
@@ -21,17 +24,28 @@ struct grid_quad_2D_data
     using vertex = std::tuple<position_vec, size_vec, color_vec>;
     using size_type = std::size_t;
 
-    grid_quad_2D& prog;
+    static constexpr GLenum draw_mode = GL_POINTS;
+
+    program_type& prog;
     gl::vao va;
-    gl::attribuf<position_vec> position {prog, "quadPosition"};
-    gl::attribuf<size_vec> size {prog, "quadSize"};
-    gl::attribuf<color_vec> color {prog, "color"};
 
-    // todo needs ubo
-    // gl::uniform<glm::ivec2> viewport_position{prog, "viewportPosition"};
-    // gl::uniform<glm::uvec2> viewport_size{prog, "viewportSize"};
+    // struct buffers
+    // {
+        gl::attribuf<position_vec> position {prog, "quadPosition"};
+        gl::attribuf<size_vec> size {prog, "quadSize"};
+        gl::attribuf<color_vec> color {prog, "color"};
+    // };
 
-    grid_quad_2D_data(grid_quad_2D& p) : prog(p)
+    struct uniforms
+    {
+        program_type& prog;
+        gl::uniform<glm::ivec2> viewport_position{prog, "viewportPosition"};
+        gl::uniform<glm::uvec2> viewport_size{prog, "viewportSize"};
+    };
+
+    program_type& program() { return prog; }
+
+    grid_quad_2D_data(program_type& p) : prog(p)
     {
         position.enable(va);
         size.enable(va);
@@ -69,6 +83,12 @@ struct grid_quad_2D_data
         color.storage.push_back(c);
     }
 
+    void push(vertex v)
+    {
+        auto [p, s, c] = v;
+        push(p, s, c);
+    }
+
     void set(size_type index, vertex v)
     {
         position.storage.at(index) = std::get<0>(v);
@@ -76,4 +96,14 @@ struct grid_quad_2D_data
         color.storage.at(index) = std::get<2>(v);
     }
 };
+}
+#endif
+
+namespace Rxt::shader_programs::webcompat
+{
+#ifdef RXT_WEBGL2
+using Rxt::shader_programs::webgl::grid_quad_2D;
+#else
+using Rxt::shader_programs::grid_quad_2D;
+#endif
 }

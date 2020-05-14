@@ -3,6 +3,7 @@
 #include "gl_core.hpp"
 #include "gl_data.hpp"
 #include "gl_guard.hpp"
+#include "gl_loader.hpp"
 
 #include <vector>
 #include <utility>
@@ -77,15 +78,31 @@ void attribuf<T>::enable(vao& va)
     enable_attrib(*this, va);
 }
 
+namespace _det
+{
+template <class D>
+using program_uniforms_t = typename D::uniforms;
+
+struct _empty { template <class... Ts> _empty(Ts&&...) {} };
+
+template <class T>
+using uniforms_base =
+    std::experimental::detected_or_t<_empty, program_uniforms_t, T>;
+}
+
 template <class Data>
 struct derived_program : public program
 {
     using data = Data;
     using vertex = typename Data::vertex;
 
-    template <class Loader>
-    derived_program(Loader const& loader)
+    using uniforms = _det::uniforms_base<Data>;
+    uniforms u_{*this};
+
+    derived_program(program_loader const& loader = default_program_loader())
         : program{loader.find_program(data::program_name())}
     {}
+
+    uniforms* operator->() { return &u_; }
 };
 }

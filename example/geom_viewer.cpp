@@ -1,9 +1,10 @@
 #include "geom_viewer.hpp"
 
-#include <Rxt/_debug.hpp>
-#include <Rxt/graphics/glm.hpp>
-#include <Rxt/geometry/helper.hpp>
-#include <Rxt/geometry/shapes.hpp>
+#include "Rxt/_debug.hpp"
+#include "Rxt/util.hpp"
+#include "Rxt/graphics/glm.hpp"
+#include "Rxt/geometry/helper.hpp"
+#include "Rxt/geometry/shapes.hpp"
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Surface_mesh.h>
@@ -56,7 +57,7 @@ geom_viewer::geom_viewer()
     // glEnable(GL_BLEND);
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    set(b_triangles.light_position, glm::vec3{15, 0, 15});
+    set(prog->light_position, glm::vec3{15, 0, 15});
 
     update_model();
     update_camera();
@@ -70,9 +71,9 @@ void geom_viewer::update_camera()
     auto model_matrix = camera.model_matrix();
     auto mvp_matrix   = camera.projection_matrix() * view_matrix * model_matrix;
 
-    set(b_triangles.model_matrix, model_matrix);
-    set(b_triangles.view_matrix, view_matrix);
-    set(b_triangles.mvp_matrix, mvp_matrix);
+    set(prog->model_matrix, model_matrix);
+    set(prog->view_matrix, view_matrix);
+    set(prog->mvp_matrix, mvp_matrix);
 
     set_dirty();
 }

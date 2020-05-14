@@ -15,12 +15,12 @@
 
 namespace Rxt
 {
-template <class I>
+template <class I, class E = I>
 struct range_adaptor
 {
-    I first, second;
+    I first; E second;
     I begin() const { return this->first; }
-    I end() const { return this->second; }
+    E end() const { return this->second; }
 };
 
 // iterator pair to range
@@ -35,6 +35,13 @@ auto to_range(std::optional<T>& p)
 {
     auto* ptr = &*p;
     return range_adaptor<T*> {ptr, (p ? ptr + 1 : ptr)};
+}
+
+template <class T>
+auto to_range(std::optional<T> const& p)
+{
+    auto* ptr = &*p;
+    return range_adaptor<T const*> {ptr, (p ? ptr + 1 : ptr)};
 }
 
 // Given a map M (k -> v) with iterator Mi, output pairs (k, r) for all equal-ranges r:(Mi, Mi) in M

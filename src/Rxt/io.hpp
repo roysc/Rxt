@@ -12,6 +12,11 @@
 #include <fstream>
 #include <sstream>
 
+#define Rxt_DEBUG_impl(var_) (::Rxt::print("[DEBUG] " #var_ " = {}\n", (var_)))
+// #define Rxt_DEBUG_rec(var_, ...) (Rxt_DEBUG_impl(var_), Rxt_DEBUG_rec(__VA_ARGS__))
+
+#define Rxt_DEBUG(...) Rxt_DEBUG_impl(__VA_ARGS__)
+
 namespace Rxt
 {
 #ifndef RXT_DISABLE_FMT

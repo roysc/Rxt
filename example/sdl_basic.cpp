@@ -1,4 +1,4 @@
-#include <Rxt/graphics/sdl.hpp>
+#include "Rxt/graphics/sdl.hpp"
 
 #include <exception>
 #include <iostream>
@@ -12,7 +12,7 @@ struct loop_state
     loop_state(sdl::window_ptr) {}
     bool should_quit() const { return count >= 10; }
 
-    void step(SDL_Event event)
+    void step(SDL_Event)
     {
         std::cout << (1 + count++) << " steps\n";
         if (should_quit())
