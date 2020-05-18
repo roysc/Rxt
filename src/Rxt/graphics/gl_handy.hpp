@@ -104,4 +104,26 @@ struct derived_program : public program
 
     uniforms* operator->() { return &u_; }
 };
+
+template <class Prog>
+struct buffers
+{
+    Prog _p;
+    typename Prog::data _data{_p};
+
+    // buffers() : _data{_p} {}
+
+    Prog& get_program() { return _p; }
+
+    // std::variant<grid_program*, grid_program> _pp;
+    // buffers(Prog& p) : _pp{&p} {}
+
+    // grid_program& get_program()
+    // {
+    //     auto v = overload {[](grid_program* p) {return *p;}, [](grid_program& p) {return p;}};
+    //     return visit(v, _pp);
+    // }
+
+    typename Prog::uniforms* operator->() { return &get_program().u_; }
+};
 }
