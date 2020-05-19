@@ -171,7 +171,7 @@ add_subdirectory(graphics)
 
 # Packaging
 set(_config_file "${PROJECT_BINARY_DIR}/cmake/RxtConfig.cmake")
-set(_version_file "${PROJECT_BINARY_DIR}/cmake/RxtVersionConfig.cmake")
+set(_version_file "${PROJECT_BINARY_DIR}/cmake/RxtConfigVersion.cmake")
 set(CMAKE_INSTALL_MODULEDIR ${_CMAKE_MODULE_DEST})
 
 configure_package_config_file(
