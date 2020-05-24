@@ -2,8 +2,7 @@
 
 #include "../_debug.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <SOIL/SOIL.h>
 
 #include <utility>
 #include <memory>
@@ -11,17 +10,17 @@
 
 namespace Rxt
 {
-auto load_image(std::string path, int& width, int& height)
+auto load_image(const char* path, int& width, int& height)
 {
     int nchannels;
-    auto image = stbi_load(path.c_str(), &width, &height, &nchannels, 0);
+    auto image = SOIL_load_image(path, &width, &height, &nchannels, SOIL_LOAD_RGB);
     if (image) {
-        dbg::print("stbi load: [w, h, nc]=[{0},{1},{2}]\n", width, height, nchannels);
+        dbg::print("Image load: [w, h, nc]=[{0},{1},{2}]\n", width, height, nchannels);
     } else {
-        dbg::print("Failed to load image (at {0})\n", path.c_str());
+        dbg::print("Failed to load image (at {0})\n", path);
     }
 
-    std::unique_ptr<unsigned char, void(*)(void*)> ret{image, &stbi_image_free};
+    std::unique_ptr<unsigned char, void(*)(unsigned char*)> ret{image, &SOIL_free_image_data};
     return ret;
 }
 }
