@@ -89,11 +89,10 @@ struct grid_quad_2D_data
         push(p, s, c);
     }
 
-    void set(size_type index, vertex v)
+    template <class VData>
+    void set_from(VData const& vd)
     {
-        position.storage.at(index) = std::get<0>(v);
-        size.storage.at(index) = std::get<1>(v);
-        color.storage.at(index) = std::get<2>(v);
+        for (auto& v: vd) push(v);
     }
 };
 }
