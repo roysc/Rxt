@@ -40,5 +40,19 @@ inline const rgb sand = rgb_hex(0xCABB90);
 inline const rgb water = rgb_hex(0xB3D1E5);
 inline const rgb hot_pink = rgb_hex(0xFF69B4);
 inline const rgb russet = rgb_hex(0x80461B);
+
+// inline const rgba blank {0};
+}
+
+using palette = std::vector<rgb>;
+inline palette default_palette()
+{
+    return palette {
+        colors::black,
+        colors::white,
+        colors::red,
+        colors::green,
+        colors::blue
+    };
 }
 }
