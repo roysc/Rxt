@@ -140,14 +140,26 @@ install(FILES ${_HEADERS}
 _install_component(${RXT_BASE})
 
 # Tests
-function(make_test _NAME _SOURCES)
-    add_executable(test_${_NAME} ${_SOURCES})
-    target_include_directories(test_${_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/external)
+function(make_test _NAME)
+    set(_options USES_BOOST)
+    set(_oneValueArgs)
+    set(_multiValueArgs FILES INCLUDE LINK)
+    cmake_parse_arguments(_TEST "${_options}" "${_oneValueArgs}" "${_multiValueArgs}" ${ARGN})
+
+    add_executable(test_${_NAME} ${_TEST_FILES})
     add_test(NAME test_${_NAME} COMMAND ${_NAME})
+
+    target_link_libraries(test_${_NAME} PUBLIC ${_TEST_LINK})
+    target_include_directories(test_${_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/external)
+    target_include_directories(test_${_NAME} PUBLIC ${_TEST_INCLUDE})
+    set_target_properties(test_${_NAME}
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 endfunction()
 
-make_test(range range.test.cpp)
-target_link_libraries(test_range RxtBase)
+foreach(_TEST meta io time range)
+    make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtBase)
+endforeach()
 _use_boost(test_range)
 
 # Component libs
