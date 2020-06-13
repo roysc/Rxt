@@ -19,10 +19,6 @@ function(Rxt_demo _NAME)
         set_target_properties(${_NAME} PROPERTIES SUFFIX "-webgl")
     endif()
 
-    if(${_RXT_DEMO_USES_BOOST})
-        _link_boost(${_NAME})
-    endif()
-
     target_link_libraries(${_NAME} PUBLIC ${_RXT_DEMO_LINK})
     target_include_directories(${_NAME} PUBLIC ${_RXT_DEMO_INCLUDE})
 endfunction()

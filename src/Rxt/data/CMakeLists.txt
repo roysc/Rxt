@@ -11,10 +11,10 @@ _add_component(Data)
 target_link_libraries(RxtData PUBLIC ${RXT_BASE_LIBRARY})
 _use_boost(RxtData graph)
 
-make_test(graph graph.test.cpp)
+make_test(graph FILES graph.test.cpp)
 target_link_libraries(test_graph RxtData)
 
-make_test(grid grid.test.cpp)
+make_test(grid FILES grid.test.cpp)
 target_link_libraries(test_grid RxtData)
 
 install(FILES ${_HEADERS}

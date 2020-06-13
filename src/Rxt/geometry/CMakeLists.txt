@@ -36,7 +36,7 @@ target_link_libraries(RxtGeometry ${CGAL_LIBRARIES})
 # target_compile_definitions(RxtGeometry PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_FEATURES)
 
 # make_test(surface)
-make_test(shapes shapes.test.cpp)
+make_test(shapes FILES shapes.test.cpp)
 target_link_libraries(test_shapes RxtGeometry)
 
 install(FILES ${_HEADERS}
