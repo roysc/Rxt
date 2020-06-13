@@ -1,16 +1,12 @@
 #pragma once
 #include "../_debug.hpp"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp>
-#include <glm/gtx/quaternion.hpp>
+#include "glm.hpp"
 
 #include <cmath>
 
 namespace Rxt
 {
-namespace _impl
+namespace _det
 {
 using glm::vec2;
 using glm::vec3;
@@ -29,42 +25,49 @@ quat rotation_between(vec3 v0, vec3 v1)
     return normalize(q);
 }
 
-struct focused_camera
+template <class Der>
+struct reactive_focus_cam
 {
     static constexpr float field_of_view = M_PI/4;
+    using position_type = vec3;
 
     vec3 _position;
     vec3 focus;
     vec3 up;
 
-    focused_camera(vec3 pos = vec3{0}, vec3 f = vec3{0}, vec3 u = vec3{0, 0, 1})
+    reactive_focus_cam(vec3 pos = vec3{0}, vec3 f = vec3{0}, vec3 u = vec3{0, 0, 1})
         : _position(pos)
         , focus(f)
         , up(u)
     { }
 
     vec3 position() const { return _position; }
-    void position(vec3 pos) { _position = pos; }
+
+    void position(vec3 pos)
+    {
+        _position = pos;
+        static_cast<Der&>(*this).on_update();
+    }
 
     // Rotate about focal point
     void orbit(quat rot)
     {
         auto rotmat = glm::mat4_cast(rot);
-        _position = vec3{rotmat * vec4{_position - focus, 0}} + focus;
+        position(vec3{rotmat * vec4{position() - focus, 0}} + focus);
         up = vec3{rotmat * vec4{up, 0}};
     }
 
     void translate(vec3 t)
     {
         auto tmat = glm::translate(t);
-        _position = vec3{tmat * vec4{_position, 1}};
+        position(vec3{tmat * vec4{position(), 1}});
         focus = vec3{tmat * vec4{focus, 1}};
     }
 
     void forward(float d)
     {
         auto tmat = glm::translate(d * orientation());
-        _position = vec3{tmat * vec4{_position, 1}};
+        position(vec3{tmat * vec4{position(), 1}});
     }
 
     mat4 model_matrix() const
@@ -87,6 +90,16 @@ struct focused_camera
     {
         return normalize(focus - _position);
     }
+};
+
+// null case
+struct no_hook { void on_update() {} };
+
+struct focused_camera
+    : reactive_focus_cam<focused_camera>, no_hook
+{
+    using reactive_base = reactive_focus_cam<focused_camera>;
+    using reactive_base::reactive_base;
 };
 
 template <class Cam>
@@ -121,9 +134,10 @@ std::pair<vec3, vec3> cast_ray(vec2 coord_nds, Cam const& cam)
 }
 }
 
-using _impl::focused_camera;
-using _impl::unview;
-using _impl::unproject;
-using _impl::cast_ray;
-using _impl::rotation_between;
+using _det::reactive_focus_cam;
+using _det::focused_camera;
+using _det::unview;
+using _det::unproject;
+using _det::cast_ray;
+using _det::rotation_between;
 }
