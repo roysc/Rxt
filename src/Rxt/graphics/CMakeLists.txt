@@ -110,3 +110,5 @@ install(FILES ${_HEADERS_SHADER}
     COMPONENT Graphics)
 
 _install_component(Graphics)
+
+make_test(camera FILES camera.test.cpp LINK Rxt::Graphics)
