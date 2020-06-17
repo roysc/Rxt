@@ -5,7 +5,7 @@
 #include "gl_handy.hpp"
 #include "_sdl_debug.hpp"
 
-#include <Rxt/meta.hpp>
+#include <Rxt/macro.hpp>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -35,7 +35,7 @@ struct sdl_context
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     }
 
-    RXT_CTORS_MOVE_ONLY(sdl_context);
+    RXT_def_ctors_move_only(sdl_context);
 };
 
 struct gl_context
