@@ -4,17 +4,24 @@
 namespace Rxt
 {
 TEST_CASE("focus_cam") {
+    glm::vec3 p1(1);
+    focus_cam cam{p1};
+    REQUIRE(cam.position() == p1);
+}
+
+TEST_CASE("focus_cam_crt") {
     int data = 0;
-    struct cam : reactive_focus_cam<cam>
+    using namespace _det;
+    struct camera : focus_cam_crt<camera>
     {
-        using reactive_focus_cam<cam>::reactive_focus_cam;
+        using focus_cam_crt<camera>::focus_cam_crt;
         int* data;
-        void on_update() { *data = 4; }
+        void set_position(position_type) { *data = 4; }
     };
 
-    using Pos = cam::position_type;
+    using Pos = camera::position_type;
     Pos p1{0}, p2{0};
-    cam c(p1); c.data = &data;
+    camera c(p1); c.data = &data;
     REQUIRE(c.position() == p1);
 
     c.position(p2);
