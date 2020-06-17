@@ -1,13 +1,6 @@
 #pragma once
 #include <type_traits>
 
-#define RXT_CTORS_MOVE_ONLY(name_)              \
-    name_(const name_&) = delete;               \
-    name_& operator=(const name_&) = delete;    \
-    name_(name_&&) = default;                   \
-    name_& operator=(name_&&) = default         \
-
-
 namespace Rxt
 {
 inline namespace meta

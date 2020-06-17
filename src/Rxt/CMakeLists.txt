@@ -111,6 +111,7 @@ set(_HEADERS
     ${_SOURCE_DIR}/time.hpp
     ${_SOURCE_DIR}/util.hpp
     ${_SOURCE_DIR}/meta.hpp
+    ${_SOURCE_DIR}/macro.hpp
 )
 set(_SOURCES
 )
@@ -153,7 +154,7 @@ function(make_test _NAME)
         RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 endfunction()
 
-foreach(_TEST meta io time range)
+foreach(_TEST meta io time range "macro")
     make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtBase)
 endforeach()
 _use_boost(test_range)
