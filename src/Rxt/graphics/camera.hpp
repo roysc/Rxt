@@ -27,7 +27,7 @@ struct focus_cam
     { }
 
     P position() const { return _position; }
-    void position(P pos) {_position = pos;}
+    virtual void position(P pos) {_position = pos;}
 
     // Rotate about focal point
     void orbit(glm::quat rot)
@@ -70,6 +70,8 @@ struct focus_cam
     {
         return normalize(focus - _position);
     }
+
+    virtual ~focus_cam() {}
 };
 using focused_camera = focus_cam;
 
@@ -81,14 +83,14 @@ using glm::vec4;
 using glm::mat4;
 using glm::quat;
 
-template <class Der>
-struct focus_cam_crt : focus_cam
-{
-    using focus_cam::focus_cam;
-    using focus_cam::position;
-    // crt api
-    void position(vec3 pos) { static_cast<Der&>(*this).set_position(pos); }
-};
+// template <class Der>
+// struct focus_cam_crt : focus_cam
+// {
+//     using focus_cam::focus_cam;
+//     using focus_cam::position;
+//     // crt api
+//     void position(vec3 pos) { static_cast<Der&>(*this).set_position(pos); }
+// };
 
 template <class Cam>
 vec3 unview(vec4 view, Cam const& cam)

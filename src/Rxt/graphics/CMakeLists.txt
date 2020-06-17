@@ -37,7 +37,7 @@ set(_HEADERS
     camera.hpp
     color.hpp
 
-    reactive.hpp
+    # reactive.hpp
 )
 
 set(_HEADERS_SHADER
