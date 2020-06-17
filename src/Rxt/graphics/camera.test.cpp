@@ -9,14 +9,15 @@ TEST_CASE("focus_cam") {
     REQUIRE(cam.position() == p1);
 }
 
-TEST_CASE("focus_cam_crt") {
+TEST_CASE("extending focus_cam") {
     int data = 0;
     using namespace _det;
-    struct camera : focus_cam_crt<camera>
+    struct camera : focus_cam
     {
-        using focus_cam_crt<camera>::focus_cam_crt;
+        using focus_cam::focus_cam;
+        using focus_cam::position;
         int* data;
-        void set_position(position_type) { *data = 4; }
+        void position(position_type) override { (*data)++; }
     };
 
     using Pos = camera::position_type;
@@ -26,6 +27,8 @@ TEST_CASE("focus_cam_crt") {
 
     c.position(p2);
     REQUIRE(c.position() == p2);
-    REQUIRE(data == 4);
+    REQUIRE(data == 1);
+    c.forward(1);
+    REQUIRE(data == 2);
 }
 }
