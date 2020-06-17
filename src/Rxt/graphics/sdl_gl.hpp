@@ -66,7 +66,7 @@ struct gl_context
         SDL_GL_DeleteContext(_gl);
     }
 
-    RXT_CTORS_MOVE_ONLY(gl_context);
+    RXT_def_ctors_move_only(gl_context);
 };
 
 // convenience
