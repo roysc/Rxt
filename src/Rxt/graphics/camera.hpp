@@ -6,6 +6,73 @@
 
 namespace Rxt
 {
+
+struct focus_cam
+{
+    static constexpr float field_of_view = M_PI/4;
+    using position_type = glm::vec3;
+    using matrix_type = glm::mat4;
+    using M = matrix_type;
+    using P = position_type;
+    using H = glm::vec4;
+
+    P _position;
+    P focus;
+    P up;
+
+    focus_cam(P pos = P{0}, P f = P{0}, P u = P{0, 0, 1})
+        : _position(pos)
+        , focus(f)
+        , up(u)
+    { }
+
+    P position() const { return _position; }
+    void position(P pos) {_position = pos;}
+
+    // Rotate about focal point
+    void orbit(glm::quat rot)
+    {
+        auto rotmat = glm::mat4_cast(rot);
+        position(P{rotmat * H{position() - focus, 0}} + focus);
+        up = P{rotmat * H{up, 0}};
+    }
+
+    void translate(P t)
+    {
+        auto tmat = glm::translate(t);
+        position(P{tmat * H{position(), 1}});
+        focus = P{tmat * H{focus, 1}};
+    }
+
+    void forward(float d)
+    {
+        auto tmat = glm::translate(d * orientation());
+        position(P{tmat * H{position(), 1}});
+    }
+
+    M model_matrix() const
+    {
+        return glm::translate(- _position);
+    }
+
+    M view_matrix() const
+    {
+        return glm::lookAt(_position, focus, up);
+    }
+
+    M projection_matrix() const
+    {
+        // FOV, aspect ratio, Z near, Z far
+        return glm::perspective(field_of_view, 1.f, 1.f, 100.f);
+    }
+
+    P orientation() const
+    {
+        return normalize(focus - _position);
+    }
+};
+using focused_camera = focus_cam;
+
 namespace _det
 {
 using glm::vec2;
@@ -14,92 +81,13 @@ using glm::vec4;
 using glm::mat4;
 using glm::quat;
 
-inline
-quat rotation_between(vec3 v0, vec3 v1)
-{
-    auto l0 = length(v0) * length(v0);
-    auto l1 = length(v1) * length(v1);
-    vec3 a = cross(v0, v1);
-    quat q {std::sqrt(l0 * l1) + dot(v0, v1), a.x, a.y, a.z};
-
-    return normalize(q);
-}
-
 template <class Der>
-struct reactive_focus_cam
+struct focus_cam_crt : focus_cam
 {
-    static constexpr float field_of_view = M_PI/4;
-    using position_type = vec3;
-
-    vec3 _position;
-    vec3 focus;
-    vec3 up;
-
-    reactive_focus_cam(vec3 pos = vec3{0}, vec3 f = vec3{0}, vec3 u = vec3{0, 0, 1})
-        : _position(pos)
-        , focus(f)
-        , up(u)
-    { }
-
-    vec3 position() const { return _position; }
-
-    void position(vec3 pos)
-    {
-        _position = pos;
-        static_cast<Der&>(*this).on_update();
-    }
-
-    // Rotate about focal point
-    void orbit(quat rot)
-    {
-        auto rotmat = glm::mat4_cast(rot);
-        position(vec3{rotmat * vec4{position() - focus, 0}} + focus);
-        up = vec3{rotmat * vec4{up, 0}};
-    }
-
-    void translate(vec3 t)
-    {
-        auto tmat = glm::translate(t);
-        position(vec3{tmat * vec4{position(), 1}});
-        focus = vec3{tmat * vec4{focus, 1}};
-    }
-
-    void forward(float d)
-    {
-        auto tmat = glm::translate(d * orientation());
-        position(vec3{tmat * vec4{position(), 1}});
-    }
-
-    mat4 model_matrix() const
-    {
-        return glm::translate(- _position);
-    }
-
-    mat4 view_matrix() const
-    {
-        return glm::lookAt(_position, focus, up);
-    }
-
-    mat4 projection_matrix() const
-    {
-        // FOV, aspect ratio, Z near, Z far
-        return glm::perspective(field_of_view, 1.f, 1.f, 100.f);
-    }
-
-    vec3 orientation() const
-    {
-        return normalize(focus - _position);
-    }
-};
-
-// null case
-struct no_hook { void on_update() {} };
-
-struct focused_camera
-    : reactive_focus_cam<focused_camera>, no_hook
-{
-    using reactive_base = reactive_focus_cam<focused_camera>;
-    using reactive_base::reactive_base;
+    using focus_cam::focus_cam;
+    using focus_cam::position;
+    // crt api
+    void position(vec3 pos) { static_cast<Der&>(*this).set_position(pos); }
 };
 
 template <class Cam>
@@ -114,9 +102,9 @@ vec4 unproject(vec4 hcs, Cam const& cam)
     return vec4{inverse(cam.projection_matrix()) * hcs};
 }
 
-// Source: http://antongerdelan.net/opengl/raycasting.html
 // Given a coordinate in NDS and a camera object, returns ray pointing into space
 // as (source point, normalized direction vector)
+// Source: http://antongerdelan.net/opengl/raycasting.html
 template <class Cam>
 std::pair<vec3, vec3> cast_ray(vec2 coord_nds, Cam const& cam)
 {
@@ -132,10 +120,19 @@ std::pair<vec3, vec3> cast_ray(vec2 coord_nds, Cam const& cam)
 
     return {eye_world, normalize(ray_cam)};
 }
+
+inline
+quat rotation_between(vec3 v0, vec3 v1)
+{
+    auto l0 = length(v0) * length(v0);
+    auto l1 = length(v1) * length(v1);
+    vec3 a = cross(v0, v1);
+    quat q {std::sqrt(l0 * l1) + dot(v0, v1), a.x, a.y, a.z};
+
+    return normalize(q);
+}
 }
 
-using _det::reactive_focus_cam;
-using _det::focused_camera;
 using _det::unview;
 using _det::unproject;
 using _det::cast_ray;
