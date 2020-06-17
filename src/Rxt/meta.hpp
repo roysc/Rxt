@@ -5,6 +5,9 @@ namespace Rxt
 {
 inline namespace meta
 {
+struct empty {};
+struct swallow { template <class... Ts> swallow(Ts&&...) {} };
+
 template <class... T>
 struct type_tuple {};
 
