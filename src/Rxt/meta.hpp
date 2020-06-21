@@ -7,9 +7,12 @@ inline namespace meta
 {
 struct empty {};
 struct swallow { template <class... Ts> swallow(Ts&&...) {} };
+struct default_ {};
 
 template <class... T>
 struct type_tuple {};
+
+using empty_tuple = type_tuple<>;
 
 // indexing
 template <class... >
