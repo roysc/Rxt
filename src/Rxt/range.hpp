@@ -21,6 +21,9 @@ struct range_adaptor
     I first; E second;
     I begin() const { return this->first; }
     E end() const { return this->second; }
+
+    range_adaptor(I i, E e) : first(i), second(e) {}
+    range_adaptor(range_adaptor const&) = default;
 };
 
 // iterator pair to range
