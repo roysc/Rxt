@@ -6,9 +6,9 @@
 
 namespace Rxt::gl
 {
-gl::program file_loader::find_program(std::string name) const
+program file_loader::find_program(std::string name) const
 {
-    gl::program ret;
+    program ret;
     auto paths = {
         std::pair(GL_VERTEX_SHADER, (shader_root()/(name + ".vert"))),
         {GL_GEOMETRY_SHADER, shader_root()/(name + ".geom")},
@@ -22,8 +22,8 @@ gl::program file_loader::find_program(std::string name) const
             throw std::invalid_argument(path);
         }
 
-        dbg::print("loading: ", path);
-        gl::shader sh(kind, Rxt::read_file(path).c_str());
+        log("loading: ", path);
+        shader sh(kind, Rxt::read_file(path).c_str());
         log_result(sh, GL_COMPILE_STATUS, path.c_str());
         glAttachShader(ret, sh);
     }
