@@ -27,7 +27,7 @@ struct key_descriptor
     key_descriptor(SDL_Keysym k) : key_descriptor(k.sym, k.mod) {}
     key_descriptor(SDL_Keycode c) : key_descriptor(c, {}) {}
 
-    // Specify by key name, e.g. "Up", "Right", "S-Left", "a", "C-b", "1", etc.
+    // Specify by key name, e.g. "Up", "Right", "S-Left", "a", "C-b", "1"
     key_descriptor(const char* s);
 
     friend bool operator<(const key_descriptor& lhs, const key_descriptor& rhs);
