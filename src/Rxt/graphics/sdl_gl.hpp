@@ -87,7 +87,7 @@ void step(void* c)
     // SDL_PumpEvents();
 
 #ifdef __EMSCRIPTEN__
-    if (context.should_quit()) {
+    if (should_quit(context)) {
         emscripten_cancel_main_loop(); // asynchronous apparently, so also return early
         return;
     }
@@ -100,6 +100,9 @@ void step(void* c)
 
     context.step(event);
 }
+
+template <class T>
+bool should_quit(T const& c) { return c.should_quit(); }
 
 // Emscripten-compatible abstraction over main loop
 template <class C>
@@ -124,7 +127,7 @@ struct emscripten_looper
     auto operator()()
     {
 #ifndef __EMSCRIPTEN__
-        while (!context->should_quit()) {
+        while (!should_quit(*context)) {
             step(&*context);
         }
 #else
