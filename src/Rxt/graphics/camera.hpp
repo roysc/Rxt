@@ -6,7 +6,6 @@
 
 namespace Rxt
 {
-
 struct focus_cam
 {
     static constexpr float field_of_view = M_PI/4;
@@ -26,8 +25,9 @@ struct focus_cam
         , up(u)
     { }
 
-    P position() const { return _position; }
     virtual void position(P pos) {_position = pos;}
+
+    P position() const { return _position; }
 
     // Rotate about focal point
     void orbit(glm::quat rot)
@@ -82,15 +82,6 @@ using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 using glm::quat;
-
-// template <class Der>
-// struct focus_cam_crt : focus_cam
-// {
-//     using focus_cam::focus_cam;
-//     using focus_cam::position;
-//     // crt api
-//     void position(vec3 pos) { static_cast<Der&>(*this).set_position(pos); }
-// };
 
 template <class Cam>
 vec3 unview(vec4 view, Cam const& cam)
