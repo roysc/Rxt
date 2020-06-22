@@ -69,9 +69,15 @@ struct gl_context
     RXT_def_ctors_move_only(gl_context);
 };
 
-// convenience
+// Interface for loop context
+template <class T>
+bool should_quit(T const& c) { return c.should_quit(); }
+template <class T>
+void advance(T& c, SDL_Event e) { c.advance(e); }
+
+// Convenience function
 template <class C>
-void step(void* c)
+void em_advance(void* c)
 {
 #ifdef __EMSCRIPTEN__
     // Emscripten wants main loop set before swap interval
@@ -82,7 +88,7 @@ void step(void* c)
     }
 #endif
 
-    C& context = *(C*) c;
+    C& context = *static_cast<C*>(c);
     SDL_Event event;
     // SDL_PumpEvents();
 
@@ -98,11 +104,8 @@ void step(void* c)
     SDL_WaitEvent(&event);
 #endif
 
-    context.step(event);
+    advance(context, event);
 }
-
-template <class T>
-bool should_quit(T const& c) { return c.should_quit(); }
 
 // Emscripten-compatible abstraction over main loop
 template <class C>
@@ -119,28 +122,30 @@ struct emscripten_looper
     using update_function = void(*)(void*);
 
     context_ptr context;
-    update_function step;
+    update_function step_context;
 
     emscripten_looper(C* c, update_function f)
-        : context(c), step(f) { }
+        : context(c), step_context(f) { }
 
     auto operator()()
     {
 #ifndef __EMSCRIPTEN__
         while (!should_quit(*context)) {
-            step(&*context);
+            step_context(&*context);
         }
 #else
-        emscripten_set_main_loop_arg(step, (void*)context, 0, true);
+        emscripten_set_main_loop_arg(step_context, static_cast<void*>(context), 0, true);
 #endif
     }
 };
 
 template <class T, class F>
-auto make_looper(T* c, F&& f)
+auto em_looper(T* c, F&& f)
 {
     return emscripten_looper<T> {c, f};
 }
+
+auto make_looper = [](auto* c, auto&& f) { return em_looper(c, f); };
 
 // SDL coords -> normalized device space
 inline

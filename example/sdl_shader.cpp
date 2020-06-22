@@ -42,7 +42,7 @@ struct loop_state : public sdl::simple_gui
         set(line_prog->mvp_matrix, glm::mat4{1});
     }
 
-    void step(SDL_Event event)
+    void advance(SDL_Event event)
     {
         do {
             switch (event.type) {
@@ -68,7 +68,7 @@ struct loop_state : public sdl::simple_gui
 
 extern "C" void step_loop(void* c)
 {
-    sdl::step<loop_state>(c);
+    sdl::em_advance<loop_state>(c);
 }
 
 int main()

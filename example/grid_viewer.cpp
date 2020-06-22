@@ -24,7 +24,7 @@ struct run_context : public gl::program_loader
     run_context(sdl::window_ptr, unsigned, unsigned);
 
     bool should_quit() const { return !_running; }
-    void step(SDL_Event);
+    void advance(SDL_Event);
 
     void update_model();
     void update_texture();
@@ -33,7 +33,7 @@ struct run_context : public gl::program_loader
 
 extern "C" void step_state(void* c)
 {
-    sdl::step<run_context>(c);
+    sdl::em_advance<run_context>(c);
 }
 
 int main()
@@ -115,7 +115,7 @@ void run_context::draw()
     SDL_GL_SwapWindow(window.get());
 }
 
-void run_context::step(SDL_Event event)
+void run_context::advance(SDL_Event event)
 {
     kd.scan();
 

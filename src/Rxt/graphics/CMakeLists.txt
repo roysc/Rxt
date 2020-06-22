@@ -114,4 +114,4 @@ install(FILES ${_HEADERS_SHADER}
 _install_component(Graphics)
 
 make_test(camera FILES camera.test.cpp LINK Rxt::Graphics)
-# make_test(sdl FILES sdl.hpp LINK Rxt::Graphics)
+make_test(sdl FILES sdl.test.cpp LINK Rxt::Graphics)

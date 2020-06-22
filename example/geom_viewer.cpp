@@ -15,7 +15,7 @@
 
 extern "C" void step_state(void* c)
 {
-    sdl::step<geom_viewer>(c);
+    sdl::em_advance<geom_viewer>(c);
 }
 
 int main()
@@ -116,7 +116,7 @@ void geom_viewer::draw()
     SDL_GL_SwapWindow(window.get());
 }
 
-void geom_viewer::step(SDL_Event event)
+void geom_viewer::advance(SDL_Event event)
 {
     switch (event.type) {
     case SDL_QUIT: { should_quit(true); return; }
