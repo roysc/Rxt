@@ -3,13 +3,12 @@
 
 namespace Rxt
 {
-TEST_CASE("debug macro")
+TEST_CASE("RXT_show")
 {
     int x = 4;
-    // int y = 5;
 
-    // _set_debug_ostream(out);
-    Rxt_DEBUG(x);
+    // RXT_log_out(file);
+    RXT_show(x);
     // assert(out == "[DEBUG] x = 4\n");
 }
 }
