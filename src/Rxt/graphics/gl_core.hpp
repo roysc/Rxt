@@ -25,7 +25,7 @@ struct object
     object(object&& o) : _value{o._value} { o._value = {}; }
     object& operator=(object&& o) = delete;
 
-    operator typename Traits::value_type() const { return _value; }
+    operator typename Traits::value_type() const { return _value; } // todo o.glid()?
 };
 
 // Program
