@@ -12,7 +12,7 @@ struct loop_state
     loop_state(sdl::window_ptr) {}
     bool should_quit() const { return count >= 10; }
 
-    void step(SDL_Event)
+    void advance(SDL_Event)
     {
         std::cout << (1 + count++) << " steps\n";
         if (should_quit())
@@ -22,7 +22,7 @@ struct loop_state
 
 extern "C" void step_loop(void* c)
 {
-    sdl::step<loop_state>(c);
+    sdl::em_advance<loop_state>(c);
 }
 
 int main()

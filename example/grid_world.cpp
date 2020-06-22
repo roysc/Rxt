@@ -9,7 +9,7 @@ using Rxt::dbg::print;
 
 extern "C" void step_state(void* c)
 {
-    sdl::step<grid_world>(c);
+    sdl::em_advance<grid_world>(c);
 }
 
 int main()
@@ -79,7 +79,7 @@ grid_world::grid_world(grid_size world_size, glm::uvec2 tile_px)
     glClearColor(russet.r, russet.g, russet.b, 1);
 }
 
-void grid_world::step(SDL_Event event)
+void grid_world::advance(SDL_Event event)
 {
     do {
         handle(event);

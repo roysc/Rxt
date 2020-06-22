@@ -19,12 +19,12 @@ struct loop_state
     loop_state(sdl::window_ptr w) : window(w) {}
     void handle(SDL_Event);
     bool should_quit() const { return _quit; } // fixme
-    void step(SDL_Event);
+    void advance(SDL_Event);
 };
 
 extern "C" void step_loop(void* c)
 {
-    sdl::step<loop_state>(c);
+    sdl::em_advance<loop_state>(c);
 }
 
 int main()
@@ -42,7 +42,7 @@ int main()
     loop();
 }
 
-void loop_state::step(SDL_Event event)
+void loop_state::advance(SDL_Event event)
 {
     handle(event);
 

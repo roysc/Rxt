@@ -42,7 +42,7 @@ struct grid_world : public grid_context
     template <class M>
     M* get_mode() { return std::get_if<M>(&current_mode); }
 
-    void step(SDL_Event);
+    void advance(SDL_Event);
     void draw();
 
     void update_cursor();

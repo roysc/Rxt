@@ -22,7 +22,7 @@ struct geom_viewer : public virtual sdl::simple_gui
 
     geom_viewer();
 
-    void step(SDL_Event);
+    void advance(SDL_Event);
     void draw();
     void update_camera();
     void update_model();
