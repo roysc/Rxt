@@ -11,6 +11,7 @@ using solid_color_3D = gl::derived_program<solid_color_3D_data<Mode>>;
 template <GLenum Mode>
 struct solid_color_3D_data
 {
+    using program_type = solid_color_3D<Mode>;
     static const char* program_name() { return "solid_color_3D"; }
 
     static constexpr GLenum draw_mode = Mode;
@@ -19,13 +20,20 @@ struct solid_color_3D_data
     using color_vec = glm::vec3;
     using vertex = std::tuple<position_vec, color_vec>;
 
-    solid_color_3D<draw_mode>& prog;
+    program_type& prog;
     gl::vao va;
     gl::attribuf<position_vec> position {prog, "vertexPosition"};
     gl::attribuf<color_vec> color {prog, "vertexColor"};
-    gl::uniform<glm::mat4> mvp_matrix {prog, "MVP"};
 
-    solid_color_3D_data(solid_color_3D<draw_mode>& p)
+    struct uniforms
+    {
+        program_type& prog;
+        gl::uniform<glm::mat4> mvp_matrix {prog, "MVP"};
+    };
+
+    program_type& program() { return prog; }
+
+    solid_color_3D_data(program_type& p)
         : prog(p)
     {
         position.enable(va);

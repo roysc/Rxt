@@ -12,6 +12,7 @@ using grid_quad_2D = gl::derived_program<grid_quad_2D_data>;
 // WebGL-compatible program with same interface as grid_quad_2D w/ geometry shader
 struct grid_quad_2D_data
 {
+    using program_type = grid_quad_2D;
     static const char* program_name() { return "webgl_grid_quad_2D"; }
 
     static constexpr GLenum draw_mode = GL_TRIANGLES;
@@ -22,13 +23,22 @@ struct grid_quad_2D_data
     using vertex = std::tuple<position_vec, size_vec, color_vec>;
     using size_type = std::size_t;
 
-    grid_quad_2D& prog;
+    program_type& prog;
     gl::vao va;
     gl::attribuf<position_vec> position {prog, "quadPosition"};
     gl::attribuf<color_vec> color {prog, "color"};
     gl::buffer<GLuint> elements;
 
-    grid_quad_2D_data(grid_quad_2D& p) : prog(p)
+    struct uniforms
+    {
+        program_type& prog;
+        gl::uniform<glm::ivec2> viewport_position{prog, "viewportPosition"};
+        gl::uniform<glm::uvec2> viewport_size{prog, "viewportSize"};
+    };
+
+    program_type& program() { return prog; }
+
+    grid_quad_2D_data(program_type& p) : prog(p)
     {
         position.enable(va);
         color.enable(va);
