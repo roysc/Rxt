@@ -54,7 +54,7 @@ program make_program(make_program_arg shaders)
     return ret;
 }
 
-void _debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+void _debug_callback(GLenum, GLenum, GLuint, GLenum severity, GLsizei,
                      const GLchar* message, void const* user_param)
 {
     auto& data = *static_cast<debug_context const*>(user_param);

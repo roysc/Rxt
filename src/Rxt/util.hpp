@@ -5,10 +5,10 @@
 
 namespace Rxt
 {
+// sort the corners and return canonical form
 template <class T>
-std::pair<T, T> ordered(T a, T b)
+std::pair<T, T> box(T a, T b)
 {
-    using std::swap;
     auto a_ = min(a, b);
     auto b_ = max(a, b);
     return std::make_pair(a_, b_);

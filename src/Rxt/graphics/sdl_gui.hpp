@@ -5,8 +5,6 @@
 
 namespace Rxt::sdl
 {
-// Convenient gui class with T = user data
-// T: default constructible
 struct simple_gui
 {
     const unsigned width, height;
