@@ -3,12 +3,10 @@
 
 namespace Rxt
 {
-TEST_CASE("RXT_show")
+TEST_CASE("print_to")
 {
     int x = 4;
-
-    // RXT_log_out(file);
-    RXT_show(x);
-    // assert(out == "[DEBUG] x = 4\n");
+    print("{}", x);
+    // assert(_out.str() == "4");
 }
 }

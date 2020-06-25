@@ -11,24 +11,31 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-
-#define RXT_log_debug(var_) (::Rxt::print("[DEBUG] {}", var_))
-#define RXT_log(var_) RXT_log_debug(var_)
-
-#define RXT_show_impl(var_) RXT_log( #var_ " = {}\n", (var_))
-#define RXT_show(...) RXT_show_impl(__VA_ARGS__)
-// #define RXT_show_n(...) FOR(var_, __VA_ARGS__, RXT_show(var_))
+#include <stdexcept>
 
 namespace Rxt
 {
 #ifndef RXT_DISABLE_FMT
 using fmt::print;
+
+template <class...T>
+void print_to(std::FILE* out, T&&...a)
+{
+    print(out, std::forward<T...>(a)...);
+}
 #else
+
+template <class... T>
+void print_to(std::ostream& out, const char* m, T&&... args)
+{
+    out << m;
+    (out << ... << args);
+}
+
 template <class... T>
 void print(const char* m, T&&... args)
 {
-    std::cout << m;
-    (std::cout << ... << args);
+    print_to(std::cout, std::forward<T...>(args)...);
 }
 #endif
 

@@ -154,8 +154,8 @@ function(make_test _NAME)
         RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 endfunction()
 
-foreach(_TEST meta io time range "macro")
-    make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtBase)
+foreach(_TEST meta io log time range "macro")
+    make_test(${_TEST} FILES ${_SOURCE_DIR}/${_TEST}.test.cpp LINK RxtBase)
 endforeach()
 _use_boost(test_range)
 
