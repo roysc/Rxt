@@ -32,7 +32,7 @@ int main()
 grid_world::grid_world(grid_size world_size, glm::uvec2 tile_px)
     : grid_context{"demo: grid_world", world_size, tile_px}
 {
-    keys.on_press["C-W"]    = [this] { should_quit(true); };
+    keys.on_press["C-W"]    = [this] { is_stopped(true); };
     keys.on_press["C"]      = [this] {
         this->viewport_position = grid_coord {0};
         this->update_viewport();
@@ -206,7 +206,7 @@ void grid_world::h_edge_scroll()
 void grid_world::handle(SDL_Event event)
 {
     switch (event.type) {
-    case SDL_QUIT: { should_quit(true); return; }
+    case SDL_QUIT: { is_stopped(true); return; }
     case SDL_KEYDOWN: { keys.press(event.key.keysym); break; }
     case SDL_MOUSEMOTION: { h_mouse_motion(event.motion); break; }
     case SDL_MOUSEBUTTONDOWN: { h_mouse_down(event.button); break; }

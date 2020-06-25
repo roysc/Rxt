@@ -23,7 +23,7 @@ struct run_context : public gl::program_loader
 
     run_context(sdl::window_ptr, unsigned, unsigned);
 
-    bool should_quit() const { return !_running; }
+    bool is_stopped() const { return !_running; }
     void advance(SDL_Event);
 
     void update_model();

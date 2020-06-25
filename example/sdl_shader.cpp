@@ -24,7 +24,7 @@ struct loop_state : public sdl::simple_gui
     loop_state()
         : simple_gui("demo: sdl_shader", 500, 500)
     {
-        keys.on_press["C-W"] = [this] { should_quit(true); };
+        keys.on_press["C-W"] = [this] { is_stopped(true); };
 
         auto color = Rxt::rgba{Rxt::colors::red, 1};
         auto points = {
@@ -46,7 +46,7 @@ struct loop_state : public sdl::simple_gui
     {
         do {
             switch (event.type) {
-            case SDL_QUIT: { should_quit(true); return; }
+            case SDL_QUIT: { is_stopped(true); return; }
             case SDL_KEYDOWN: { keys.press(event.key.keysym); break; }
             }
         } while (SDL_PollEvent(&event));

@@ -49,7 +49,7 @@ geom_viewer::geom_viewer()
 
     keys.on_scan["Right"] = std::bind(camera_right, +1);
     keys.on_scan["Left"] = std::bind(camera_right, -1);
-    keys.on_press["C-W"] = [this] { should_quit(true); };
+    keys.on_press["C-W"] = [this] { is_stopped(true); };
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -119,7 +119,7 @@ void geom_viewer::draw()
 void geom_viewer::advance(SDL_Event event)
 {
     switch (event.type) {
-    case SDL_QUIT: { should_quit(true); return; }
+    case SDL_QUIT: { is_stopped(true); return; }
     case SDL_KEYDOWN: { keys.press(event.key.keysym); break; }
     }
 

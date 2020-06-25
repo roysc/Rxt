@@ -10,12 +10,12 @@ struct loop_state
     int count = 0;
 
     loop_state(sdl::window_ptr) {}
-    bool should_quit() const { return count >= 10; }
+    bool is_stopped() const { return count >= 10; }
 
     void advance(SDL_Event)
     {
         std::cout << (1 + count++) << " steps\n";
-        if (should_quit())
+        if (is_stopped())
             std::cout << "done\n";
     }
 };

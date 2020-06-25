@@ -18,7 +18,7 @@ struct loop_state
 
     loop_state(sdl::window_ptr w) : window(w) {}
     void handle(SDL_Event);
-    bool should_quit() const { return _quit; } // fixme
+    bool is_stopped() const { return _quit; } // fixme
     void advance(SDL_Event);
 };
 

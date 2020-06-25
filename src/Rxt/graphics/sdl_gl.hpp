@@ -71,7 +71,8 @@ struct gl_context
 
 // Interface for loop context
 template <class T>
-bool should_quit(T const& c) { return c.should_quit(); }
+bool is_stopped(T const& c) { return !c.is_stopped(); }
+
 template <class T>
 void advance(T& c, SDL_Event e) { c.advance(e); }
 
@@ -93,7 +94,7 @@ void em_advance(void* c)
     // SDL_PumpEvents();
 
 #ifdef __EMSCRIPTEN__
-    if (should_quit(context)) {
+    if (is_stopped(context)) {
         emscripten_cancel_main_loop(); // asynchronous apparently, so also return early
         return;
     }
@@ -130,7 +131,7 @@ struct emscripten_looper
     auto operator()()
     {
 #ifndef __EMSCRIPTEN__
-        while (!should_quit(*context)) {
+        while (!is_stopped(*context)) {
             step_context(&*context);
         }
 #else

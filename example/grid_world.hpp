@@ -27,7 +27,7 @@ struct grid_world : public grid_context
 {
     sdl::key_dispatcher keys;
 #ifndef __EMSCRIPTEN__
-    sdl::metronome metronome{tick_duration{1}, [this] { return !should_quit(); }};
+    sdl::metronome metronome{tick_duration{1}, [this] { return !is_stopped(); }};
 #endif
     grid_quad_2D::data b_quads_sticky {quad_prog};
     bool p_edge_scroll = true;

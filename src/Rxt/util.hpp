@@ -48,14 +48,11 @@ struct runtime
 {
     bool _running = true;
 
-    bool should_quit() const { return !_running; }
-    void should_quit(bool v) { _running = !v; }
+    bool is_stopped() const { return !_running; }
+    void is_stopped(bool v) { _running = !v; }
 
     virtual ~runtime() {}
 };
 
 using simple_runtime = runtime;
-
-template <class R>
-bool exited(R const& rt) { return rt.should_quit(); }
 }
