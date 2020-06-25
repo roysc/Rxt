@@ -110,10 +110,8 @@ set(_HEADERS
     ${_SOURCE_DIR}/io.hpp
     ${_SOURCE_DIR}/math.hpp
     ${_SOURCE_DIR}/range.hpp
-    ${_SOURCE_DIR}/runtime.hpp
     ${_SOURCE_DIR}/time.hpp
     ${_SOURCE_DIR}/util.hpp
-    ${_SOURCE_DIR}/vec.hpp
     ${_SOURCE_DIR}/meta.hpp
 )
 set(_SOURCES

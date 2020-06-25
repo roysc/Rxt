@@ -43,4 +43,19 @@ struct lazy_action
         return 0;
     }
 };
+
+struct runtime
+{
+    bool _running = true;
+
+    bool should_quit() const { return !_running; }
+    void should_quit(bool v) { _running = !v; }
+
+    virtual ~runtime() {}
+};
+
+using simple_runtime = runtime;
+
+template <class R>
+bool exited(R const& rt) { return rt.should_quit(); }
 }

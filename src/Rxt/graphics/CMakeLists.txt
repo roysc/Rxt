@@ -25,14 +25,14 @@ set(_HEADERS
     sdl_core.hpp
     sdl_gl.hpp
     sdl_gui.hpp
-    sdl_events.hpp
+    sdl_metronome.hpp
     sdl_input.hpp
     sdl_input.cpp
     _sdl_debug.hpp
     sdl.hpp
 
     glm.hpp
-    images.hpp
+    image.hpp
     camera.hpp
     color.hpp
 )
