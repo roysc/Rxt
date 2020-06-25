@@ -12,6 +12,13 @@
 #include <fstream>
 #include <sstream>
 
+#define RXT_log_debug(var_) (::Rxt::print("[DEBUG] {}", var_))
+#define RXT_log(var_) RXT_log_debug(var_)
+
+#define RXT_show_impl(var_) RXT_log( #var_ " = {}\n", (var_))
+#define RXT_show(...) RXT_show_impl(__VA_ARGS__)
+// #define RXT_show_n(...) FOR(var_, __VA_ARGS__, RXT_show(var_))
+
 namespace Rxt
 {
 #ifndef RXT_DISABLE_FMT
