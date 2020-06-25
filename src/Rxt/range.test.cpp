@@ -5,9 +5,27 @@
 #include <utility>
 #include <iterator>
 // #include <experimental/ranges/algorithm>
+#include <optional>
 
 namespace Rxt
 {
+TEST_CASE("to_range")
+{
+    std::optional<int> xo;
+    std::optional<int> const cxo = 8;
+
+    auto count = [] (auto&& r) {
+        int ct = 0;
+        for (auto _: r) ++ct;
+        return ct;
+    };
+    REQUIRE(count(to_range(xo)) == 0);
+    xo = 4;
+    REQUIRE(count(to_range(xo)) == 1);
+
+    REQUIRE(count(to_range(cxo)) == 1);
+}
+
 TEST_CASE("index_ranges(map)")
 {
     using M = std::map<int, int>;
@@ -77,4 +95,5 @@ TEST_CASE("make_indexed_range_map(multimap)")
     REQUIRE(equivalent(mr[2], {20}));
 }
 #endif
+
 }
