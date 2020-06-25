@@ -76,11 +76,12 @@ if(EMSCRIPTEN)
     set(_emscripten_options
         --emrun # needed?
         --preload-file "${_shader_dir}@/data/shader"
-        # "SHELL:-s CYBERDWARF=1" # not supported by the LLVM wasm backend
         "SHELL:-s USE_WEBGL2=1"
         "SHELL:-s USE_SDL=2"
+        "SHELL:-s DISABLE_EXCEPTION_CATCHING=0"
+        # "SHELL:-s CYBERDWARF=1" # not supported by the LLVM wasm backend
         # "SHELL:-s FORCE_FILESYSTEM=1"
-        "SHELL:-s DISABLE_EXCEPTION_CATCHING=0")
+    )
 
     target_compile_options(RxtGraphics PUBLIC ${_emscripten_options})
     target_link_options(RxtGraphics PUBLIC ${_emscripten_options})
