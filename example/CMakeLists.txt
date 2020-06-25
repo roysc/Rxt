@@ -1,11 +1,7 @@
-# find_package(noise REQUIRED)
+project(RxtDemos VERSION 0.1)
 
 # Rxt demos
 function(Rxt_demo _NAME)
-    if(NOT BUILD_DEMOS)
-        return()
-    endif()
-
     set(_options USES_BOOST) # USES_THREADS
     set(_oneValueArgs)
     set(_multiValueArgs FILES INCLUDE LINK)
@@ -23,6 +19,8 @@ function(Rxt_demo _NAME)
     target_include_directories(${_NAME} PUBLIC ${_RXT_DEMO_INCLUDE})
 endfunction()
 
+set(CMAKE_CXX_STANDARD 20)
+
 Rxt_demo(sdl_basic FILES sdl_basic.cpp LINK RxtGraphics)
 Rxt_demo(sdl_events FILES sdl_events.cpp LINK RxtGraphics)
 Rxt_demo(sdl_shader FILES sdl_shader.cpp LINK RxtGraphics)
@@ -37,7 +35,7 @@ Rxt_demo(grid_world
     INCLUDE ${PROJECT_SOURCE_DIR}/external
     LINK RxtGraphics)
 
-if(NOT EMSCRIPTEN)              #depends on geometry :(
+if(NOT EMSCRIPTEN)              #depends on geometry :\
     Rxt_demo(geom_viewer
         FILES geom_viewer.cpp geom_viewer.hpp
         LINK RxtGraphics RxtGeometry)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Rxt/graphics/gl.hpp"
-#include <Rxt/math.hpp>
+#include "Rxt/math.hpp"
 
 #include <glm/glm.hpp>
 #include <boost/multi_array.hpp>

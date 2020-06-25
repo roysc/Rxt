@@ -166,7 +166,6 @@ _use_boost(test_range)
 add_subdirectory(data)
 add_subdirectory(geometry)
 add_subdirectory(graphics)
-add_subdirectory(demo)
 
 # Packaging
 set(_config_file "${PROJECT_BINARY_DIR}/cmake/RxtConfig.cmake")

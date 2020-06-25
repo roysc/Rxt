@@ -1,6 +1,7 @@
-#include <Rxt/graphics/images.hpp>
-#include <Rxt/graphics/sdl.hpp>
-#include <Rxt/graphics/gl.hpp>
+#include "Rxt/util.hpp"
+#include "Rxt/graphics/image.hpp"
+#include "Rxt/graphics/sdl.hpp"
+#include "Rxt/graphics/gl.hpp"
 
 namespace sdl = Rxt::sdl;
 namespace gl = Rxt::gl;
@@ -46,9 +47,9 @@ int main()
     loop();
 }
 
-run_context::run_context(sdl::window_ptr w, unsigned width, unsigned height)
+run_context::run_context(sdl::window_ptr w, unsigned, unsigned)
     : window(w)
-    , prog(find_program("grid_viewer"))
+    , prog(find_program("texture_quad_2D"))
     , position(prog, "position")
     , tex_coord(prog, "texCoord")
 {
@@ -60,7 +61,6 @@ run_context::run_context(sdl::window_ptr w, unsigned width, unsigned height)
     gl::use_guard _p(prog);
     gl::bind_vao_guard _a(va);
 
-    gl::set_uniform(prog, "tex", 0);
     update_texture();
 }
 

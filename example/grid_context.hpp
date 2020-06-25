@@ -1,17 +1,17 @@
 #pragma once
 
-#include <Rxt/graphics/sdl.hpp>
-#include <Rxt/graphics/gl.hpp>
-#include <Rxt/graphics/shader/texture_quad_2D.hpp>
+#include "Rxt/graphics/sdl.hpp"
+#include "Rxt/graphics/gl.hpp"
+#include "Rxt/graphics/shader/texture_quad_2D.hpp"
 
 #ifdef RXT_WEBGL2
-  #include <Rxt/graphics/shader/webgl_grid_quad_2D.hpp>
+  #include "Rxt/graphics/shader/webgl_grid_quad_2D.hpp"
 #else
-  #include <Rxt/graphics/shader/grid_quad_2D.hpp>
+  #include "Rxt/graphics/shader/grid_quad_2D.hpp"
 #endif
 
-#include <Rxt/util.hpp>
-#include <Rxt/range.hpp>
+#include "Rxt/util.hpp"
+#include "Rxt/range.hpp"
 
 #include <glm/gtx/transform.hpp>
 

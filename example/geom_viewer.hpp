@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Rxt/runtime.hpp>
-#include <Rxt/graphics/sdl.hpp>
-#include <Rxt/graphics/gl.hpp>
-#include <Rxt/graphics/camera.hpp>
-#include <Rxt/graphics/shader/colored_triangle_3D.hpp>
+#include "Rxt/util.hpp"
+#include "Rxt/graphics/sdl.hpp"
+#include "Rxt/graphics/gl.hpp"
+#include "Rxt/graphics/camera.hpp"
+#include "Rxt/graphics/shader/colored_triangle_3D.hpp"
 
 namespace sdl = Rxt::sdl;
 namespace gl = Rxt::gl;

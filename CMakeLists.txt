@@ -33,3 +33,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 add_subdirectory(src/Rxt)
 add_subdirectory(cmake)
+
+if(BUILD_DEMOS)
+    add_subdirectory(example)
+endif()

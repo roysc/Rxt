@@ -1,7 +1,7 @@
-#include <Rxt/runtime.hpp>
-#include <Rxt/graphics/sdl.hpp>
-#include <Rxt/graphics/color.hpp>
-#include <Rxt/graphics/shader/solid_color_3D.hpp>
+#include "Rxt/util.hpp"
+#include "Rxt/graphics/sdl.hpp"
+#include "Rxt/graphics/color.hpp"
+#include "Rxt/graphics/shader/solid_color_3D.hpp"
 
 #include <exception>
 #include <iostream>
@@ -39,7 +39,7 @@ struct loop_state : public sdl::simple_gui
         }
         b_lines.update();
 
-        set(b_lines.mvp_matrix, glm::mat4{1});
+        set(line_prog->mvp_matrix, glm::mat4{1});
     }
 
     void step(SDL_Event event)
