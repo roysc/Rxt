@@ -5,6 +5,7 @@
 #include "gl_guard.hpp"
 #include "gl_loader.hpp"
 
+#include <Rxt/meta.hpp>
 #include <vector>
 #include <utility>
 
@@ -83,11 +84,9 @@ namespace _det
 template <class D>
 using program_uniforms_t = typename D::uniforms;
 
-struct _empty { template <class... Ts> _empty(Ts&&...) {} };
-
 template <class T>
 using uniforms_base =
-    std::experimental::detected_or_t<_empty, program_uniforms_t, T>;
+    std::experimental::detected_or_t<meta::swallow, program_uniforms_t, T>;
 }
 
 template <class Data>
