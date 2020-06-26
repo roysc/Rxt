@@ -1,0 +1,8 @@
+#+TODO: TODO WIP DONE
+
+* TODO glTF support?
+  https://github.com/syoyo/tinygltf
+
+* instancing
+
+* graphics: remove implicit casts to gluint
