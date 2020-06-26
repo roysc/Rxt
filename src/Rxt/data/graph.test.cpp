@@ -8,7 +8,7 @@
 
 namespace Rxt
 {
-namespace _impl
+namespace _det
 {
 using namespace boost;
 
@@ -29,8 +29,8 @@ bool equivalent(A const& a, B const& b)
 TEST_CASE("adjacency table") {
     // create a 2-valent graph
     using namespace Rxt;
-    using _impl::G;
-    using _impl::GT;
+    using _det::G;
+    using _det::GT;
     using VD = typename GT::vertex_descriptor;
     G g;
     VD v[4];

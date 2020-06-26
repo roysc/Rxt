@@ -14,7 +14,7 @@ inline const glm::vec3 AXIS_X {1, 0, 0};
 inline const glm::vec3 AXIS_Y {0, 1, 0};
 inline const glm::vec3 AXIS_Z {0, 0, 1};
 
-namespace _impl
+namespace _det
 {
 template <GLenum Enum, GLint D0 = 1, GLint D1 = 1>
 struct data_adaptor
@@ -48,7 +48,7 @@ void set_uniform(program& prog, const char* n, T const& x)
 }
 
 template <>
-struct data_traits<glm::vec2> : _impl::data_adaptor<GL_FLOAT, 2>
+struct data_traits<glm::vec2> : _det::data_adaptor<GL_FLOAT, 2>
 {
     static void set(value_type id, glm::vec2 const& v)
     {
@@ -57,7 +57,7 @@ struct data_traits<glm::vec2> : _impl::data_adaptor<GL_FLOAT, 2>
 };
 
 template <>
-struct data_traits<glm::ivec2> : _impl::data_adaptor<GL_INT, 2>
+struct data_traits<glm::ivec2> : _det::data_adaptor<GL_INT, 2>
 {
     static void set(value_type id, glm::ivec2 const& v)
     {
@@ -66,7 +66,7 @@ struct data_traits<glm::ivec2> : _impl::data_adaptor<GL_INT, 2>
 };
 
 template <>
-struct data_traits<glm::uvec2> : _impl::data_adaptor<GL_UNSIGNED_INT, 2>
+struct data_traits<glm::uvec2> : _det::data_adaptor<GL_UNSIGNED_INT, 2>
 {
     static void set(value_type id, glm::uvec2 const& v)
     {
@@ -75,7 +75,7 @@ struct data_traits<glm::uvec2> : _impl::data_adaptor<GL_UNSIGNED_INT, 2>
 };
 
 template <>
-struct data_traits<glm::vec3> : _impl::data_adaptor<GL_FLOAT, 3>
+struct data_traits<glm::vec3> : _det::data_adaptor<GL_FLOAT, 3>
 {
     static void set(value_type id, glm::vec3 const& v)
     {
@@ -84,7 +84,7 @@ struct data_traits<glm::vec3> : _impl::data_adaptor<GL_FLOAT, 3>
 };
 
 template <>
-struct data_traits<glm::vec4> : _impl::data_adaptor<GL_FLOAT, 4>
+struct data_traits<glm::vec4> : _det::data_adaptor<GL_FLOAT, 4>
 {
     static void set(value_type id, glm::vec4 const& v)
     {
@@ -93,7 +93,7 @@ struct data_traits<glm::vec4> : _impl::data_adaptor<GL_FLOAT, 4>
 };
 
 template <>
-struct data_traits<glm::mat3> : _impl::data_adaptor<GL_FLOAT, 3, 3>
+struct data_traits<glm::mat3> : _det::data_adaptor<GL_FLOAT, 3, 3>
 {
     static void set(value_type id, glm::mat3 const& m)
     {
@@ -102,7 +102,7 @@ struct data_traits<glm::mat3> : _impl::data_adaptor<GL_FLOAT, 3, 3>
 };
 
 template <>
-struct data_traits<glm::mat4> : _impl::data_adaptor<GL_FLOAT, 4, 4>
+struct data_traits<glm::mat4> : _det::data_adaptor<GL_FLOAT, 4, 4>
 {
     static void set(value_type id, glm::mat4 const& m)
     {
@@ -111,7 +111,7 @@ struct data_traits<glm::mat4> : _impl::data_adaptor<GL_FLOAT, 4, 4>
 };
 
 template <>
-struct data_traits<GLint> : _impl::data_adaptor<GL_INT>
+struct data_traits<GLint> : _det::data_adaptor<GL_INT>
 {
     static void set(value_type id, GLint x)
     {
@@ -120,7 +120,7 @@ struct data_traits<GLint> : _impl::data_adaptor<GL_INT>
 };
 
 template <>
-struct data_traits<bool> : _impl::data_adaptor<GL_UNSIGNED_BYTE> // todo: ok?
+struct data_traits<bool> : _det::data_adaptor<GL_UNSIGNED_BYTE> // todo: ok?
 {
     static void set(value_type id, bool x)
     {

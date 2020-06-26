@@ -26,7 +26,7 @@ CGAL::Segment_3<K> segment_between(CGAL::Segment_3<K> a, CGAL::Segment_3<K> b)
 
     auto denom = 1 - dot(da, db) * dot(da, db);
     // check if approx. parallel
-    if (denom < _impl::epsilon) {
+    if (denom < _det::epsilon) {
         return Seg{ra, rb}; // arbitrary t
     } else {
         t_a = (dot(rab, da) - dot(rab, db) * dot(da, db)) / denom;
@@ -112,9 +112,9 @@ CGAL::Segment_3<K> segment_between(CGAL::Ray_3<K> q,
         auto diffmin = boxmin - qseg.source();
         auto diffmax = boxmax - qseg.source();
         if (abs(diffmin[i_near]) < abs(diffmax[i_near]))
-            c1 = _impl::replacing(c1, boxmin, i_near);
+            c1 = _det::replacing(c1, boxmin, i_near);
         if (abs(diffmin[i_far]) < abs(diffmax[i_far]))
-            c1 = _impl::replacing(c1, boxmin, i_far);
+            c1 = _det::replacing(c1, boxmin, i_far);
 
         auto c2 = replacing(c1, boxmin, i_edge);
         // Edge segment

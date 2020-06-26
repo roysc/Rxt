@@ -10,7 +10,7 @@ auto normalize(Vec3 v)
     return v / std::sqrt(v.squared_length());
 }
 
-namespace _impl
+namespace _det
 {
 constexpr double epsilon = 0.0001;
 
