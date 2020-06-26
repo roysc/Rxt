@@ -69,13 +69,6 @@ struct gl_context
     RXT_def_ctors_move_only(gl_context);
 };
 
-// Interface for loop context
-template <class T>
-bool is_stopped(T const& c) { return !c.is_stopped(); }
-
-template <class T>
-void advance(T& c, SDL_Event e) { c.advance(e); }
-
 // Convenience function
 template <class C>
 void em_advance(void* c)
