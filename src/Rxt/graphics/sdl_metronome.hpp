@@ -12,14 +12,9 @@ struct _metronome
     unsigned tick_event_type;
     std::thread _thread;
 
-    template <class Dur, class T>
-    _metronome(Dur dur, T* ctx)
-        : _metronome(dur, [ctx] { return !is_stopped(*ctx); })
-    {}
-
-    // _metronome(Dur dur, std::invocable auto&& pred)
+    // _metronome(Dur dur, std::invocable auto pred)
     template <class Dur, class Pred>
-    _metronome(Dur dur, Pred&& pred)
+    _metronome(Dur dur, Pred pred)
         : tick_event_type{SDL_RegisterEvents(1)}
     {
         if (tick_event_type == (unsigned)-1) {
