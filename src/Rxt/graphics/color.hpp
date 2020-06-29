@@ -56,15 +56,15 @@ inline const rgb sky_blue = rgb_hex(0x87CEEB);
 // inline const rgba blank {0};
 }
 
-using palette = std::vector<rgb>;
-inline palette default_palette()
+inline rgb default_palette(unsigned i)
 {
-    return palette {
+    std::array palette = {
         colors::black,
         colors::white,
         colors::red,
         colors::green,
         colors::blue
     };
+    return palette.at(i);
 }
 }
