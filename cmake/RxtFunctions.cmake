@@ -6,21 +6,21 @@ include(CMakePackageConfigHelpers)
 
 include(RxtEmscriptenHelpers)
 
-# Use correct std headers - FIXME better way to do it?
+# Use correct headers for newer stdlib
+# TODO better way?
 function(_use_libstd_path _TGT _LIBPATH_PREFIX)
     if(EMSCRIPTEN)
         return()
     endif()
 
     if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-        set(_DIR ${_LIBPATH_PREFIX}/include/c++/9.2.0)
+        set(_INCDIR ${_LIBPATH_PREFIX}/include/c++/9.2.0)
         set(_LIBDIR ${_LIBPATH_PREFIX}/lib64)
-        target_include_directories(${_TGT} PUBLIC ${_DIR} ${_DIR}/x86_64-pc-linux-gnu)
+        target_include_directories(${_TGT} PUBLIC ${_INCDIR} ${_INCDIR}/x86_64-pc-linux-gnu)
         target_compile_options(${_TGT} PUBLIC -nostdinc++)
         target_link_options(${_TGT} PUBLIC -L${_LIBDIR} -Wl,-rpath,${_LIBDIR})
     endif()
 
-    # FIXME better way?
     target_link_options(Rxt${_COMP} PUBLIC -L${_LIBPATH_PREFIX}/lib -Wl,-rpath,${_LIBPATH_PREFIX}/lib)
 
     if(CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -101,4 +101,3 @@ function(make_test _NAME)
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 endfunction()
-

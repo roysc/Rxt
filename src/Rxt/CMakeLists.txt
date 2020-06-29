@@ -19,16 +19,16 @@ endif()
 
 # Define base library
 set(_HEADERS
-    ${_SOURCE_DIR}/_debug.hpp
-    ${_SOURCE_DIR}/error.hpp
-    ${_SOURCE_DIR}/io.hpp
-    ${_SOURCE_DIR}/log.hpp
-    ${_SOURCE_DIR}/math.hpp
-    ${_SOURCE_DIR}/range.hpp
-    ${_SOURCE_DIR}/time.hpp
-    ${_SOURCE_DIR}/util.hpp
-    ${_SOURCE_DIR}/meta.hpp
-    ${_SOURCE_DIR}/macro.hpp
+    _debug.hpp
+    error.hpp
+    io.hpp
+    log.hpp
+    math.hpp
+    range.hpp
+    time.hpp
+    util.hpp
+    meta.hpp
+    "macro.hpp"
 )
 set(_SOURCES
 )
@@ -53,12 +53,6 @@ install(FILES ${_HEADERS}
 
 _install_component(${RXT_BASE})
 
-# Tests
-foreach(_TEST meta io log time range "macro")
-    make_test(${_TEST} FILES ${_SOURCE_DIR}/${_TEST}.test.cpp LINK RxtBase)
-endforeach()
-_use_boost(test_range)
-
 # Component libs
 add_subdirectory(data)
 add_subdirectory(geometry)
@@ -79,6 +73,13 @@ write_basic_package_version_file(${_version_file}
 
 install(FILES ${_config_file} DESTINATION ${_CMAKE_MODULE_DEST})
 install(FILES ${_version_file} DESTINATION ${_CMAKE_MODULE_DEST})
+
+# Tests for base
+set(_TESTS meta io log time range "macro")
+foreach(_TEST ${_TESTS})
+    make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtBase)
+endforeach()
+_use_boost(test_range)
 
 find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
 make_test(math FILES math.test.cpp LINK RxtBase glm)
