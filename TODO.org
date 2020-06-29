@@ -6,3 +6,7 @@
 * instancing
 
 * graphics: remove implicit casts to gluint
+
+* cmake export()
+
+* fix sdl tests
