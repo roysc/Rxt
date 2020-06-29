@@ -87,7 +87,7 @@ void em_advance(void* c)
     // SDL_PumpEvents();
 
 #ifdef __EMSCRIPTEN__
-    if (is_stopped(context)) {
+    if (context.is_stopped()) {
         emscripten_cancel_main_loop(); // asynchronous apparently, so also return early
         return;
     }
@@ -98,7 +98,7 @@ void em_advance(void* c)
     SDL_WaitEvent(&event);
 #endif
 
-    advance(context, event);
+    context.advance(event);
 }
 
 // Emscripten-compatible abstraction over main loop
@@ -113,22 +113,22 @@ struct emscripten_looper
 #endif
         ;
     // using step_function = bool(*)(C&);
-    using update_function = void(*)(void*);
+    using update_function = void (*)(void*);
 
     context_ptr context;
-    update_function step_context;
+    update_function advance_context;
 
     emscripten_looper(C* c, update_function f)
-        : context(c), step_context(f) { }
+        : context(c), advance_context(f) { }
 
     auto operator()()
     {
 #ifndef __EMSCRIPTEN__
-        while (!is_stopped(*context)) {
-            step_context(&*context);
+        while (!context->is_stopped()) {
+            advance_context(&*context);
         }
 #else
-        emscripten_set_main_loop_arg(step_context, static_cast<void*>(context), 0, true);
+        emscripten_set_main_loop_arg(advance_context, static_cast<void*>(context), 0, true);
 #endif
     }
 };

@@ -18,11 +18,4 @@ std::shared_ptr<T> make_shared(T* t) {
 }
 
 using window_ptr = std::shared_ptr<SDL_Window>;
-
-// Interface for loop context
-template <class T>
-bool is_stopped(T const& c) { return !c.is_stopped(); }
-
-template <class T>
-void advance(T& c, SDL_Event e) { c.advance(e); }
 }
