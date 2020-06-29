@@ -79,3 +79,6 @@ write_basic_package_version_file(${_version_file}
 
 install(FILES ${_config_file} DESTINATION ${_CMAKE_MODULE_DEST})
 install(FILES ${_version_file} DESTINATION ${_CMAKE_MODULE_DEST})
+
+find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
+make_test(math FILES math.test.cpp LINK RxtBase glm)
