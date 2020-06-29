@@ -54,8 +54,10 @@ geom_viewer::geom_viewer()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_CULL_FACE);
 
     set(prog->light_position, glm::vec3{15, 0, 15});
 
@@ -96,8 +98,10 @@ void geom_viewer::update_model()
     b_triangles.clear();
     for (auto fd: faces(sm)) {
         auto n = face_normals[fd];
+        glm::vec4 color(to_glm(CGAL::green()), 1);
+        if ((count/3) % 2) color.a = 0.2;
         for (auto vd: vertices_around_face(halfedge(fd, sm), sm)) {
-            b_triangles.push(to_glm(pm[vd]), to_glm(n), to_glm(CGAL::green()));
+            b_triangles.push(to_glm(pm[vd]), to_glm(n), color);
             count++;
         }
         assert(count % 3 == 0);
