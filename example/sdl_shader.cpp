@@ -15,9 +15,6 @@ struct loop_state : public sdl::simple_gui
     bool dirty = true;
     sdl::key_dispatcher keys;
     gl::program_loader loader;
-
-    // grid_quad_2D quad_prog {loader};
-    // grid_quad_2D::data b_quads {quad_prog};
     shader line_prog{loader};
     shader::data b_lines{line_prog};
 

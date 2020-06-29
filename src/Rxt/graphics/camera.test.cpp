@@ -7,6 +7,8 @@ TEST_CASE("focus_cam") {
     glm::vec3 p1(1);
     focus_cam cam{p1};
     REQUIRE(cam.position() == p1);
+
+    // cam.orbit();
 }
 
 TEST_CASE("extending focus_cam") {

@@ -8,7 +8,7 @@ struct ctx : simple_gui
 {
     ctx() : simple_gui("test", 10,10) {}
     bool is_stopped() const { return true; }
-    void advance(SDL_Event) {}
+    void advance(SDL_Event e) {}
 };
 extern "C" void step(void* c)
 {
@@ -25,8 +25,7 @@ TEST_CASE("simple_gui")
 struct ctx_met : test_ctx
 {
     using dur = std::chrono::duration<float, std::ratio<1, 30>>;
-    metronome m{dur(), this};
-    // metronome m2{dur(), [this] { return !is_stopped(*this); };
+    metronome m2{dur(), [this] { return !is_stopped(); }};
 };
 
 TEST_CASE("metronome")

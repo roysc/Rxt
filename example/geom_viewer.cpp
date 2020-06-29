@@ -1,6 +1,6 @@
 #include "geom_viewer.hpp"
 
-#include "Rxt/_debug.hpp"
+#include "Rxt/io.hpp"
 #include "Rxt/util.hpp"
 #include "Rxt/graphics/glm.hpp"
 #include "Rxt/geometry/helper.hpp"
@@ -65,7 +65,7 @@ geom_viewer::geom_viewer()
 
 void geom_viewer::update_camera()
 {
-    // dbg::print("camera at {}\n", camera.position());
+    Rxt::print("camera:\npos={}\nup={}\n", camera.position(), camera.up);
 
     auto view_matrix  = camera.view_matrix();
     auto model_matrix = camera.model_matrix();
@@ -91,8 +91,8 @@ void geom_viewer::update_model()
     Rxt::make_icosphere(sm, 1.0, 0);
     Rxt::calculate_face_normals(sm, boost::make_assoc_property_map(face_normals));
     auto pm = get(CGAL::vertex_point, sm);
-    unsigned count = 0;
 
+    unsigned count = 0;
     b_triangles.clear();
     for (auto fd: faces(sm)) {
         auto n = face_normals[fd];

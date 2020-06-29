@@ -44,7 +44,7 @@ struct lazy_action
     }
 };
 
-struct runtime
+struct runtime //todo nix
 {
     bool _running = true;
 
