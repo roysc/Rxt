@@ -75,7 +75,7 @@ void geom_viewer::update_camera()
     set(prog->view_matrix, view_matrix);
     set(prog->mvp_matrix, mvp_matrix);
 
-    set_dirty();
+    dirty = true;
 }
 
 void geom_viewer::update_model()
@@ -103,7 +103,7 @@ void geom_viewer::update_model()
         assert(count % 3 == 0);
     }
     b_triangles.update();
-    set_dirty();
+    dirty = true;
 }
 
 void geom_viewer::draw()
@@ -125,8 +125,8 @@ void geom_viewer::advance(SDL_Event event)
 
     keys.scan();
 
-    if (is_dirty()) {
+    if (dirty) {
         draw();
-        set_dirty(false);
+        dirty = (false);
     }
 }

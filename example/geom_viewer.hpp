@@ -15,7 +15,7 @@ struct geom_viewer : public virtual sdl::simple_gui
 {
     sdl::key_dispatcher keys;
     Rxt::focused_camera camera;
-
+    bool dirty = true;
     gl::program_loader loader;
     colored_triangle_3D prog{loader};
     colored_triangle_3D::data b_triangles{prog};

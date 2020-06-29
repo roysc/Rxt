@@ -12,7 +12,7 @@ struct loop_state : public sdl::simple_gui
                   , public Rxt::runtime
 {
     using shader = Rxt::shader_programs::solid_color_3D<GL_LINE_STRIP>;
-
+    bool dirty = true;
     sdl::key_dispatcher keys;
     gl::program_loader loader;
 
@@ -51,9 +51,9 @@ struct loop_state : public sdl::simple_gui
             }
         } while (SDL_PollEvent(&event));
 
-        if (is_dirty()) {
+        if (dirty) {
             draw();
-            set_dirty(false);
+            dirty=(false);
         }
     }
 
