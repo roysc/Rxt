@@ -1,7 +1,7 @@
 #version 300 es
 precision highp float;
 
-in vec3 color;
+in vec4 color;
 in vec3 position_world;
 in vec3 normal_camera;
 in vec3 eye_dir_camera;
@@ -16,7 +16,7 @@ void main()
     vec3 light_color = vec3(1, 1, 1);
     float light_power = 500.0f;
 
-    vec3 material_diffuse_color = color;
+    vec3 material_diffuse_color = color.rgb;
     vec3 material_ambient_color = vec3(0.1) * material_diffuse_color;
     vec3 material_specular_color = vec3(0.3);
 
@@ -34,4 +34,6 @@ void main()
         material_ambient_color +
         material_diffuse_color * light_color * light_power * cos_theta / light_dist2 +
         material_specular_color * light_color * light_power * pow(cos_alpha, 5.) / light_dist2;
+    out_color.a =
+        color.a;
 }

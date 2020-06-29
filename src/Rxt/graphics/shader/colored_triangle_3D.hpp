@@ -17,7 +17,8 @@ struct colored_triangle_3D_data
 
     using position_vec = glm::vec3;
     using normal_vec = glm::vec3;
-    using color_vec = glm::vec3;
+    using rgba_vec = glm::vec4;
+    using color_vec = rgba_vec;
     using vertex = std::tuple<position_vec, normal_vec, color_vec>;
     using size_type = std::size_t;
 

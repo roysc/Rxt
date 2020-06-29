@@ -16,9 +16,19 @@ inline rgb rgb_hex(unsigned v)
     return ret / 256.f;
 }
 
-inline rgba rgb_hex(unsigned v, float a)
+inline rgba rgba_hex(unsigned v, float a)
 {
     return {rgb_hex(v), a};
+}
+
+inline rgba to_rgba(rgb c)
+{
+    return rgba{c, 1};
+}
+
+inline rgba to_rgba(rgb c, float a)
+{
+    return rgba{c, a};
 }
 
 namespace colors
@@ -40,6 +50,8 @@ inline const rgb sand = rgb_hex(0xCABB90);
 inline const rgb water = rgb_hex(0xB3D1E5);
 inline const rgb hot_pink = rgb_hex(0xFF69B4);
 inline const rgb russet = rgb_hex(0x80461B);
+inline const rgb soil = rgb_hex(0xA0522D);
+inline const rgb sky_blue = rgb_hex(0x87CEEB);
 
 // inline const rgba blank {0};
 }

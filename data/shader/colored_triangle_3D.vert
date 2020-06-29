@@ -3,9 +3,9 @@ precision highp float;
 
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec3 vertex_normal;
-layout(location = 2) in vec3 vertex_color;
+layout(location = 2) in vec4 vertex_color;
 
-out vec3 color;
+out vec4 color;
 out vec3 position_world;
 out vec3 normal_camera;
 out vec3 eye_dir_camera;
