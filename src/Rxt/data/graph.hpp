@@ -4,11 +4,40 @@
 #include <Rxt/range.hpp>
 
 #include <boost/graph/graph_traits.hpp>
+#include <boost/graph/adjacency_list.hpp>
+
 #include <vector>
 #include <array>
 
 namespace Rxt
 {
+namespace _det
+{
+using boost::vecS;
+using boost::directedS;
+using boost::undirectedS;
+using boost::directedS;
+using boost::adjacency_list;
+
+// using no_prop = no_property;
+// template <class T>
+// using v_prop = property<boost::vertex_property_tag, T>;
+// template <class T>
+// using e_prop = property<boost::edge_property_tag, T>;
+
+template <class... P>
+using g_dl = adjacency_list<vecS, vecS, directedS, P...>;
+}
+
+inline namespace dat
+{
+using _det::g_dl;
+using boost::property;
+using boost::no_property;
+using boost::vertex_property_tag;
+using boost::edge_property_tag;
+}
+
 // Create an adjacency table of all vertices of a K-valent graph
 // where G is a graph (v, e)
 // and R is a property map of (G.v -> v[3])
