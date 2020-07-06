@@ -8,18 +8,22 @@ namespace Rxt
 {
 struct focus_cam
 {
-    static constexpr float field_of_view = M_PI/4;
     using position_type = glm::vec3;
+    using vector_type = position_type;
     using matrix_type = glm::mat4;
     using M = matrix_type;
     using P = position_type;
+    using V = vector_type;
     using H = glm::vec4;
+
+    static constexpr float field_of_view = M_PI/4;
+    inline static const vector_type default_up {0, 0, 1};
 
     P _position;
     P focus;
-    P up;
+    V up;
 
-    focus_cam(P pos = P{0}, P f = P{0}, P u = P{0, 0, 1})
+    focus_cam(P pos = P{1}, P f = P{0}, V u = default_up)
         : _position(pos)
         , focus(f)
         , up(u)
@@ -33,21 +37,21 @@ struct focus_cam
     void orbit(glm::quat rot)
     {
         auto rotmat = glm::mat4_cast(rot);
-        position(P{rotmat * H{position() - focus, 0}} + focus);
-        up = P{rotmat * H{up, 0}};
+        position(P(rotmat * H(position() - focus, 0)) + focus);
+        up = P(rotmat * H(up, 0));
     }
 
-    void translate(P t)
+    void translate(V t)
     {
         auto tmat = glm::translate(t);
-        position(P{tmat * H{position(), 1}});
-        focus = P{tmat * H{focus, 1}};
+        position(P(tmat * H(position(), 1)));
+        focus = P(tmat * H(focus, 1));
     }
 
     void forward(float d)
     {
         auto tmat = glm::translate(d * orientation());
-        position(P{tmat * H{position(), 1}});
+        position(P(tmat * H(position(), 1)));
     }
 
     M model_matrix() const
@@ -66,7 +70,7 @@ struct focus_cam
         return glm::perspective(field_of_view, 1.f, 1.f, 100.f);
     }
 
-    P orientation() const
+    V orientation() const
     {
         return normalize(focus - _position);
     }
@@ -101,17 +105,17 @@ vec4 unproject(vec4 hcs, Cam const& cam)
 template <class Cam>
 std::pair<vec3, vec3> cast_ray(vec2 coord_nds, Cam const& cam)
 {
-    // Homogeneous clip space (projected) -> View space -> Camera/world
+    // Homogeneous clip space (projected) -> View -> Model [-> World]
     vec4 ray_hcs {coord_nds, -1, 0};
     vec4 ray_view = unproject(ray_hcs, cam);
     ray_view = vec4{ray_view.x, ray_view.y, -1, 0};
 
-    vec3 ray_cam = unview(ray_view, cam);
+    vec3 ray_model = unview(ray_view, cam);
     ray_view = vec4{ray_view.x, ray_view.y, -1, 1};
-    vec3 eye_cam = unview(ray_view, cam);
-    vec3 eye_world = cam.position() + eye_cam;
+    vec3 eye_model = unview(ray_view, cam);
+    vec3 eye_world = cam.position() + eye_model;
 
-    return {eye_world, normalize(ray_cam)};
+    return {eye_world, normalize(ray_model)};
 }
 
 inline
