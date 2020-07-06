@@ -7,38 +7,6 @@
 
 namespace Rxt
 {
-template <class P, class Q>
-bool point_within(P p, Q q, Q r = Q{0})
-{
-    static_assert(P::length() == Q::length());
-    auto [a, b] = box(q, r);
-    bool ret = true;
-    for (int i = 0; i < q.length(); ++i) {
-        // if (i > p.length()) {
-        //     ret &&= (q[i] == 0);
-        //     continue;
-        // }
-        ret &= (a[i] <= p[i]);
-        ret &= (p[i] < b[i]);
-    }
-    return ret;
-}
-
-// Sample a clifford torus - the simplest and most symmetric flat embedding (in R^4)
-// of the cartesian product of two circles
-template <class FP, class Sampler>
-auto sample_clifford_torus(FP nx, FP ny, const double R, Sampler&& sample_4D)
-{
-    using std::sin;
-    using std::cos;
-    const double TAU = 2 * M_PI;
-    FP angle_x = TAU * nx, angle_y = TAU * ny;
-    const auto C = R / TAU;
-
-    return sample_4D(C * cos(angle_x), C * sin(angle_x),
-                     C * cos(angle_y), C * sin(angle_y));
-}
-
 inline namespace constants
 {
 enum class axis3 : unsigned char
@@ -76,5 +44,35 @@ constexpr Vec3 basis3(unsigned char axis)
 {
     return basis3<Vec3>(to_axis3(axis));
 }
+}
+template <class P, class Q>
+bool point_within(P p, Q q, Q r = Q{0})
+{
+    static_assert(P::length() == Q::length());
+    auto [a, b] = box(q, r);
+    bool ret = true;
+    for (int i = 0; i < q.length(); ++i) {
+        // if (i > p.length()) {
+        //     ret &&= (q[i] == 0);
+        //     continue;
+        // }
+        ret &= (a[i] <= p[i]);
+        ret &= (p[i] < b[i]);
+    }
+    return ret;
+}
+
+// Sample a clifford torus - the simplest and most symmetric flat embedding (in R^4)
+// of the cartesian product of two circles
+template <class FP, class Sampler>
+auto sample_clifford_torus(FP nx, FP ny, const double R, Sampler&& sample_4D)
+{
+    using std::sin;
+    using std::cos;
+    FP angle_x = tau * nx, angle_y = tau * ny;
+    const auto C = R / tau;
+
+    return sample_4D(C * cos(angle_x), C * sin(angle_x),
+                     C * cos(angle_y), C * sin(angle_y));
 }
 }
