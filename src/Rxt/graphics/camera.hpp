@@ -1,8 +1,9 @@
 #pragma once
 #include "../_debug.hpp"
 #include "glm.hpp"
+#include "Rxt/math.hpp"
 
-#include <cmath>
+#include <utility>
 
 namespace Rxt
 {
@@ -11,25 +12,27 @@ struct focus_cam
     using position_type = glm::vec3;
     using vector_type = position_type;
     using matrix_type = glm::mat4;
+
     using M = matrix_type;
     using P = position_type;
     using V = vector_type;
     using H = glm::vec4;
 
-    static constexpr float field_of_view = M_PI/4;
     inline static const vector_type default_up {0, 0, 1};
+    static constexpr float field_of_view = tau/8;
+    // static constexpr float epsilon = 0.001f;
 
     P _position;
     P focus;
     V up;
 
-    focus_cam(P pos = P{1}, P f = P{0}, V u = default_up)
+    focus_cam(P pos, P f = P{0}, V u = default_up)
         : _position(pos)
         , focus(f)
         , up(u)
-    { }
+    {}
 
-    virtual void position(P pos) {_position = pos;}
+    virtual void position(P pos) { _position = pos; }
 
     P position() const { return _position; }
 
@@ -50,8 +53,8 @@ struct focus_cam
 
     void forward(float d)
     {
-        auto tmat = glm::translate(d * orientation());
-        position(P(tmat * H(position(), 1)));
+        auto newpos = position() + d * orientation();
+        position(newpos);
     }
 
     M model_matrix() const
@@ -72,7 +75,12 @@ struct focus_cam
 
     V orientation() const
     {
-        return normalize(focus - _position);
+        return normalize(offset());
+    }
+
+    V offset() const
+    {
+        return focus - position();
     }
 
     virtual ~focus_cam() {}
