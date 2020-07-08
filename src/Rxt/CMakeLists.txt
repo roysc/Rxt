@@ -82,4 +82,4 @@ endforeach()
 _use_boost(test_range)
 
 find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
-make_test(math FILES math.test.cpp LINK RxtBase glm)
+make_test(math FILES math.test.cpp LINK RxtBase glm::glm)

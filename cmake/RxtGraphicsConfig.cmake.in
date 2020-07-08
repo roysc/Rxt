@@ -4,4 +4,7 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     find_dependency(GLEW REQUIRED)
 endif()
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_dependency(Threads REQUIRED)
+
 find_dependency(glm REQUIRED @RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE@)
