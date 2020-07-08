@@ -84,41 +84,20 @@ using uniforms_base =
     std::experimental::detected_or_t<meta::swallow, program_uniforms_t, T>;
 }
 
-template <class Data>
+template <class Buffers>
 struct derived_program : public program
 {
-    using data = Data;
-    using vertex = typename Data::vertex;
+    using buffers = Buffers;
+    using data = buffers; //depr.
+    using vertex = typename buffers::vertex;
+    using uniforms = _det::uniforms_base<buffers>;
 
-    using uniforms = _det::uniforms_base<Data>;
     uniforms u_{*this};
 
     derived_program(program_loader const& loader = default_program_loader())
-        : program{loader.find_program(data::program_name())}
+        : program{loader.find_program(buffers::program_name())}
     {}
 
     uniforms* operator->() { return &u_; }
-};
-
-template <class Prog>
-struct buffers
-{
-    Prog _p;
-    typename Prog::data _data{_p};
-
-    // buffers() : _data{_p} {}
-
-    Prog& get_program() { return _p; }
-
-    // std::variant<grid_program*, grid_program> _pp;
-    // buffers(Prog& p) : _pp{&p} {}
-
-    // grid_program& get_program()
-    // {
-    //     auto v = overload {[](grid_program* p) {return *p;}, [](grid_program& p) {return p;}};
-    //     return visit(v, _pp);
-    // }
-
-    typename Prog::uniforms* operator->() { return &get_program().u_; }
 };
 }

@@ -10,7 +10,7 @@
 
 namespace Rxt
 {
-auto load_image(const char* path, int& width, int& height)
+inline auto load_image(const char* path, int& width, int& height)
 {
     int nchannels;
     auto image = SOIL_load_image(path, &width, &height, &nchannels, SOIL_LOAD_RGB);
