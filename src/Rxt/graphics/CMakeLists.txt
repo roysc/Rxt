@@ -5,8 +5,8 @@ if(EMSCRIPTEN)
 else()
     # Provided as ports
     find_package(OpenGL REQUIRED)
-    find_package(SDL2 2.0.8 REQUIRED)
-    find_package(GLEW 1.13 REQUIRED)
+    find_package(SDL2 REQUIRED)
+    find_package(GLEW REQUIRED)
 endif()
 
 find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})

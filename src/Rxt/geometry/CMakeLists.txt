@@ -5,7 +5,10 @@ if(EMSCRIPTEN)
     return()
 endif()
 
-find_package(CGAL 5.0 REQUIRED)
+find_package(CGAL REQUIRED) #fixme: xubuntu CGAL install doesn't use a cmake version file
+if(${CGAL_VERSION} VERSION_LESS 5.0)
+    message(SEND_ERROR "CGAL version ${CGAL_VERSION} not supported")
+endif()
 include(${CGAL_USE_FILE})
 
 set(_HEADERS

@@ -1,1 +1,1 @@
-find_dependency(CGAL 5.0 REQUIRED)
+find_dependency(CGAL REQUIRED)
