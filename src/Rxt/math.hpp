@@ -9,6 +9,9 @@ namespace Rxt
 {
 inline namespace constants
 {
+constexpr float tau = 2 * M_PI;
+constexpr double tau_d = 2 * M_PI;
+
 enum class axis3 : unsigned char
 {
     x = 0, y = 1, z = 2
