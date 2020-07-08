@@ -16,6 +16,7 @@ set(_HEADERS
     mesh_transform.hpp
     mesh_traits.hpp
     segment_between.hpp
+    ray_distance.hpp
     util.hpp
 )
 set(_SOURCES
@@ -35,9 +36,13 @@ target_link_libraries(RxtGeometry ${CGAL_LIBRARIES})
 # target_compile_definitions(RxtGeometry PRIVATE ${CGAL_CXX_FLAGS_DEBUG_INIT}) # XXX adds "-D-g"
 # target_compile_definitions(RxtGeometry PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_FEATURES)
 
-# make_test(surface)
-make_test(shapes FILES shapes.test.cpp)
-target_link_libraries(test_shapes RxtGeometry)
+set(_TESTS
+    shapes
+    ray_distance
+)
+foreach(_TEST ${_TESTS})
+    make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtGeometry)
+endforeach()
 
 install(FILES ${_HEADERS}
     DESTINATION "${_INCLUDE_DEST}/Rxt/geometry"

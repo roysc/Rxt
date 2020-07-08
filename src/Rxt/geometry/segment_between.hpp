@@ -3,6 +3,8 @@
 #include "util.hpp"
 
 #include <CGAL/Segment_3.h>
+#include <CGAL/Ray_3.h>
+#include <CGAL/Iso_cuboid_3.h>
 
 #include <cmath>
 #include <limits>
@@ -35,8 +37,8 @@ CGAL::Segment_3<K> segment_between(CGAL::Segment_3<K> a, CGAL::Segment_3<K> b)
     // TODO: TEST
     auto la = std::sqrt(a.squared_length());
     auto lb = std::sqrt(b.squared_length());
-    t_a = std::clamp(t_a, 0., la);
-    t_b = std::clamp(t_b, 0., lb);
+    t_a = std::clamp(t_a, 0.f, la);
+    t_b = std::clamp(t_b, 0.f, lb);
 
     auto pa = ra + t_a * da, pb = rb + t_b * db; // Point_3
     return Seg{pa, pb};
@@ -64,7 +66,7 @@ CGAL::Segment_3<K> segment_between(CGAL::Ray_3<K> q,
         FT b1 = r.min_coord(i), b2 = r.max_coord(i);
 
         // test for parallel
-        if (abs(D[i]) < EPSILON) {
+        if (abs(D[i]) < _det::epsilon) {
             // TODO test this!
             continue;
         }
@@ -107,20 +109,21 @@ CGAL::Segment_3<K> segment_between(CGAL::Ray_3<K> q,
         // Query segment
         Seg qseg{p_near, p_far};
 
+        using _det::replacing;
         // Find closest edge corners
         auto c1 = boxmax;       // Point_3
         auto diffmin = boxmin - qseg.source();
         auto diffmax = boxmax - qseg.source();
         if (abs(diffmin[i_near]) < abs(diffmax[i_near]))
-            c1 = _det::replacing(c1, boxmin, i_near);
+            c1 = replacing(c1, boxmin, i_near);
         if (abs(diffmin[i_far]) < abs(diffmax[i_far]))
-            c1 = _det::replacing(c1, boxmin, i_far);
+            c1 = replacing(c1, boxmin, i_far);
 
         auto c2 = replacing(c1, boxmin, i_edge);
         // Edge segment
         Seg eseg{c1, c2};
 
-        return between(qseg, eseg);
+        return segment_between(qseg, eseg);
     }
 
     return Seg{p_near, p_near};
