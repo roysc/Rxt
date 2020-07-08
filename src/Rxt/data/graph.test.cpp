@@ -61,9 +61,9 @@ TEST_CASE("adjacency table") {
 TEST_CASE("g_dl") {
     struct V { using kind = vertex_property_tag; };
     struct E { using kind = edge_property_tag; };
-    g_dl<> g;
-    g_dl<property<V, int>> gv;
-    g_dl<no_property, property<E, int>> ge;
+    directed_adj_list<> g;
+    directed_adj_list<property<V, int>> gv;
+    directed_adj_list<no_property, property<E, int>> ge;
 
     {
         auto v = add_vertex(1, gv);

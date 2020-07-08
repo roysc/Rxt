@@ -26,12 +26,14 @@ using boost::adjacency_list;
 // using e_prop = property<boost::edge_property_tag, T>;
 
 template <class... P>
-using g_dl = adjacency_list<vecS, vecS, directedS, P...>;
+using directed_adj_list = adjacency_list<vecS, vecS, directedS, P...>;
+
+// using g_dl = adjacency_list<vecS, vecS, directedS, P...>;
 }
 
-inline namespace dat
+inline namespace data
 {
-using _det::g_dl;
+using _det::directed_adj_list;
 using boost::property;
 using boost::no_property;
 using boost::vertex_property_tag;
