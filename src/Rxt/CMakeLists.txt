@@ -1,4 +1,6 @@
 # CMake config for source tree
+include(CMakeFindDependencyMacro)
+
 include(RxtFunctions)
 
 set(_LOCAL_PREFIX "$ENV{HOME}/.local")
@@ -82,6 +84,6 @@ endforeach()
 _use_boost(test_range)
 
 if(BUILD_TESTING)
-    find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
+    find_dependency(glm CONFIG REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
     make_test(math FILES math.test.cpp LINK RxtBase glm::glm)
 endif()

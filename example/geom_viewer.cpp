@@ -90,7 +90,7 @@ void geom_viewer::update_model()
     Mesh sm;
     FaceNormalMap face_normals;
 
-    Rxt::make_icosphere(sm, 1.0, 0);
+    Rxt::make_icosphere(1.0, 0, sm);
     Rxt::calculate_face_normals(sm, boost::make_assoc_property_map(face_normals));
     auto pm = get(CGAL::vertex_point, sm);
 

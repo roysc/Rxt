@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <array>
 
 namespace Rxt
 {
@@ -56,15 +57,15 @@ inline const rgb sky_blue = rgb_hex(0x87CEEB);
 // inline const rgba blank {0};
 }
 
-inline rgb default_palette(unsigned i)
-{
-    std::array palette = {
-        colors::black,
-        colors::white,
-        colors::red,
-        colors::green,
-        colors::blue
-    };
-    return palette.at(i);
-}
+// inline rgb default_palette(unsigned i)
+// {
+//     std::array palette = {
+//         colors::black,
+//         colors::white,
+//         colors::red,
+//         colors::green,
+//         colors::blue
+//     };
+//     return palette.at(i);
+// }
 }

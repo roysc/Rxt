@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <cassert>
 
 namespace Rxt
 {
@@ -15,6 +16,7 @@ namespace _det
 constexpr double epsilon = 0.0001;
 
 // Return a, with a[i] replaced with b[i]
+// todo glm has something for this in gtx
 template <class T>
 constexpr T replacing(T const& a, T const& b, unsigned i)
 {

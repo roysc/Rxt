@@ -10,7 +10,7 @@
 namespace Rxt
 {
 template <class Mesh, class Point>
-auto make_cuboid(Mesh& mesh, Point min, Point max)
+auto make_cuboid(Point min, Point max, Mesh& mesh)
 {
     // CGAL_precondition(mesh.is_valid());
     auto x0 = min.x(), y0 = min.y(), z0 = min.z();
@@ -30,7 +30,7 @@ auto make_cuboid(Mesh& mesh, Point min, Point max)
 }
 
 template <class Mesh>
-auto make_icosphere(Mesh& mesh, float r, unsigned n)
+auto make_icosphere(float r, unsigned n, Mesh& mesh)
 {
     // constexpr float circsphere_radius = 0.951056516295; ?
     using Point = typename mesh_traits<Mesh>::point;
