@@ -31,6 +31,7 @@ set(_HEADERS
     util.hpp
     meta.hpp
     "macro.hpp"
+    loader.hpp
 )
 set(_SOURCES
 )

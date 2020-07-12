@@ -60,12 +60,12 @@ _add_component(Graphics)
 
 # Point to shader sources
 if(EMSCRIPTEN)
-    target_compile_definitions(RxtGraphics PUBLIC RXT_GRAPHICS_DATA_DEFAULT="/data")
+    target_compile_definitions(RxtGraphics PUBLIC RXT_ASSET_PATH_DEFAULT="/data")
     set(_html_shell "${PROJECT_SOURCE_DIR}/data/emscripten/shell_minimal.html")
     target_link_options(RxtGraphics PUBLIC --shell-file ${_html_shell})
 else()
     target_compile_definitions(RxtGraphics PUBLIC
-        RXT_GRAPHICS_DATA_DEFAULT="$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/data>$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${_LIB_DEST}>")
+        RXT_ASSET_PATH_DEFAULT="$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/data>$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${_LIB_DEST}>")
 endif()
 
 # For testing WebGL compatibility

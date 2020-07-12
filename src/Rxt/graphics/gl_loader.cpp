@@ -6,7 +6,7 @@
 
 namespace Rxt::gl
 {
-program file_loader::find_program(std::string name) const
+program program_loader::find_program(std::string name) const
 {
     program ret;
     auto paths = {
