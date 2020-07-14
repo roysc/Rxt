@@ -4,16 +4,20 @@
 
 #include <CGAL/Kd_tree_rectangle.h>
 #include <CGAL/squared_distance_3.h>
+
 #include <limits>
+#include <type_traits>
+#include <utility>
 
 namespace Rxt
 {
-template <class T, class K, auto get_point>
-// requires(T const& a) { get_point(a) -> point }
+template <class P, class T, class K_=void>
 struct ray_distance
 {
+    // using K = typename CGAL::Kernel_traits<T>::Kernel;
+    using K = std::conditional_t<std::is_void_v<K_>, typename CGAL::Kernel_traits<P>::Kernel, K_>;
     // CGAL distance interface
-    using Point_d    = T;
+    using Point_d    = std::pair<P, T>;
     using D          = CGAL::Dimension_tag<3>;
     using Query_item = typename K::Ray_3;
     using FT         = typename K::FT;
@@ -40,7 +44,7 @@ struct ray_distance
 
     FT transformed_distance(Query_item q, Point_d pp) const
     {
-        auto p = get_point(pp);
+        auto p = pp.first;
         auto qp = q.supporting_line().projection(p);
         return squared_distance(qp, p);
     }
