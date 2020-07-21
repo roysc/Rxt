@@ -31,7 +31,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-pedantic-errors)
 add_compile_options(-Wall -Wextra)
 add_compile_options(-Wdeprecated -Wextra-semi)
-add_compile_options(-Wmissing-declarations)
+# add_compile_options(-Wmissing-declarations)
 add_compile_options(-Werror=return-type) # -Wunused -Wpedantic
 add_compile_options(-Werror=redundant-decls)
 add_compile_options(-fno-omit-frame-pointer -fno-optimize-sibling-calls)

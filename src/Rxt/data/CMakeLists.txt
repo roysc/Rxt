@@ -2,8 +2,8 @@
 
 set(_HEADERS
     graph.hpp
-    _graph_dummy.cpp
 )
+set(_SOURCES _graph_dummy.cpp)
 
 add_library(RxtData ${_HEADERS} ${_SOURCES})
 _add_component(Data)
