@@ -6,6 +6,6 @@ namespace Rxt
 TEST_CASE("demangle")
 {
     auto ni = type_name<int>();
-    REQUIRE_EQUAL(ni, "i");
+    REQUIRE_EQ(ni, "i");
 }
 }
