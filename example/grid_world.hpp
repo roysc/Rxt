@@ -29,7 +29,7 @@ struct grid_world : public grid_context
 #ifndef __EMSCRIPTEN__
     sdl::metronome metronome{tick_duration{1}, [this] { return !is_stopped(); }};
 #endif
-    grid_quad_2D::data b_quads_sticky {quad_prog};
+    grid_quad_2D::buffers b_quads_sticky {quad_prog};
     bool p_edge_scroll = true;
 
     grid_coord cursor_position {0}; // relative to viewport

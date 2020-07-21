@@ -46,8 +46,8 @@ struct grid_context : public Rxt::sdl::simple_gui
     texture_quad_2D tex_prog {_loader};
     grid_quad_2D quad_prog {_loader};
 
-    texture_quad_2D::data b_texs {tex_prog};
-    grid_quad_2D::data b_quads {quad_prog};
+    texture_quad_2D::buffers b_texs {tex_prog};
+    grid_quad_2D::buffers b_quads {quad_prog};
 
     bool _dirty = true;
 

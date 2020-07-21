@@ -5,10 +5,14 @@
 #include "gl_guard.hpp"
 #include "gl_loader.hpp"
 #include "_gl_debug.hpp"
-
 #include <Rxt/meta.hpp>
+
 #include <vector>
+#include <map>
+#include <memory>
+#include <string>
 #include <utility>
+#include <experimental/type_traits>
 
 namespace Rxt::gl
 {
@@ -84,15 +88,45 @@ using uniforms_base =
     std::experimental::detected_or_t<meta::swallow, program_uniforms_t, T>;
 }
 
-template <class Buffers>
+template <class P>
+struct program_buffer_registry
+{
+    using buffer_type = typename P::buffers;
+    using key_type = std::string;
+    using buffer_ptr = std::unique_ptr<buffer_type>;
+    using map_type = std::map<key_type, buffer_ptr>;
+
+    P& _prog;
+    map_type _map{};
+
+    buffer_type& operator[](key_type k)
+    {
+        auto it = _map.find(k);
+        if (it == end(_map)) {
+            auto r = _map.emplace(k, std::make_unique<buffer_type>(_prog));
+            it = r.first;
+        }
+        return *it->second;
+    }
+
+    buffer_type* ptr(key_type k)
+    {
+        auto it = _map.find(k);
+        if (it != _map.end())
+            return it->second.get();
+        return nullptr;
+    }
+};
+
+template <class Buf>
 struct derived_program : public program
 {
-    using buffers = Buffers;
-    using data = buffers; //depr.
+    using buffers = Buf;
     using vertex = typename buffers::vertex;
     using uniforms = _det::uniforms_base<buffers>;
 
     uniforms u_{*this};
+    program_buffer_registry<derived_program> buf{*this};
 
     derived_program(asset_loader const& loader = asset_loader::default_loader())
         : program{loader.find_program(buffers::program_name())}

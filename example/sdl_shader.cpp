@@ -16,7 +16,7 @@ struct loop_state : public sdl::simple_gui
     sdl::key_dispatcher keys;
     gl::asset_loader loader;
     shader line_prog{loader};
-    shader::data b_lines{line_prog};
+    shader::buffers b_lines{line_prog};
 
     loop_state()
         : simple_gui("demo: sdl_shader", 500, 500)
@@ -31,11 +31,11 @@ struct loop_state : public sdl::simple_gui
             { .5, -.5, 0},
             {-.5, -.5, 0}
         };
+        auto& b = line_prog.buf["lines"];
         for (auto point: points) {
-            b_lines.push(point, color);
+            b.push(point, color);
         }
-        b_lines.update();
-
+        b.update();
         set(line_prog->mvp_matrix, glm::mat4{1});
     }
 
@@ -58,7 +58,7 @@ struct loop_state : public sdl::simple_gui
     {
         glClearColor(0,0,0,0);
         glClear(GL_COLOR_BUFFER_BIT);
-        b_lines.draw();
+        line_prog.buf["lines"].draw();
         SDL_GL_SwapWindow(window.get());
     }
 };
