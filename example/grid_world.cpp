@@ -191,12 +191,11 @@ void grid_world::h_edge_scroll()
     // (0,0) is center-screen, so offset it to the corner
     grid_offset offset_pos = cursor_position + grid_offset(viewport_size / 2u);
     grid_offset dv {0};
-    for (unsigned i = 0; i < dv.length(); ++i) {
-        if (offset_pos[i] == 0) {
+    for (int i = 0; i < dv.length(); ++i) {
+        if (offset_pos[i] == 0)
             dv[i] = -1;
-        } else if (offset_pos[i] + 1 == (int)viewport_size[i]) {
+        else if (offset_pos[i] + 1 == (int)viewport_size[i])
             dv[i] = +1;
-        }
     }
     if (dv != grid_offset{0}) {
         h_move_viewport(dv.x, dv.y);
