@@ -19,16 +19,10 @@ using boost::undirectedS;
 using boost::directedS;
 using boost::adjacency_list;
 
-// using no_prop = no_property;
-// template <class T>
-// using v_prop = property<boost::vertex_property_tag, T>;
-// template <class T>
-// using e_prop = property<boost::edge_property_tag, T>;
-
 template <class... P>
 using directed_adj_list = adjacency_list<vecS, vecS, directedS, P...>;
-
-// using g_dl = adjacency_list<vecS, vecS, directedS, P...>;
+template <class... P>
+using undirected_adj_list = adjacency_list<vecS, vecS, undirectedS, P...>;
 }
 
 inline namespace data
@@ -38,6 +32,12 @@ using boost::property;
 using boost::no_property;
 using boost::vertex_property_tag;
 using boost::edge_property_tag;
+using boost::graph_traits;
+
+template <class T>
+using vertex_descriptor_t = graph_traits<T>::vertex_descriptor;
+template <class T>
+using edge_descriptor_t = graph_traits<T>::edge_descriptor;
 }
 
 // Create an adjacency table of all vertices of a K-valent graph
@@ -46,8 +46,6 @@ using boost::edge_property_tag;
 template <unsigned K, class Out, class G>
 bool create_adjacency_table(const G& g, Out& out)
 {
-    using boost::graph_traits;
-
     using Vd = typename graph_traits<G>::vertex_descriptor;
     using Row = std::array<Vd, K>;
 
