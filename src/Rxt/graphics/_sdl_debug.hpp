@@ -5,10 +5,11 @@
 
 namespace Rxt::sdl
 {
-inline void log_and_fail(const char* what)
+inline void log_and_fail(const char* what, int r=0)
 {
     auto msg = SDL_GetError();
-    SDL_Log("%s: %s", what, msg);
+    if (r) SDL_Log("%s: (%d) %s", what, r, msg);
+    else SDL_Log("%s: %s", what, msg);
     throw std::runtime_error(msg);
 }
 

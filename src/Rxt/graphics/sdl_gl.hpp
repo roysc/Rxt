@@ -50,7 +50,7 @@ struct gl_context
         if (!_gl) {
             log_and_fail("SDL_GL_CreateContext");
         }
-        if (auto r = SDL_GL_MakeCurrent(window.get(), _gl) < 0) {
+        if (SDL_GL_MakeCurrent(window.get(), _gl) < 0) {
             log_and_fail("SDL_GL_MakeCurrent");
         }
 #ifndef __EMSCRIPTEN__
