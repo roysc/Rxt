@@ -17,6 +17,7 @@ std::pair<T, T> box(T a, T b)
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
+auto get_first = [] (auto&& pair) -> auto&& { return (pair.first); };
 auto get_second = [] (auto&& pair) -> auto&& { return (pair.second); };
 
 // "Lazy" function wrapper to batch calls and flush manually
