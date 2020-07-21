@@ -32,8 +32,10 @@ set(_HEADERS
     meta.hpp
     "macro.hpp"
     loader.hpp
+    demangle.hpp
 )
 set(_SOURCES
+    demangle.cpp
 )
 
 # Base library is installed by default; dependencies of other components should live here.
@@ -78,7 +80,7 @@ install(FILES ${_config_file} DESTINATION ${_CMAKE_MODULE_DEST})
 install(FILES ${_version_file} DESTINATION ${_CMAKE_MODULE_DEST})
 
 # Tests for base
-set(_TESTS meta io log time range "macro")
+set(_TESTS meta io log time range "macro" demangle)
 foreach(_TEST ${_TESTS})
     make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtBase)
 endforeach()
