@@ -12,11 +12,12 @@
 
 namespace Rxt::gl
 {
-struct program_loader : file_loader
+using Str = std::string;
+struct asset_loader : file_loader
 {
-    std::string env_var = "RXT_ASSET_PATH";
+    Str env_var = "RXT_ASSET_PATH";
 
-    program_loader()
+    asset_loader()
         : file_loader{RXT_ASSET_PATH_DEFAULT}
     {}
 
@@ -35,12 +36,14 @@ struct program_loader : file_loader
     }
 
     // Assumes shaders named like: name.vert, name.frag
-    gl::program find_program(std::string name) const;
-};
+    program find_program(Str name) const;
 
-inline program_loader& default_program_loader()
-{
-    thread_local program_loader thread_loader;
-    return thread_loader;
-}
+    texture find_texture(Str name) const;
+
+    static asset_loader& default_loader()
+    {
+        thread_local asset_loader thread_loader;
+        return thread_loader;
+    }
+};
 }

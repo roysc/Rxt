@@ -7,7 +7,7 @@ namespace sdl = Rxt::sdl;
 namespace gl = Rxt::gl;
 // using Rxt::print;
 
-struct run_context : public gl::program_loader
+struct run_context : public gl::asset_loader
 {
     sdl::window_ptr window;
     sdl::key_dispatcher kd;

@@ -35,7 +35,7 @@ inline grid_coord nds_to_grid(glm::vec2 nds, glm::vec2 scale) { return floor(nds
 
 struct grid_context : public Rxt::sdl::simple_gui
 {
-    gl::program_loader _loader;
+    gl::asset_loader _loader;
 
     grid_size world_size;
     grid_size viewport_size;

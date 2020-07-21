@@ -94,7 +94,7 @@ struct derived_program : public program
 
     uniforms u_{*this};
 
-    derived_program(program_loader const& loader = default_program_loader())
+    derived_program(asset_loader const& loader = asset_loader::default_loader())
         : program{loader.find_program(buffers::program_name())}
     {}
 

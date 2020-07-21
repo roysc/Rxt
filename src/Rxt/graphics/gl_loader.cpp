@@ -1,12 +1,13 @@
 #include "_gl_debug.hpp"
 #include "gl_loader.hpp"
 #include "Rxt/io.hpp"
+#include "Rxt/error.hpp"
 
 #include <utility>
 
 namespace Rxt::gl
 {
-program program_loader::find_program(std::string name) const
+program asset_loader::find_program(Str name) const
 {
     program ret;
     auto paths = {
@@ -30,5 +31,11 @@ program program_loader::find_program(std::string name) const
     glLinkProgram(ret);
     log_result(ret, GL_LINK_STATUS, "program");
     return ret;
+}
+
+texture asset_loader::find_texture(Str) const
+{
+    throw util::_unimplemented{};
+    return texture{};
 }
 }
