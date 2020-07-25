@@ -2,6 +2,7 @@
 
 set(_HEADERS
     graph.hpp
+    quadtree.hpp
 )
 set(_SOURCES _graph_dummy.cpp)
 
@@ -16,6 +17,9 @@ target_link_libraries(test_graph RxtData)
 
 make_test(grid FILES grid.test.cpp)
 target_link_libraries(test_grid RxtData)
+
+make_test(quadtree FILES quadtree.test.cpp)
+target_link_libraries(test_quadtree RxtData)
 
 install(FILES ${_HEADERS}
     DESTINATION "${_INCLUDE_DEST}/Rxt/data"
