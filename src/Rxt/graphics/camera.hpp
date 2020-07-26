@@ -1,7 +1,7 @@
 #pragma once
 #include "../_debug.hpp"
-#include "glm.hpp"
 #include "Rxt/math.hpp"
+#include "Rxt/vec.hpp"
 
 #include <utility>
 
@@ -9,14 +9,14 @@ namespace Rxt
 {
 struct focus_cam
 {
-    using position_type = glm::vec3;
+    using position_type = fvec3;
     using vector_type = position_type;
     using matrix_type = glm::mat4;
 
     using M = matrix_type;
     using P = position_type;
     using V = vector_type;
-    using H = glm::vec4;
+    using H = fvec4;
 
     inline static const vector_type default_up {0, 0, 1};
     static constexpr float field_of_view = tau/8;
@@ -89,49 +89,43 @@ using focused_camera = focus_cam;
 
 namespace _det
 {
-using glm::vec2;
-using glm::vec3;
-using glm::vec4;
-using glm::mat4;
-using glm::quat;
-
 template <class Cam>
-vec3 unview(vec4 view, Cam const& cam)
+fvec3 unview(fvec4 view, Cam const& cam)
 {
-    return vec3{inverse(cam.view_matrix()) * view};
+    return fvec3{inverse(cam.view_matrix()) * view};
 }
 
 template <class Cam>
-vec4 unproject(vec4 hcs, Cam const& cam)
+fvec4 unproject(fvec4 hcs, Cam const& cam)
 {
-    return vec4{inverse(cam.projection_matrix()) * hcs};
+    return fvec4{inverse(cam.projection_matrix()) * hcs};
 }
 
 // Given a coordinate in NDS and a camera object, returns ray pointing into space
 // as (source point, normalized direction vector)
 // Source: http://antongerdelan.net/opengl/raycasting.html
 template <class Cam>
-std::pair<vec3, vec3> cast_ray(vec2 coord_nds, Cam const& cam)
+std::pair<fvec3, fvec3> cast_ray(fvec2 coord_nds, Cam const& cam)
 {
     // Homogeneous clip space (projected) -> View -> Model [-> World]
-    vec4 ray_hcs {coord_nds, -1, 0};
-    vec4 ray_view = unproject(ray_hcs, cam);
-    ray_view = vec4{ray_view.x, ray_view.y, -1, 0};
+    fvec4 ray_hcs {coord_nds, -1, 0};
+    fvec4 ray_view = unproject(ray_hcs, cam);
+    ray_view = fvec4{ray_view.x, ray_view.y, -1, 0};
 
-    vec3 ray_model = unview(ray_view, cam);
-    ray_view = vec4{ray_view.x, ray_view.y, -1, 1};
-    vec3 eye_model = unview(ray_view, cam);
-    vec3 eye_world = cam.position() + eye_model;
+    fvec3 ray_model = unview(ray_view, cam);
+    ray_view = fvec4{ray_view.x, ray_view.y, -1, 1};
+    fvec3 eye_model = unview(ray_view, cam);
+    fvec3 eye_world = cam.position() + eye_model;
 
     return {eye_world, normalize(ray_model)};
 }
 
 inline
-quat rotation_between(vec3 v0, vec3 v1)
+quat rotation_between(fvec3 v0, fvec3 v1)
 {
     auto l0 = length(v0) * length(v0);
     auto l1 = length(v1) * length(v1);
-    vec3 a = cross(v0, v1);
+    fvec3 a = cross(v0, v1);
     quat q {std::sqrt(l0 * l1) + dot(v0, v1), a.x, a.y, a.z};
 
     return normalize(q);

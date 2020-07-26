@@ -2,7 +2,7 @@
 
 #include "gl.hpp"
 #include "gl_guard.hpp"
-#include "glm.hpp"
+#include "Rxt/vec.hpp"
 
 namespace Rxt::gl
 {
@@ -10,9 +10,9 @@ namespace Rxt::gl
 // #define glUniform2ui glUniform2i
 // #endif
 
-inline const glm::vec3 AXIS_X {1, 0, 0};
-inline const glm::vec3 AXIS_Y {0, 1, 0};
-inline const glm::vec3 AXIS_Z {0, 0, 1};
+inline const fvec3 AXIS_X {1, 0, 0};
+inline const fvec3 AXIS_Y {0, 1, 0};
+inline const fvec3 AXIS_Z {0, 0, 1};
 
 namespace _det
 {
@@ -48,63 +48,63 @@ void set_uniform(program& prog, const char* n, T const& x)
 }
 
 template <>
-struct data_traits<glm::vec2> : _det::data_adaptor<GL_FLOAT, 2>
+struct data_traits<fvec2> : _det::data_adaptor<GL_FLOAT, 2>
 {
-    static void set(value_type id, glm::vec2 const& v)
+    static void set(value_type id, fvec2 const& v)
     {
         glUniform2f(id, v.x, v.y);
     }
 };
 
 template <>
-struct data_traits<glm::ivec2> : _det::data_adaptor<GL_INT, 2>
+struct data_traits<ivec2> : _det::data_adaptor<GL_INT, 2>
 {
-    static void set(value_type id, glm::ivec2 const& v)
+    static void set(value_type id, ivec2 const& v)
     {
         glUniform2i(id, v.x, v.y);
     }
 };
 
 template <>
-struct data_traits<glm::uvec2> : _det::data_adaptor<GL_UNSIGNED_INT, 2>
+struct data_traits<uvec2> : _det::data_adaptor<GL_UNSIGNED_INT, 2>
 {
-    static void set(value_type id, glm::uvec2 const& v)
+    static void set(value_type id, uvec2 const& v)
     {
         glUniform2ui(id, v.x, v.y);
     }
 };
 
 template <>
-struct data_traits<glm::vec3> : _det::data_adaptor<GL_FLOAT, 3>
+struct data_traits<fvec3> : _det::data_adaptor<GL_FLOAT, 3>
 {
-    static void set(value_type id, glm::vec3 const& v)
+    static void set(value_type id, fvec3 const& v)
     {
         glUniform3f(id, v.x, v.y, v.z);
     }
 };
 
 template <>
-struct data_traits<glm::vec4> : _det::data_adaptor<GL_FLOAT, 4>
+struct data_traits<fvec4> : _det::data_adaptor<GL_FLOAT, 4>
 {
-    static void set(value_type id, glm::vec4 const& v)
+    static void set(value_type id, fvec4 const& v)
     {
         glUniform4f(id, v.x, v.y, v.z, v.w);
     }
 };
 
 template <>
-struct data_traits<glm::mat3> : _det::data_adaptor<GL_FLOAT, 3, 3>
+struct data_traits<fmat3> : _det::data_adaptor<GL_FLOAT, 3, 3>
 {
-    static void set(value_type id, glm::mat3 const& m)
+    static void set(value_type id, fmat3 const& m)
     {
         glUniformMatrix3fv(id, 1, GL_FALSE, value_ptr(m));
     }
 };
 
 template <>
-struct data_traits<glm::mat4> : _det::data_adaptor<GL_FLOAT, 4, 4>
+struct data_traits<fmat4> : _det::data_adaptor<GL_FLOAT, 4, 4>
 {
-    static void set(value_type id, glm::mat4 const& m)
+    static void set(value_type id, fmat4 const& m)
     {
         glUniformMatrix4fv(id, 1, GL_FALSE, value_ptr(m));
     }

@@ -1,6 +1,6 @@
-#include "../_testing.hpp"
+#include "Rxt/_testing.hpp"
 #include "color.hpp"
-#include "glm.hpp"
+#include "Rxt/vec.hpp"
 
 namespace Rxt
 {

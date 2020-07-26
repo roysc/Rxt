@@ -2,7 +2,8 @@
 
 #include "Rxt/io.hpp"
 #include "Rxt/util.hpp"
-#include "Rxt/graphics/glm.hpp"
+#include "Rxt/vec.hpp"
+#include "Rxt/vec_io.hpp"
 #include "Rxt/geometry/helper.hpp"
 #include "Rxt/geometry/shapes.hpp"
 
@@ -25,16 +26,16 @@ int main()
 }
 
 template <class K>
-glm::vec3 to_glm(CGAL::Point_3<K> v)  { return {v.x(), v.y(), v.z()}; }
+Rxt::fvec3 to_glm(CGAL::Point_3<K> v)  { return {v.x(), v.y(), v.z()}; }
 template <class K>
-glm::vec3 to_glm(CGAL::Vector_3<K> v) { return {v.x(), v.y(), v.z()}; }
+Rxt::fvec3 to_glm(CGAL::Vector_3<K> v) { return {v.x(), v.y(), v.z()}; }
 
 inline glm::vec3 to_glm(CGAL::Color c) { return glm::vec3 {c.red(), c.green(), c.blue()} / 256.f; }
-inline glm::vec3 to_glm(glm::vec3 v)   { return v; }
+inline glm::vec3 to_glm(Rxt::fvec3 v)   { return v; }
 
-void turn(Rxt::focused_camera& cam, float d, const glm::vec3 axis)
+void turn(Rxt::focused_camera& cam, float d, const Rxt::fvec3 axis)
 {
-    glm::quat rot = glm::angleAxis(d, axis);
+    auto rot = angleAxis(d, axis);
     cam.orbit(rot);
 }
 

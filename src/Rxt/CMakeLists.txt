@@ -33,6 +33,9 @@ set(_HEADERS
     "macro.hpp"
     loader.hpp
     demangle.hpp
+    _glm.hpp
+    vec.hpp
+    vec_io.hpp
 )
 set(_SOURCES
     demangle.cpp
@@ -47,10 +50,15 @@ add_library(RxtBase ${_HEADERS} ${_SOURCES})
 _add_component(Base)
 
 set_target_properties(RxtBase PROPERTIES LINKER_LANGUAGE CXX)
+
+# Dependencies
+find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
+
 if(NOT DISABLE_FMT)
     find_package(fmt 6.0 CONFIG REQUIRED)
     target_link_libraries(RxtBase fmt::fmt)
 endif()
+target_link_libraries(RxtBase glm::glm)
 
 install(FILES ${_HEADERS}
     DESTINATION "${_INCLUDE_DEST}/Rxt"
@@ -87,6 +95,7 @@ endforeach()
 _use_boost(test_range)
 
 if(BUILD_TESTING)
-    find_dependency(glm CONFIG REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
-    make_test(math FILES math.test.cpp LINK RxtBase glm::glm)
+    make_test(vec FILES vec.test.cpp LINK RxtBase)
+    make_test(vec_io FILES vec_io.test.cpp LINK RxtBase)
+    make_test(math FILES math.test.cpp LINK RxtBase)
 endif()

@@ -12,7 +12,6 @@ endif()
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
 find_library(SOIL REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
 
 set(_HEADERS
@@ -35,7 +34,6 @@ set(_HEADERS
     _sdl_debug.hpp
     sdl.hpp
 
-    glm.hpp
     image.hpp
     camera.hpp
     color.hpp
@@ -93,13 +91,11 @@ if(EMSCRIPTEN)
     target_link_options(RxtGraphics PUBLIC ${_emscripten_options})
     target_link_libraries(RxtGraphics
         ${RXT_BASE_LIBRARY}
-        glm::glm
         SOIL)                   #fixme
 else()
     target_link_libraries(RxtGraphics PUBLIC
         Threads::Threads
         ${RXT_BASE_LIBRARY}
-        glm::glm
         SOIL
         OpenGL::GL
         ${GLEW_LIBRARIES}
