@@ -11,7 +11,7 @@ set(_CMAKE_MODULE_DEST "lib/cmake/Rxt")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 option(BUILD_DEMOS "Build example demos" OFF)
-option(BUILD_TESTING "Build tests" OFF)
+option(BUILD_TESTING "Build tests" ON)
 option(DISABLE_BOOST "Purge projects requiring Boost" OFF) #todo USE_BOOST, USE_FMT
 option(DISABLE_FMT "Disable all use of fmt" OFF)
 option(WEBGL_COMPAT "Build with WebGL compatibility changes" OFF) #todo ENABLE_WEBGL_COMPAT

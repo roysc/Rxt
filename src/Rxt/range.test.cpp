@@ -16,14 +16,14 @@ TEST_CASE("to_range")
 
     auto count = [] (auto&& r) {
         int ct = 0;
-        for (auto _: r) ++ct;
+        for (int _: r) ++ct;
         return ct;
     };
-    REQUIRE(count(to_range(xo)) == 0);
+    REQUIRE_EQ(count(to_range(xo)), 0);
     xo = 4;
-    REQUIRE(count(to_range(xo)) == 1);
+    REQUIRE_EQ(count(to_range(xo)), 1);
 
-    REQUIRE(count(to_range(cxo)) == 1);
+    REQUIRE_EQ(count(to_range(cxo)), 1);
 }
 
 TEST_CASE("index_ranges(map)")
@@ -36,8 +36,8 @@ TEST_CASE("index_ranges(map)")
     std::map<int, MIP> mp;
     index_ranges(m, std::inserter(mp, mp.end()));
 
-    REQUIRE(mp[1] == MIP{begin(m), next(begin(m))});
-    REQUIRE(mp[2] == MIP{next(begin(m)), end(m)});
+    REQUIRE_EQ(mp[1], MIP{begin(m), next(begin(m))});
+    REQUIRE_EQ(mp[2], MIP{next(begin(m)), end(m)});
 }
 
 TEST_CASE("index_ranges(multimap)")
@@ -50,8 +50,8 @@ TEST_CASE("index_ranges(multimap)")
     std::map<int, MIP> mp;
     index_ranges(m, std::inserter(mp, mp.end()));
 
-    REQUIRE(mp[1] == MIP{begin(m), next(begin(m), 2)});
-    REQUIRE(mp[2] == MIP{next(begin(m), 2), end(m)});
+    REQUIRE_EQ(mp[1], MIP{begin(m), next(begin(m), 2)});
+    REQUIRE_EQ(mp[2], MIP{next(begin(m), 2), end(m)});
 }
 
 template <class R>
