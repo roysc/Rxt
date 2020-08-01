@@ -69,6 +69,9 @@ struct bounding_box
         , _max(max(a,b ))
     {}
 
+    bounding_box(std::pair<vec_type, vec_type> pair)
+        : bounding_box(pair.first, pair.second) {}
+
     bounding_box() : bounding_box(vec_type(), vec_type()) {}
 
     auto shape() const { return _max - _min; }
