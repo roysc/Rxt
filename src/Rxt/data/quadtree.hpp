@@ -9,7 +9,7 @@
 #include <type_traits>
 #include <vector>
 
-namespace Rxt_ds
+namespace Rxt
 {
 template <class FT>
 using vec2 = Rxt::tvec2<FT>;
@@ -18,9 +18,23 @@ using vec2 = Rxt::tvec2<FT>;
 // using bounding_box(vec2<T>, vec2<T>) -> bounding_box<T>;
 
 template<class T, class GetBox, class Equal = std::equal_to<T>, class FT = float>
-class quadtree
+struct quadtree
 {
     using box_type = Rxt::bounding_box<FT>;
+
+    struct node_type
+    {
+        std::array<std::unique_ptr<node_type>, 4> children;
+        std::vector<T> values;
+    };
+
+    static constexpr auto threshold = std::size_t(16);
+    static constexpr auto max_depth = std::size_t(8);
+
+    box_type m_box;
+    std::unique_ptr<node_type> m_root;
+    GetBox m_get_box;
+    Equal m_equal;
 
     static_assert(std::is_convertible_v<std::invoke_result_t<GetBox, const T&>, box_type>,
         "GetBox must be a callable of signature bounding_box<FT>(const T&)");
@@ -28,12 +42,11 @@ class quadtree
         "Equal must be a callable of signature bool(const T&, const T&)");
     static_assert(std::is_arithmetic_v<FT>);
 
-public:
     quadtree(const box_type& box,
              const GetBox& get_box = GetBox(),
              const Equal& equal = Equal())
         : m_box(box),
-          m_root(std::make_unique<node_t>()),
+          m_root(std::make_unique<node_type>()),
           m_get_box(get_box), m_equal(equal)
     {}
 
@@ -61,22 +74,7 @@ public:
         return intersections;
     }
 
-private:
-    static constexpr auto threshold = std::size_t(16);
-    static constexpr auto max_depth = std::size_t(8);
-
-    struct node_t
-    {
-        std::array<std::unique_ptr<node_t>, 4> children;
-        std::vector<T> values;
-    };
-
-    box_type m_box;
-    std::unique_ptr<node_t> m_root;
-    GetBox m_get_box;
-    Equal m_equal;
-
-    bool is_leaf(const node_t* node) const
+    bool is_leaf(const node_type* node) const
     {
         return !static_cast<bool>(node->children[0]);
     }
@@ -140,7 +138,7 @@ private:
             return -1;
     }
 
-    void add(node_t* node, std::size_t depth, const box_type& box, const T& value)
+    void add(node_type* node, std::size_t depth, const box_type& box, const T& value)
     {
         assert(node != nullptr);
         assert(box.contains(m_get_box(value)));
@@ -161,20 +159,23 @@ private:
             auto i = get_quadrant(box, m_get_box(value));
             // Add the value in a child if the value is entirely contained in it
             if (i != -1)
-                add(node->children[static_cast<std::size_t>(i)].get(), depth + 1, compute_box(box, i), value);
+                add(node->children[static_cast<std::size_t>(i)].get(),
+                    depth + 1,
+                    compute_box(box, i),
+                    value);
             // Otherwise, we add the value in the current node
             else
                 node->values.push_back(value);
         }
     }
 
-    void split(node_t* node, const box_type& box)
+    void split(node_type* node, const box_type& box)
     {
         assert(node != nullptr);
         assert(is_leaf(node) && "Only leaves can be split");
         // Create children
         for (auto& child : node->children)
-            child = std::make_unique<node_t>();
+            child = std::make_unique<node_type>();
         // Assign values to children
         auto new_values = std::vector<T>(); // New values for this node
         for (const auto& value : node->values)
@@ -188,7 +189,7 @@ private:
         node->values = std::move(new_values);
     }
 
-    void remove(node_t* node, node_t* parent, const box_type& box, const T& value)
+    void remove(node_type* node, node_type* parent, const box_type& box, const T& value)
     {
         assert(node != nullptr);
         assert(box.contains(m_get_box(value)));
@@ -212,7 +213,7 @@ private:
         }
     }
 
-    void remove_value(node_t* node, const T& value)
+    void remove_value(node_type* node, const T& value)
     {
         // Find the value in node->values
         auto it = std::find_if(std::begin(node->values), std::end(node->values),
@@ -223,7 +224,7 @@ private:
         node->values.pop_back();
     }
 
-    void try_merge(node_t* node)
+    void try_merge(node_type* node)
     {
         assert(node != nullptr);
         assert(!is_leaf(node) && "Only interior nodes can be merged");
@@ -249,7 +250,10 @@ private:
         }
     }
 
-    void query(node_t* node, const box_type& box, const box_type& query_box, std::vector<T>& values) const
+    void query(node_type* node,
+               const box_type& box,
+               const box_type& query_box,
+               std::vector<T>& values) const
     {
         assert(node != nullptr);
         assert(query_box.intersects(box));
@@ -269,7 +273,7 @@ private:
         }
     }
 
-    void find_all_intersections(node_t* node, std::vector<std::pair<T, T>>& intersections) const
+    void find_all_intersections(node_type* node, std::vector<std::pair<T, T>>& intersections) const
     {
         // Find intersections between values stored in this node
         // Make sure to not report the same intersection twice
@@ -295,7 +299,10 @@ private:
         }
     }
 
-    void find_intersections_in_descendants(node_t* node, const T& value, std::vector<std::pair<T, T>>& intersections) const
+    void find_intersections_in_descendants(
+        node_type* node,
+        const T& value,
+        std::vector<std::pair<T, T>>& intersections) const
     {
         // Test against the values stored in this node
         for (const auto& other : node->values)
@@ -311,9 +318,4 @@ private:
         }
     }
 };
-}
-
-namespace Rxt
-{
-using Rxt_ds::quadtree;
 }

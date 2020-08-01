@@ -135,11 +135,11 @@ TEST_CASE("quadtree: add and find all intersections")
     auto box = Box(Vec(0.0f), Vec(1.0f));
     auto nodes = generateRandomNodes(n);
     // Add nodes to quadtree
-    auto quadtree = Rxt_ds::quadtree<Node*, decltype(getBox)>(box, getBox);
+    auto tree = quadtree<Node*, decltype(getBox)>(box, getBox);
     for (auto& node : nodes)
-        quadtree.add(&node);
+        tree.add(&node);
     // Quadtree
-    auto intersections1 = quadtree.find_all_intersections();
+    auto intersections1 = tree.find_all_intersections();
     // Brute force
     auto intersections2 = findAllIntersections(nodes, {});
     // Check
@@ -156,9 +156,9 @@ TEST_CASE("quadtree: add remove and query")
     auto box = Box(Vec(0.0f), Vec(1.0f));
     auto nodes = generateRandomNodes(n);
     // Add nodes to quadtree
-    auto quadtree = Rxt_ds::quadtree<Node*, decltype(getBox)>(box, getBox);
+    auto tree = quadtree<Node*, decltype(getBox)>(box, getBox);
     for (auto& node : nodes)
-        quadtree.add(&node);
+        tree.add(&node);
     // Randomly remove some nodes
     auto generator = std::default_random_engine();
     auto deathDistribution = std::uniform_int_distribution(0, 1);
@@ -168,14 +168,14 @@ TEST_CASE("quadtree: add remove and query")
     for (auto& node : nodes)
     {
         if (removed[node.id])
-            quadtree.remove(&node);
+            tree.remove(&node);
     }
     // Quadtree
     auto intersections1 = std::vector<std::vector<Node*>>(n);
     for (const auto& node : nodes)
     {
         if (!removed[node.id])
-            intersections1[node.id] = quadtree.query(node.box);
+            intersections1[node.id] = tree.query(node.box);
     }
     // Brute force
     auto intersections2 = std::vector<std::vector<Node*>>(n);
@@ -204,9 +204,9 @@ TEST_CASE("quadtree: add remove and find all intersections")
     auto box = Box(Vec(0.0f), Vec(1.0f));
     auto nodes = generateRandomNodes(n);
     // Add nodes to quadtree
-    auto quadtree = Rxt_ds::quadtree<Node*, decltype(getBox)>(box, getBox);
+    auto tree = quadtree<Node*, decltype(getBox)>(box, getBox);
     for (auto& node : nodes)
-        quadtree.add(&node);
+        tree.add(&node);
     // Randomly remove some nodes
     auto generator = std::default_random_engine();
     auto deathDistribution = std::uniform_int_distribution(0, 1);
@@ -216,10 +216,10 @@ TEST_CASE("quadtree: add remove and find all intersections")
     for (auto& node : nodes)
     {
         if (removed[node.id])
-            quadtree.remove(&node);
+            tree.remove(&node);
     }
     // Quadtree
-    auto intersections1 = quadtree.find_all_intersections();
+    auto intersections1 = tree.find_all_intersections();
     // Brute force
     auto intersections2 = findAllIntersections(nodes, removed);
     // Check
