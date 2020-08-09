@@ -1,16 +1,16 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "_glm.hpp"
 #include <array>
 
 namespace Rxt
 {
-using rgb = glm::vec3;
-using rgba = glm::vec4;
+using rgb = fvec3;
+using rgba = fvec4;
 
 inline rgb rgb_hex(unsigned v)
 {
-    glm::vec3 ret;
+    rgb ret;
     for (int i = 0; i < 3; ++i) {
         ret[2-i] = ((v >> (8*i)) & 0xFF);
     }

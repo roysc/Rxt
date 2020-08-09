@@ -36,6 +36,7 @@ set(_HEADERS
     _glm.hpp
     vec.hpp
     vec_io.hpp
+    color.hpp
 )
 set(_SOURCES
     demangle.cpp
@@ -95,7 +96,8 @@ endforeach()
 _use_boost(test_range)
 
 if(BUILD_TESTING)
+    make_test(math FILES math.test.cpp LINK RxtBase)
     make_test(vec FILES vec.test.cpp LINK RxtBase)
     make_test(vec_io FILES vec_io.test.cpp LINK RxtBase)
-    make_test(math FILES math.test.cpp LINK RxtBase)
+    make_test(color FILES color.test.cpp LINK RxtBase)
 endif()

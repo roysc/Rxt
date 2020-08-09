@@ -1,6 +1,6 @@
 #include "Rxt/util.hpp"
 #include "Rxt/graphics/sdl.hpp"
-#include "Rxt/graphics/color.hpp"
+#include "Rxt/color.hpp"
 #include "Rxt/graphics/shader/solid_color_3D.hpp"
 
 #include <exception>

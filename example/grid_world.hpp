@@ -4,7 +4,7 @@
 #include "grid_context.hpp"
 
 #include "Rxt/graphics/sdl.hpp"
-#include "Rxt/graphics/color.hpp"
+#include "Rxt/color.hpp"
 #include "Rxt/util.hpp"
 
 #include <optional>
