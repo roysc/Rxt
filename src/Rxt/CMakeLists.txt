@@ -37,6 +37,7 @@ set(_HEADERS
     vec.hpp
     vec_io.hpp
     color.hpp
+    span.hpp
 )
 set(_SOURCES
     demangle.cpp
