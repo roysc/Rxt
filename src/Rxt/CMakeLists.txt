@@ -12,11 +12,15 @@ set(_TESTS_DIR ${_SOURCE_DIR})
 if(EMSCRIPTEN)
     list(APPEND CMAKE_MODULE_PATH "${_LOCAL_PREFIX}/lib/cmake")
     list(APPEND CMAKE_PREFIX_PATH "${_LOCAL_PREFIX}/lib/cmake")
-endif()
 
-if(EMSCRIPTEN)
     # Force find_ functions to search outside Emscripten's redefined root path
     set(RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE CMAKE_FIND_ROOT_PATH_BOTH)
+endif()
+
+# Dependencies
+find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
+if(NOT DISABLE_FMT)
+    find_package(fmt 6.0 CONFIG REQUIRED)
 endif()
 
 # Define base library
@@ -53,20 +57,24 @@ _add_component(Base)
 
 set_target_properties(RxtBase PROPERTIES LINKER_LANGUAGE CXX)
 
-# Dependencies
-find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
-
 if(NOT DISABLE_FMT)
-    find_package(fmt 6.0 CONFIG REQUIRED)
     target_link_libraries(RxtBase fmt::fmt)
 endif()
 target_link_libraries(RxtBase glm::glm)
 
-install(FILES ${_HEADERS}
-    DESTINATION "${_INCLUDE_DEST}/Rxt"
-    COMPONENT ${RXT_BASE})
+# Tests for base
+set(_TESTS meta io log time range "macro" demangle)
+foreach(_TEST ${_TESTS})
+    make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtBase)
+endforeach()
+_use_boost(test_range)
 
-_install_component(${RXT_BASE})
+if(BUILD_TESTING)
+    make_test(math FILES math.test.cpp LINK RxtBase)
+    make_test(vec FILES vec.test.cpp LINK RxtBase)
+    make_test(vec_io FILES vec_io.test.cpp LINK RxtBase)
+    make_test(color FILES color.test.cpp LINK RxtBase)
+endif()
 
 # Component libs
 add_subdirectory(data)
@@ -89,16 +97,8 @@ write_basic_package_version_file(${_version_file}
 install(FILES ${_config_file} DESTINATION ${_CMAKE_MODULE_DEST})
 install(FILES ${_version_file} DESTINATION ${_CMAKE_MODULE_DEST})
 
-# Tests for base
-set(_TESTS meta io log time range "macro" demangle)
-foreach(_TEST ${_TESTS})
-    make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtBase)
-endforeach()
-_use_boost(test_range)
+install(FILES ${_HEADERS}
+    DESTINATION "${_INCLUDE_DEST}/Rxt"
+    COMPONENT ${RXT_BASE})
 
-if(BUILD_TESTING)
-    make_test(math FILES math.test.cpp LINK RxtBase)
-    make_test(vec FILES vec.test.cpp LINK RxtBase)
-    make_test(vec_io FILES vec_io.test.cpp LINK RxtBase)
-    make_test(color FILES color.test.cpp LINK RxtBase)
-endif()
+_install_component(${RXT_BASE})

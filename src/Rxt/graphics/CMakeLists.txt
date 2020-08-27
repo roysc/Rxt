@@ -55,6 +55,9 @@ set(_SOURCES
 add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER} ${_SOURCES})
 _add_component(Graphics)
 
+make_test(camera FILES camera.test.cpp LINK Rxt::Graphics)
+make_test(sdl FILES sdl.test.cpp LINK Rxt::Graphics)
+
 # Point to shader sources
 if(EMSCRIPTEN)
     target_compile_definitions(RxtGraphics PUBLIC RXT_ASSET_PATH_DEFAULT="/data")
@@ -111,6 +114,3 @@ install(FILES ${_HEADERS_SHADER}
     COMPONENT Graphics)
 
 _install_component(Graphics)
-
-make_test(camera FILES camera.test.cpp LINK Rxt::Graphics)
-make_test(sdl FILES sdl.test.cpp LINK Rxt::Graphics)
