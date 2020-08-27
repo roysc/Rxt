@@ -2,6 +2,7 @@
 
 #include "gl_core.hpp"
 #include "Rxt/loader.hpp"
+#include "Rxt/io.hpp"
 
 #include <cstdlib>
 #include <string>
@@ -44,6 +45,12 @@ struct asset_loader : file_loader
     {
         thread_local asset_loader thread_loader;
         return thread_loader;
+    }
+
+    auto read_file(Str name) const
+    {
+        auto fpath = data_root() / name;
+        return Rxt::read_file(fpath);
     }
 };
 }

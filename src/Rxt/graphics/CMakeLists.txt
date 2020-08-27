@@ -36,8 +36,8 @@ set(_HEADERS
 
     image.hpp
     camera.hpp
-
-    # reactive.hpp
+    animation.hpp
+    animation_util.hpp
 )
 
 set(_HEADERS_SHADER
@@ -50,11 +50,13 @@ set(_HEADERS_SHADER
 
 set(_SOURCES
     gl_loader.cpp
+    animation_util.cpp
 )
 
 add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER} ${_SOURCES})
 _add_component(Graphics)
 
+make_test(animation FILES animation.test.cpp LINK Rxt::Graphics)
 make_test(camera FILES camera.test.cpp LINK Rxt::Graphics)
 make_test(sdl FILES sdl.test.cpp LINK Rxt::Graphics)
 
@@ -75,6 +77,7 @@ if(WEBGL_COMPAT)
 endif()
 
 target_include_directories(RxtGraphics PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>)
+target_include_directories(RxtGraphics PUBLIC $<BUILD_INTERFACE:${_LOCAL_PREFIX}/include>)
 
 set(_shader_dir "${PROJECT_SOURCE_DIR}/data/shader/")
 
@@ -91,20 +94,22 @@ if(EMSCRIPTEN)
 
     target_compile_options(RxtGraphics PUBLIC ${_emscripten_options})
     target_link_options(RxtGraphics PUBLIC ${_emscripten_options})
-    target_link_libraries(RxtGraphics
-        ${RXT_BASE_LIBRARY}
-        SOIL)                   #fixme
 else()
     target_link_libraries(RxtGraphics PUBLIC
         Threads::Threads
-        ${RXT_BASE_LIBRARY}
-        SOIL
         OpenGL::GL
         ${GLEW_LIBRARIES}
         ${SDL2_LIBRARIES})
 
     install(DIRECTORY ${_shader_dir} DESTINATION ${_LIB_DEST}/shader)
 endif()
+
+target_link_libraries(RxtGraphics
+    PUBLIC
+    ${RXT_BASE_LIBRARY}
+    ozz_animation
+    ozz_base
+    SOIL)
 
 install(FILES ${_HEADERS}
     DESTINATION "${_INCLUDE_DEST}/Rxt/graphics"
