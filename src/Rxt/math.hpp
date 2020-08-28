@@ -39,7 +39,7 @@ constexpr Vec3 _basis3[3] = {
 template <class Vec3>
 constexpr Vec3 basis3(axis3 axis)
 {
-    return _basis3<Vec3>[(unsigned) axis];
+    return _basis3<Vec3>[static_cast<unsigned>(axis)];
 }
 
 template <class Vec3>
@@ -67,6 +67,7 @@ bool point_within(P p, Q q, Q r = Q{0})
 
 // Sample a clifford torus - the simplest and most symmetric flat embedding (in R^4)
 // of the cartesian product of two circles
+// param sample_4d : 4-dimensional sampling function
 template <class FP, class Sampler>
 auto sample_clifford_torus(FP nx, FP ny, const double R, Sampler&& sample_4D)
 {
@@ -78,4 +79,6 @@ auto sample_clifford_torus(FP nx, FP ny, const double R, Sampler&& sample_4D)
     return sample_4D(C * cos(angle_x), C * sin(angle_x),
                      C * cos(angle_y), C * sin(angle_y));
 }
+
+// Slice Window for grid?
 }

@@ -52,7 +52,7 @@ void enable_attrib(attrib<T>& attr, vao& va)
 template <class T>
 void attrib_buffer(attribuf<T>& b)
 {
-    using Traits = gl::data_traits<T>;
+    using Traits = data_traits<T>;
     bind_buffer_guard _b{GL_ARRAY_BUFFER, b.vbo};
 
     if constexpr (Traits::is_integral) {

@@ -11,7 +11,7 @@ set(_TESTS_DIR ${_SOURCE_DIR})
 
 if(EMSCRIPTEN)
     list(APPEND CMAKE_MODULE_PATH "${_LOCAL_PREFIX}/lib/cmake")
-    list(APPEND CMAKE_PREFIX_PATH "${_LOCAL_PREFIX}/lib/cmake")
+    # list(APPEND CMAKE_PREFIX_PATH "${_LOCAL_PREFIX}/lib/cmake")
 
     # Force find_ functions to search outside Emscripten's redefined root path
     set(RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE CMAKE_FIND_ROOT_PATH_BOTH)
