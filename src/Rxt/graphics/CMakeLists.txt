@@ -15,13 +15,13 @@ find_package(Threads REQUIRED)
 find_library(SOIL REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
 
 set(_HEADERS
+    gl_prelude.hpp
     gl_core.hpp
-    gl_core.cpp
     gl_data.hpp
     gl_guard.hpp
     gl_handy.hpp
-    gl_handy.cpp
     gl_loader.hpp
+    gl_error.hpp
     _gl_debug.hpp
     gl.hpp
 
@@ -30,7 +30,6 @@ set(_HEADERS
     sdl_gui.hpp
     sdl_metronome.hpp
     sdl_input.hpp
-    sdl_input.cpp
     _sdl_debug.hpp
     sdl.hpp
 
@@ -49,7 +48,10 @@ set(_HEADERS_SHADER
 )
 
 set(_SOURCES
+    gl_core.cpp
+    gl_handy.cpp
     gl_loader.cpp
+    sdl_input.cpp
     animation_util.cpp
 )
 

@@ -3,7 +3,6 @@
 #include "Rxt/io.hpp"
 #include "Rxt/util.hpp"
 #include "Rxt/vec.hpp"
-#include "Rxt/vec_io.hpp"
 #include "Rxt/geometry/helper.hpp"
 #include "Rxt/geometry/shapes.hpp"
 

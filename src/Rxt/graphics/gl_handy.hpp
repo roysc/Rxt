@@ -17,7 +17,7 @@
 namespace Rxt::gl
 {
 void setup_glew();
-void setup_debug();
+void setup_debug_output();
 
 using make_program_arg = std::vector<std::pair<GLenum, std::string>>;
 program make_program(make_program_arg);

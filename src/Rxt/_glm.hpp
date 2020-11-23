@@ -10,13 +10,11 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/hash.hpp>
 
-#include <experimental/type_traits>
-#include <iostream>
 #include <type_traits>
 
 namespace Rxt
 {
-inline namespace vec
+namespace _glm
 {
 using glm::fvec2;
 using glm::ivec2;
@@ -44,26 +42,8 @@ using glm::scale;
 
 namespace _det
 {
+// fixme: unused
 template <class T>
 using has_glm_to_string = decltype(::glm::to_string(std::declval<T const&>()));
-
-template <class Ch, class Tr, class T>
-using has_stream_operator =
-    decltype(std::declval<std::basic_ostream<Ch, Tr>&>() << std::declval<T const&>());
-}
-
-namespace operators
-{
-// SFINAE for std ostream operator
-template <class Ch, class Tr, class T,
-          std::enable_if_t<
-              !std::experimental::is_detected_v<Rxt::_det::has_stream_operator, Ch, Tr, T> &&
-              std::experimental::is_detected_v<Rxt::_det::has_glm_to_string, T>
-              >* = {}>
-std::basic_ostream<Ch, Tr>& operator<<(std::basic_ostream<Ch, Tr>& o, T const& x)
-{
-    return o << ::glm::to_string(x);
-}
-
 }
 }

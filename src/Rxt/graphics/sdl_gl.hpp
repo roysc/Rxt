@@ -58,7 +58,7 @@ struct gl_context
 #endif
 
         gl::setup_glew();
-        gl::setup_debug();
+        gl::setup_debug_output();
     }
 
     ~gl_context()

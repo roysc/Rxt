@@ -1,10 +1,9 @@
 #pragma once
 
-#include "../_debug.hpp"
-
-#include <GL/glew.h>            // must be included before gl.h
+#include "gl_prelude.hpp"
 
 #include <cassert>
+#include <utility>
 
 #define _debug_assert assert
 
@@ -141,30 +140,14 @@ struct property
 struct attrib_traits
 {
     using value_type = GLuint;
-    static value_type create(const object<program_traits>& p, const char* n)
-    {
-        value_type id = glGetAttribLocation(p, n);
-        // _debug_assert(id != -1);
-        if (id == value_type(-1)) {
-            dbg::print("warning: attrib '{0}' is undefined\n", n);
-        }
-        return id;
-    }
+    static value_type create(const object<program_traits>& p, const char* n);
 };
 
 // Uniform
 struct uniform_traits
 {
     using value_type = GLuint;
-    static value_type create(const object<program_traits>& p, const char* n)
-    {
-        value_type id = glGetUniformLocation(p, n);
-        // _debug_assert(id != -1);
-        if (id == value_type(-1)) {
-            dbg::print("warning: uniform '{0}' is undefined\n", n);
-        }
-        return id;
-    }
+    static value_type create(const object<program_traits>& p, const char* n);
 };
 
 template <class T>

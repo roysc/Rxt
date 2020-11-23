@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gl_core.hpp"
+#include "gl_error.hpp"
 #include <cassert>
 
 namespace Rxt::gl
@@ -49,4 +50,34 @@ struct bind_vao_guard
     ~bind_vao_guard() { glBindVertexArray(0); }
 };
 
+
+struct enable_guard
+{
+    GLuint m_flag;
+    GLboolean m_saved;
+    enable_guard(GLuint flag) : m_flag(flag)
+    {
+        m_saved = glIsEnabled(m_flag);
+        if (!m_saved) glEnable(m_flag);
+    }
+    ~enable_guard()
+    {
+        if (!m_saved) glDisable(m_flag);
+    }
+};
+
+struct disable_guard
+{
+    GLuint m_flag;
+    GLboolean m_saved;
+    disable_guard(GLuint flag) : m_flag(flag)
+    {
+        m_saved = glIsEnabled(m_flag);
+        if (m_saved) glDisable(m_flag);
+    }
+    ~disable_guard()
+    {
+        if (m_saved) glEnable(m_flag);
+    }
+};
 }

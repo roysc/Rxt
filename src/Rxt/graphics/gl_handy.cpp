@@ -1,6 +1,8 @@
 #include "gl_handy.hpp"
-#include "_gl_debug.hpp"
+
 #include "gl_core.hpp"
+#include "gl_error.hpp"
+#include "_gl_debug.hpp"
 
 #ifndef glDebugMessageCallback  // OpenGL < 4.3
 #define glDebugMessageCallback(...)                                     \
@@ -22,7 +24,7 @@ void setup_glew()
 
 void _debug_callback(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar*, const void*);
 
-void setup_debug()
+void setup_debug_output()
 {
 #ifdef __EMSCRIPTEN__
     dbg::print("OpenGL debugging not supported\n");
@@ -54,7 +56,7 @@ program make_program(make_program_arg shaders)
     return ret;
 }
 
-void _debug_callback(GLenum, GLenum, GLuint, GLenum severity, GLsizei,
+void _debug_callback(GLenum, GLenum type, GLuint, GLenum severity, GLsizei,
                      const GLchar* message, void const*)
 {
     if (!debug_context::enable_logging) return;
@@ -71,5 +73,8 @@ void _debug_callback(GLenum, GLenum, GLuint, GLenum severity, GLsizei,
         break;
     }
     dbg::print("GL {0}: {1}\n", kind, message);
+
+    if (type == GL_DEBUG_TYPE_ERROR)
+        throw message_error(message);
 }
 }

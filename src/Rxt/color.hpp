@@ -1,6 +1,6 @@
 #pragma once
 
-#include "_glm.hpp"
+#include "vec.hpp"
 #include <array>
 
 namespace Rxt
