@@ -5,11 +5,10 @@
 
 namespace sdl = Rxt::sdl;
 namespace gl = Rxt::gl;
-// using Rxt::print;
 
 struct run_context : public gl::asset_loader
 {
-    sdl::window_ptr window;
+    SDL_Window* window;
     sdl::key_dispatcher kd;
     bool _running = true;
     bool _dirty = true;
@@ -21,7 +20,7 @@ struct run_context : public gl::asset_loader
     gl::attribuf<glm::vec2> tex_coord;
     gl::buffer<GLuint> elements;
 
-    run_context(sdl::window_ptr, unsigned, unsigned);
+    run_context(SDL_Window*, unsigned, unsigned);
 
     bool is_stopped() const { return !_running; }
     void advance(SDL_Event);
@@ -43,11 +42,11 @@ int main()
     glm::uvec2 total_size_px = tile_size_px * num_tiles;
 
     sdl::simple_gui gui("demo: grid viewer", total_size_px.x, total_size_px.y);
-    auto loop = sdl::make_looper(new run_context(gui.window, num_tiles.x, num_tiles.y), step_state);
+    auto loop = sdl::make_looper(new run_context(&gui.window(), num_tiles.x, num_tiles.y), step_state);
     loop();
 }
 
-run_context::run_context(sdl::window_ptr w, unsigned, unsigned)
+run_context::run_context(SDL_Window* w, unsigned, unsigned)
     : window(w)
     , prog(find_program("texture_quad_2D"))
     , position(prog, "position")
@@ -87,7 +86,7 @@ void run_context::update_texture()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, std::data(image));
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+    // glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void run_context::update_model()
@@ -112,7 +111,7 @@ void run_context::draw()
     glBindTexture(GL_TEXTURE_2D, tex);
     glDrawElements(GL_TRIANGLES, std::size(elements.storage), GL_UNSIGNED_INT, 0);
 
-    SDL_GL_SwapWindow(window.get());
+    SDL_GL_SwapWindow(window);
 }
 
 void run_context::advance(SDL_Event event)

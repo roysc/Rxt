@@ -59,7 +59,7 @@ struct loop_state : public sdl::simple_gui
         glClearColor(0,0,0,0);
         glClear(GL_COLOR_BUFFER_BIT);
         line_prog.buf["lines"].draw();
-        SDL_GL_SwapWindow(window.get());
+        SDL_GL_SwapWindow(&window());
     }
 };
 

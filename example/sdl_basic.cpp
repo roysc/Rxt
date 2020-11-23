@@ -9,7 +9,7 @@ struct loop_state
 {
     int count = 0;
 
-    loop_state(sdl::window_ptr) {}
+    loop_state(SDL_Window& win) {}
     bool is_stopped() const { return count >= 10; }
 
     void advance(SDL_Event)
@@ -28,6 +28,6 @@ extern "C" void step_loop(void* c)
 int main()
 {
     sdl::simple_gui gui("demo: sdl_basic", 500, 500);
-    auto loop = sdl::make_looper(new loop_state(gui.window), step_loop);
+    auto loop = sdl::make_looper(new loop_state(gui.window()), step_loop);
     loop();
 }

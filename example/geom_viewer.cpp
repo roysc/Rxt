@@ -117,7 +117,7 @@ void geom_viewer::draw()
 
     b_triangles.draw();
 
-    SDL_GL_SwapWindow(window.get());
+    SDL_GL_SwapWindow(&window());
 }
 
 void geom_viewer::advance(SDL_Event event)

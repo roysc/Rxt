@@ -9,7 +9,7 @@ struct simple_gui
 {
     const unsigned width, height;
     sdl::sdl_context _sdl;
-    sdl::window_ptr window;
+    sdl::window_ptr _window;
     sdl::gl_context _gl;
 
     template <class T>
@@ -18,16 +18,18 @@ struct simple_gui
     simple_gui(const char* name, unsigned w, unsigned h)
         : width(w), height(h)
         , _sdl()
-        , window(sdl::make_shared(SDL_CreateWindow(
+        , _window(sdl::make_shared(SDL_CreateWindow(
                                       name,
                                       SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                       width, height,
                                       SDL_WINDOW_OPENGL |
                                       SDL_WINDOW_RESIZABLE)))
-        , _gl(window)
+        , _gl(_window)
     { }
 
     virtual ~simple_gui() {}
+
+    auto& window() { return *_window; }
 };
 
 template <class T>
