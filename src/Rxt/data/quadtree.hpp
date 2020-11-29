@@ -12,7 +12,7 @@
 namespace Rxt
 {
 template <class FT>
-using vec2 = Rxt::tvec2<FT>;
+using vec2 = vec::tvec2<FT>;
 
 // template <class T>
 // using bounding_box(vec2<T>, vec2<T>) -> bounding_box<T>;

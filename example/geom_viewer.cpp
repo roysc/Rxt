@@ -24,15 +24,17 @@ int main()
     loop();
 }
 
-template <class K>
-Rxt::fvec3 to_glm(CGAL::Point_3<K> v)  { return {v.x(), v.y(), v.z()}; }
-template <class K>
-Rxt::fvec3 to_glm(CGAL::Vector_3<K> v) { return {v.x(), v.y(), v.z()}; }
+using Rxt::vec::fvec3;
 
-inline glm::vec3 to_glm(CGAL::Color c) { return glm::vec3 {c.red(), c.green(), c.blue()} / 256.f; }
-inline glm::vec3 to_glm(Rxt::fvec3 v)   { return v; }
+template <class K>
+fvec3 to_glm(CGAL::Point_3<K> v)  { return {v.x(), v.y(), v.z()}; }
+template <class K>
+fvec3 to_glm(CGAL::Vector_3<K> v) { return {v.x(), v.y(), v.z()}; }
 
-void turn(Rxt::focused_camera& cam, float d, const Rxt::fvec3 axis)
+inline fvec3 to_glm(CGAL::Color c) { return fvec3(c.red(), c.green(), c.blue()) / 256.f; }
+inline fvec3 to_glm(fvec3 v)   { return v; }
+
+void turn(Rxt::focused_camera& cam, float d, const fvec3 axis)
 {
     auto rot = angleAxis(d, axis);
     cam.orbit(rot);
@@ -40,7 +42,7 @@ void turn(Rxt::focused_camera& cam, float d, const Rxt::fvec3 axis)
 
 geom_viewer::geom_viewer()
     : simple_gui{"demo: geom_viewer", 500, 500}
-    , camera(glm::vec3{2})
+    , camera(fvec3(2))
 {
     auto camera_right = [this] (float d) {
         turn(camera, 0.1 * d, gl::AXIS_Z);

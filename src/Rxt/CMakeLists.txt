@@ -42,6 +42,9 @@ set(_HEADERS
     vec.hpp
     color.hpp
     span.hpp
+    viewport.hpp
+    reactive.hpp
+    controls.hpp
 )
 set(_SOURCES
     demangle.cpp

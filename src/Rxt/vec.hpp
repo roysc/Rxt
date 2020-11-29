@@ -8,10 +8,7 @@
 
 namespace Rxt
 {
-inline namespace vec
-{
-using namespace Rxt::_glm;
-}
+namespace vec = _glm;
 }
 
 template <class T>

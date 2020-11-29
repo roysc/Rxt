@@ -11,9 +11,10 @@ namespace Rxt::gl
 // #define glUniform2ui glUniform2i
 // #endif
 
-inline const fvec3 AXIS_X {1, 0, 0};
-inline const fvec3 AXIS_Y {0, 1, 0};
-inline const fvec3 AXIS_Z {0, 0, 1};
+inline const vec::fvec3
+    AXIS_X {1, 0, 0},
+    AXIS_Y {0, 1, 0},
+    AXIS_Z {0, 0, 1};
 
 template <class T>
 struct data_traits;
@@ -56,6 +57,8 @@ struct data_adaptor
 };
 }
 #define _span_ptr(v_)( glm::value_ptr((v_)[0]))
+
+using namespace vec;
 
 template <>
 struct data_traits<fvec2> : _det::data_adaptor<GL_FLOAT, 2>

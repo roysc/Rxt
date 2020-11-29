@@ -8,13 +8,13 @@ namespace Rxt
 {
 TEST_CASE("fvec2")
 {
-    fvec2 v(0), u(1);
+    vec::fvec2 v(0), u(1);
     REQUIRE_EQ(v + u, u);
 }
 
 TEST_CASE("std::hash definitions")
 {
-    std::unordered_set<fvec2> s;
+    std::unordered_set<vec::fvec2> s;
     s.emplace(0);
 }
 

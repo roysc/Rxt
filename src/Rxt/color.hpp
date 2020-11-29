@@ -5,8 +5,8 @@
 
 namespace Rxt
 {
-using rgb = fvec3;
-using rgba = fvec4;
+using rgb = vec::fvec3;
+using rgba = vec::fvec4;
 
 inline rgb rgb_hex(unsigned v)
 {

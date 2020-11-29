@@ -7,16 +7,16 @@
 
 namespace Rxt
 {
-struct focus_cam
+struct focused_camera
 {
-    using position_type = fvec3;
+    using position_type = vec::fvec3;
     using vector_type = position_type;
-    using matrix_type = glm::mat4;
+    using matrix_type = vec::fmat4;
 
     using M = matrix_type;
     using P = position_type;
     using V = vector_type;
-    using H = fvec4;
+    using H = vec::fvec4;
 
     inline static const vector_type default_up {0, 0, 1};
     static constexpr float field_of_view = tau/8;
@@ -26,7 +26,7 @@ struct focus_cam
     P focus;
     V up;
 
-    focus_cam(P pos, P f = P{0}, V u = default_up)
+    focused_camera(P pos, P f = P{0}, V u = default_up)
         : _position(pos)
         , focus(f)
         , up(u)
@@ -37,16 +37,16 @@ struct focus_cam
     P position() const { return _position; }
 
     // Rotate about focal point
-    void orbit(glm::quat rot)
+    void orbit(vec::quat rot)
     {
-        auto rotmat = glm::mat4_cast(rot);
+        auto rotmat = mat4_cast(rot);
         position(P(rotmat * H(position() - focus, 0)) + focus);
         up = P(rotmat * H(up, 0));
     }
 
     void translate(V t)
     {
-        auto tmat = glm::translate(t);
+        auto tmat = vec::translate(t);
         position(P(tmat * H(position(), 1)));
         focus = P(tmat * H(focus, 1));
     }
@@ -59,12 +59,12 @@ struct focus_cam
 
     M model_matrix() const
     {
-        return glm::translate(- _position);
+        return vec::translate(- _position);
     }
 
     M view_matrix() const
     {
-        return glm::lookAt(_position, focus, up);
+        return lookAt(_position, focus, up);
     }
 
     M projection_matrix() const
@@ -83,12 +83,13 @@ struct focus_cam
         return focus - position();
     }
 
-    virtual ~focus_cam() {}
+    virtual ~focused_camera() {}
 };
-using focused_camera = focus_cam;
 
 namespace _det
 {
+using namespace vec;
+
 template <class Cam>
 fvec3 unview(fvec4 view, Cam const& cam)
 {

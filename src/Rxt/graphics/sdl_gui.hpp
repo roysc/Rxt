@@ -33,7 +33,7 @@ struct simple_gui
 };
 
 template <class T>
-struct _input_handler
+struct gui_input_handler
 {
     void handle_input(SDL_Event event)
     {
@@ -51,7 +51,7 @@ struct _input_handler
 };
 
 template <class T>
-struct _null_handler : public _input_handler<T>
+struct gui_input_stubs : public gui_input_handler<T>
 {
     void on_quit() {}
     void on_key_down(SDL_Keysym) {}
@@ -60,7 +60,4 @@ struct _null_handler : public _input_handler<T>
     void on_mouse_motion(SDL_MouseMotionEvent) {}
     void on_mouse_wheel(SDL_MouseWheelEvent) {}
 };
-
-template <class T, bool default_members = false>
-using input_handler = std::conditional_t<default_members, _null_handler<T>, _input_handler<T>>;
 }

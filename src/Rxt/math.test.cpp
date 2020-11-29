@@ -7,7 +7,7 @@ namespace Rxt
 {
 TEST_CASE("point_within")
 {
-    fvec2 p{1,2}, q{0,1}, r{2,3};
+    vec::fvec2 p{1,2}, q{0,1}, r{2,3};
     REQUIRE(point_within(p, q, r));
     REQUIRE(!point_within(q, p, r));
 }
