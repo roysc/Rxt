@@ -10,7 +10,6 @@
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/IO/Color.h>
 
-#include <iostream>
 #include <functional>
 
 extern "C" void step_state(void* c)
@@ -61,7 +60,7 @@ geom_viewer::geom_viewer()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_CULL_FACE);
 
-    set(prog->light_position, glm::vec3{15, 0, 15});
+    set(prog->light_position, glm::vec3(15, 0, 15));
 
     update_model();
     update_camera();

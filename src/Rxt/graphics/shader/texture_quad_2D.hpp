@@ -34,10 +34,8 @@ struct texture_quad_2D_data
     };
 
     program_type& program() { return prog; }
-    // uniforms* operator->() { return &program().u_; }
 
     texture_quad_2D_data(program_type& p)
-        // : program_buffers<program_type>(p)
         : prog(p)
     {
         gl::use_guard _p(program());

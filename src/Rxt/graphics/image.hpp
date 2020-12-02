@@ -1,26 +1,31 @@
 #pragma once
 
-#include "../_debug.hpp"
+#include "Rxt/log.hpp"
+#include "Rxt/vec.hpp"
 
 #include <SOIL/SOIL.h>
 
 #include <utility>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 
 namespace Rxt
 {
-inline auto load_image(const char* path, int& width, int& height)
+inline auto load_image(const char* path)
 {
-    int nchannels;
+    int width, height, nchannels;
     auto image = SOIL_load_image(path, &width, &height, &nchannels, SOIL_LOAD_RGB);
     if (image) {
-        _fmt::print("Image load: [w, h, nc]=[{0},{1},{2}]\n", width, height, nchannels);
+        RXT_info("Loaded image: [w, h, nc]=[{0},{1},{2}]\n", width, height, nchannels);
     } else {
-        _fmt::print("Failed to load image (at {0})\n", path);
+        RXT_warn("Failed to load image ({0}): {1}\n", path, SOIL_last_result());
+        throw std::invalid_argument(SOIL_last_result());
     }
 
-    std::unique_ptr<unsigned char, void(*)(unsigned char*)> ret{image, &SOIL_free_image_data};
-    return ret;
+    return std::pair(
+        std::unique_ptr<unsigned char, void(*)(unsigned char*)>(image, &SOIL_free_image_data),
+        vec::uvec2(width, height)
+    );
 }
 }

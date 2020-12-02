@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Rxt/vec.hpp"
+
 #include <utility>
 #include <functional>
 

@@ -13,7 +13,6 @@
 
 namespace Rxt
 {
-
 #ifndef RXT_DISABLE_FMT
 namespace _fmt = ::fmt;
 using _fmt::print;
@@ -30,7 +29,7 @@ template <class... T>
 void print_to(std::ostream& out, const char* m, T&&... args)
 {
     out << m;
-    (out << ... << args);
+    (out << ... << args << " ");
 }
 
 template <class... T>
