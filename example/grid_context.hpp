@@ -35,16 +35,14 @@ inline grid_coord nds_to_grid(glm::vec2 nds, glm::vec2 scale) { return floor(nds
 
 struct grid_context : public Rxt::sdl::simple_gui
 {
-    gl::asset_loader _loader;
-
     grid_size world_size;
     grid_size viewport_size;
     glm::uvec2 tile_size_px;
 
     grid_coord viewport_position {0};
 
-    texture_quad_2D tex_prog {_loader};
-    grid_quad_2D quad_prog {_loader};
+    texture_quad_2D tex_prog;
+    grid_quad_2D quad_prog;
 
     texture_quad_2D::buffers b_texs {tex_prog};
     grid_quad_2D::buffers b_quads {quad_prog};

@@ -37,7 +37,6 @@ set(_HEADERS
     util.hpp
     meta.hpp
     "macro.hpp"
-    loader.hpp
     demangle.hpp
     vec.hpp
     color.hpp

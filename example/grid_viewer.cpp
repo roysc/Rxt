@@ -6,8 +6,9 @@
 namespace sdl = Rxt::sdl;
 namespace gl = Rxt::gl;
 
-struct run_context : public gl::asset_loader
+struct run_context
 {
+    gl::file_asset_source assets;
     SDL_Window* window;
     sdl::key_dispatcher kd;
     bool _running = true;
@@ -48,7 +49,7 @@ int main()
 
 run_context::run_context(SDL_Window* w, unsigned, unsigned)
     : window(w)
-    , prog(find_program("texture_quad_2D"))
+    , prog(make_program(assets, "texture_quad_2D"))
     , position(prog, "position")
     , tex_coord(prog, "texCoord")
 {

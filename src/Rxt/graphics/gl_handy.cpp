@@ -41,12 +41,17 @@ void setup_debug_output()
 #endif
 }
 
-program make_program(make_program_arg shaders)
+program make_program(file_asset_source const& assets, std::string name)
 {
     program ret;
-
-    for (auto [type, path]: shaders) {
-        gl::shader sh(type, Rxt::read_file(path).c_str());
+    for (auto kind: {GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER}) {
+        auto path = assets.find_shader(name, kind);
+        if (!exists(path)) {
+            if (kind == GL_GEOMETRY_SHADER) continue;
+            throw std::invalid_argument(path);
+        }
+        log("loading: {}\n", path);
+        shader sh(kind, Rxt::read_file(path).c_str());
         log_result(sh, GL_COMPILE_STATUS, path.c_str());
         glAttachShader(ret, sh);
     }

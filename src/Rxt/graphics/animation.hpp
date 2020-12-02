@@ -1,7 +1,7 @@
 #pragma once
 
-#include "gl_loader.hpp"
 #include "animation_util.hpp"
+#include "asset.hpp"
 
 #include <ozz/base/log.h>
 #include <ozz/base/maths/simd_math.h>
@@ -50,10 +50,10 @@ struct skeletal_animation
         return true;
     }
 
-    virtual void scene_bounds(ozz::math::Box* bound) const
-    {
-        ozz::sample::ComputePostureBounds(ozz::make_span(_models), bound);
-    }
+    // void scene_bounds(ozz::math::Box* bound) const
+    // {
+    //     ozz::sample::ComputePostureBounds(ozz::make_span(_models), bound);
+    // }
 
     // Runtime
     ozz::animation::Skeleton _skeleton;
@@ -66,17 +66,17 @@ struct skeletal_animation
     // Buffer of model space matrices.
     std::vector<ozz::math::Float4x4> _models;
 
-    gl::asset_loader loader;
+    gl::file_asset_source _assets;
 
-    bool load(gl::asset_loader& loader)
+    bool load()
     {
         // Reading skeleton.
-        if (!ozz::sample::LoadSkeleton(loader.read_file("skeleton.ozz").c_str(), &_skeleton)) {
+        if (!ozz::sample::LoadSkeleton(read_file(_assets.root()/"skeleton.ozz").c_str(), &_skeleton)) {
             return false;
         }
 
         // Reading animation.
-        if (!ozz::sample::LoadAnimation(loader.read_file("animation.ozz").c_str(), &_animation)) {
+        if (!ozz::sample::LoadAnimation(read_file(_assets.root()/"animation.ozz").c_str(), &_animation)) {
             return false;
         }
 

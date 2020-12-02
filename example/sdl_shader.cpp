@@ -14,8 +14,7 @@ struct loop_state : public sdl::simple_gui
     using shader = Rxt::shader_programs::solid_color_3D<GL_LINE_STRIP>;
     bool dirty = true;
     sdl::key_dispatcher keys;
-    gl::asset_loader loader;
-    shader line_prog{loader};
+    shader line_prog;
     shader::buffers b_lines{line_prog};
 
     loop_state()

@@ -20,7 +20,6 @@ set(_HEADERS
     gl_data.hpp
     gl_guard.hpp
     gl_handy.hpp
-    gl_loader.hpp
     gl_error.hpp
     _gl_debug.hpp
     gl.hpp
@@ -33,6 +32,7 @@ set(_HEADERS
     _sdl_debug.hpp
     sdl.hpp
 
+    asset.hpp
     image.hpp
     camera.hpp
     animation.hpp
@@ -50,7 +50,6 @@ set(_HEADERS_SHADER
 set(_SOURCES
     gl_core.cpp
     gl_handy.cpp
-    gl_loader.cpp
     sdl_input.cpp
     animation_util.cpp
 )

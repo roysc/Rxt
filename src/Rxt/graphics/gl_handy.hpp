@@ -1,9 +1,9 @@
 #pragma once
 
+#include "asset.hpp"
 #include "gl_core.hpp"
 #include "gl_data.hpp"
 #include "gl_guard.hpp"
-#include "gl_loader.hpp"
 #include "_gl_debug.hpp"
 #include <Rxt/meta.hpp>
 
@@ -19,8 +19,7 @@ namespace Rxt::gl
 void setup_glew();
 void setup_debug_output();
 
-using make_program_arg = std::vector<std::pair<GLenum, std::string>>;
-program make_program(make_program_arg);
+program make_program(file_asset_source const&, std::string);
 
 template <class T>
 struct buffer
@@ -128,8 +127,8 @@ struct derived_program : public program
     uniforms u_{*this};
     program_buffer_registry<derived_program> buf{*this};
 
-    derived_program(asset_loader const& loader = asset_loader::default_loader())
-        : program{loader.find_program(buffers::program_name())}
+    derived_program(file_asset_source const& assets = file_asset_source::get_default())
+        : program{make_program(assets, buffers::program_name())}
     {}
 
     uniforms* operator->() { return &u_; }
