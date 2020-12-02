@@ -5,33 +5,33 @@
 
 namespace Rxt::sdl
 {
-constexpr
 char const* keymod_name(SDL_Keymod km)
 {
     switch (km) {
-    case KMOD_LSHIFT: return "LSHIFT";
-    case KMOD_RSHIFT: return "RSHIFT";
-    case KMOD_LCTRL:  return "LCTRL";
-    case KMOD_RCTRL:  return "RCTRL";
-    case KMOD_RALT:   return "RALT";
-    case KMOD_LALT:   return "LALT";
-    case KMOD_RGUI:   return "RGUI";
-    case KMOD_LGUI:   return "LGUI";
-    case KMOD_NUM:    return "NUMLOCK";
-    case KMOD_CAPS:   return "CAPSLOCK";
-    case KMOD_MODE:   return "MODE";
-    case KMOD_NONE:
-    default:
-        return nullptr;
+    case KMOD_LSHIFT: return "KMOD_LSHIFT";
+    case KMOD_RSHIFT: return "KMOD_RSHIFT";
+    case KMOD_LCTRL:  return "KMOD_LCTRL";
+    case KMOD_RCTRL:  return "KMOD_RCTRL";
+    case KMOD_RALT:   return "KMOD_RALT";
+    case KMOD_LALT:   return "KMOD_LALT";
+    case KMOD_RGUI:   return "KMOD_RGUI";
+    case KMOD_LGUI:   return "KMOD_LGUI";
+    case KMOD_NUM:    return "KMOD_NUM";
+    case KMOD_CAPS:   return "KMOD_CAPS";
+    case KMOD_MODE:   return "KMOD_MODE";
+    case KMOD_NONE:   return "KMOD_NONE";
+    default:          return "(?)";
     }
 }
 
-int conflate_modifiers(int mod)
+int simplify_modifiers(int mod)
 {
     // Ignore L/R distinctions
     for (auto both: {KMOD_SHIFT, KMOD_CTRL, KMOD_ALT, KMOD_GUI}) {
         if (mod & both) mod |= both;
     }
+    // Ignore others
+    mod &= ~(KMOD_NUM | KMOD_CAPS | KMOD_MODE);
     return mod;
 }
 
@@ -56,7 +56,7 @@ std::string repr_keymods(int mods)
     return ret;
 }
 
-constexpr int parse_keymods(std::string_view sv)
+int parse_keymods(std::string_view sv)
 {
     int ret = KMOD_NONE;
     for (auto c: sv) {

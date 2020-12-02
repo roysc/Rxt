@@ -12,9 +12,9 @@
 
 namespace Rxt::sdl
 {
-constexpr char const* keymod_name(SDL_Keymod km);
-constexpr int parse_keymods(std::string_view sv);
-int conflate_modifiers(int mod);
+char const* keymod_name(SDL_Keymod km);
+int parse_keymods(std::string_view sv);
+int simplify_modifiers(int mod);
 std::string repr_keymods(int mods);
 
 struct key_descriptor
@@ -23,7 +23,7 @@ struct key_descriptor
     int mod;
 
     key_descriptor(SDL_Keycode c, int m)
-        : code(c), mod(conflate_modifiers(m)) {}
+        : code(c), mod(simplify_modifiers(m)) {}
     key_descriptor(SDL_Keysym k) : key_descriptor(k.sym, k.mod) {}
     key_descriptor(SDL_Keycode c) : key_descriptor(c, {}) {}
 
@@ -33,9 +33,10 @@ struct key_descriptor
     friend bool operator<(const key_descriptor& lhs, const key_descriptor& rhs);
 };
 
-template <bool echo>
-struct _key_dispatcher
+struct key_dispatcher
 {
+    static constexpr bool echo = true;
+
     using callback = std::function<void()>;
     using fallback = std::function<void(key_descriptor)>;
     using callback_map = std::map<key_descriptor, callback>;
@@ -43,7 +44,7 @@ struct _key_dispatcher
     callback_map on_press;
     callback_map on_scan;
 
-    ~_key_dispatcher() {}        // fixme: breaks on clang?
+    ~key_dispatcher() {}        // fixme: breaks on clang?
 
     void press(SDL_Keysym keysym)
     {
@@ -59,7 +60,7 @@ struct _key_dispatcher
     void scan(fallback default_func = {})
     {
         auto const* state = SDL_GetKeyboardState(nullptr);
-        int mod = conflate_modifiers(SDL_GetModState());
+        int mod = simplify_modifiers(SDL_GetModState());
 
         for (auto&& [k, func]: on_scan) {
             auto scancode = SDL_GetScancodeFromKey(k.code);
@@ -73,8 +74,6 @@ struct _key_dispatcher
         }
     }
 };
-
-using key_dispatcher = _key_dispatcher<false>;
 }
 
 namespace std
@@ -82,10 +81,8 @@ namespace std
 template <class Ch, class Tr>
 basic_ostream<Ch, Tr>& operator<<(basic_ostream<Ch, Tr>& o, Rxt::sdl::key_descriptor const& kd)
 {
-    if (kd.mod != KMOD_NONE) {
-        o << Rxt::sdl::repr_keymods(kd.mod);
-        o << '-';
-    }
+    if (kd.mod != KMOD_NONE)
+        o << Rxt::sdl::repr_keymods(kd.mod) << '-';
     return o << SDL_GetKeyName(kd.code);
 }
 }
