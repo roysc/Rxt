@@ -5,40 +5,39 @@
 
 namespace Rxt
 {
-template <class Vec2>
+template <class FT>
 struct basic_viewport
 {
-    // using traits_type = ST;
-    using position_type = Vec2;
-    using size_type = Vec2;
-    using fvec2 = vec::fvec2;
+    using float_vec = vec::fvec2;
+    using position_type = vec::tvec2<FT>;
+    using size_type = vec::tvec2<std::make_unsigned_t<FT>>;
 
-    Vec2 max_scale;
-    Vec2 scale_factor {1};
-    Vec2 _position {0};
-    const Vec2 size_px {max_scale * scale_factor};
+    size_type max_scale;
+    size_type scale_factor {1};
+    position_type _position {0};
+    const size_type size_px {max_scale * scale_factor};
     const float margin_size = .1;
 
-    basic_viewport(Vec2 max, Vec2 scale = Vec2(1))
+    basic_viewport(size_type max, size_type scale = size_type(1))
         : max_scale{max}, scale_factor{scale}
     {
-        assert(all(lessThan(Vec2(0), scale)));
-        assert(all(lessThan(Vec2(0), max)));
+        assert(all(lessThan(size_type(0), scale)));
+        assert(all(lessThan(size_type(0), max)));
     }
 
-    virtual void position(Vec2 pos) { _position = pos; }
-    virtual void set_scale(Vec2 scale) { scale_factor = scale; }
+    virtual void set_position(position_type pos) { _position = pos; }
+    virtual void set_scale(size_type scale) { scale_factor = scale; }
 
-    Vec2 position() const { return _position; }
+    position_type position() const { return _position; }
 
-    Vec2 scale_relative(float factor) const
+    size_type scale_relative(float factor) const
     {
         return scale_factor * factor;
     }
 
-    Vec2 scale_pow(int exp) const
+    size_type scale_pow(int exp) const
     {
-        const Vec2 min_scale{1};
+        const size_type min_scale{1};
         if (exp > 0) {
             if (scale_factor.x > min_scale.x && scale_factor.y > min_scale.y)
                 return scale_factor / 2u;
@@ -50,19 +49,22 @@ struct basic_viewport
     }
 
     // size in number of cells
-    Vec2 size_cells() const
+    size_type size_cells() const
     {
-        return Vec2(fvec2(size_pixels()) / fvec2(scale_factor));
+        return size_type(vec::fvec2(size_pixels()) / vec::fvec2(scale_factor));
     }
 
-    Vec2 size_pixels() const { return size_px; }
+    size_type size_pixels() const { return size_px; }
 
     auto from_nds(float x, float y) const
     {
-        return floor(fvec2(x, y) * fvec2(size_cells() / 2u));
+        return floor(vec::fvec2(x, y) * vec::fvec2(size_cells() / 2u));
     }
 
-    fvec2 to_nds(Vec2 p) const { return fvec2(p) / fvec2(size_cells() / 2u); }
+    vec::fvec2 to_nds(position_type p) const
+    {
+        return vec::fvec2(p) / vec::fvec2(size_cells() / 2u);
+    }
 
     vec::fmat4 view_matrix() const
     {
@@ -70,8 +72,8 @@ struct basic_viewport
 
         auto pos3 = fvec3(position(), 0);
         vec::fmat4 view_matrix =
-            glm::scale(fvec3(2.f / fvec2(size_cells()), 0)) *
-            glm::translate(-pos3);
+            vec::scale(fvec3(2.f / vec::fvec2(size_cells()), 0)) *
+            vec::translate(-pos3);
         return view_matrix;
     }
 
@@ -79,29 +81,31 @@ struct basic_viewport
     {
         auto pos = position();
         auto corner = position() + size_cells();
-        return glm::ortho(pos.x, corner.x, pos.y, corner.y);
+        return vec::ortho(pos.x, corner.x, pos.y, corner.y);
     }
 
-    void translate(Vec2 d)
+    void translate(position_type d)
     {
         position(position() + d);
     }
 
     // scale, adjusting to maintain position
-    void scale_to(Vec2 coef, Vec2 focw)
+    void scale_to(size_type coef, position_type focw)
     {
+        using vec::fvec2;
+
         auto coefr = fvec2(coef) / fvec2(max_scale);
-        Vec2 newpos = Vec2(coefr * fvec2(position() - focw)) + focw;
+        position_type newpos = position_type(coefr * fvec2(position() - focw)) + focw;
         position(newpos);
         set_scale(coef);
     }
 
-    bool edge_scroll(Vec2 cursor_position, int speed)
+    bool edge_scroll(position_type cursor_position, int speed)
     {
         // (0,0) is center-screen, so offset it to the corner
         auto vpsize = size_cells();
-        auto offset_pos = to_nds(cursor_position + Vec2(vpsize / 2u));
-        Vec2 dv {0};
+        auto offset_pos = to_nds(cursor_position + position_type(vpsize / 2u));
+        position_type dv {0};
 
         for (unsigned i = 0; i < dv.length(); ++i) {
             if (offset_pos[i] < margin_size) {
@@ -111,19 +115,11 @@ struct basic_viewport
                 dv[i] = +speed;
             }
         }
-        if (dv != Vec2(0)) {
+        if (dv != position_type(0)) {
             translate(dv);
             return true;
         }
         return false;
-    }
-
-    template <class Prog>
-    void update_uniforms(Prog& prog, bool pos = true)
-    {
-        set(prog->viewport_size, size_cells());
-        if (pos)
-            set(prog->viewport_position, position());
     }
 };
 }

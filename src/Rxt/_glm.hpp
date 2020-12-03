@@ -14,31 +14,7 @@
 
 namespace Rxt
 {
-namespace _glm
-{
-using glm::fvec2;
-using glm::ivec2;
-using glm::uvec2;
-using glm::fvec3;
-using glm::ivec3;
-using glm::uvec3;
-using glm::fvec4;
-using glm::ivec4;
-using glm::uvec4;
-
-using glm::quat;
-using glm::fmat3;
-using glm::fmat4;
-
-using glm::tvec2;
-using glm::tvec3;
-using glm::tvec4;
-
-using glm::highp;
-
-using glm::translate;
-using glm::scale;
-}
+namespace _glm  = ::glm;
 
 namespace _det
 {
