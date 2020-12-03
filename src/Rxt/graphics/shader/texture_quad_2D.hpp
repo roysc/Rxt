@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Rxt/graphics/gl_handy.hpp>
+#include "Rxt/graphics/gl_handy.hpp"
+
 #include <tuple>
 
 namespace Rxt::shader_programs
@@ -23,8 +24,8 @@ struct texture_quad_2D_data
     program_type& prog;
     gl::vao va;
     gl::texture tex;
-    gl::attribuf<glm::vec2> position {program(), "position"};
-    gl::attribuf<glm::vec2> tex_coord {program(), "texCoord"};
+    gl::attribuf<position_vec> position {program(), "position"};
+    gl::attribuf<tex_coord_vec> tex_coord {program(), "texCoord"};
     gl::buffer<GLuint> elements;
 
     struct uniforms

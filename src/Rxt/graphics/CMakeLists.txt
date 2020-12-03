@@ -42,6 +42,7 @@ set(_HEADERS
 set(_HEADERS_SHADER
     shader/texture_quad_2D.hpp
     shader/grid_quad_2D.hpp
+    shader/grid_quad_texture_2D.hpp
     shader/colored_triangle_3D.hpp
     shader/solid_color_3D.hpp
     shader/webgl_grid_quad_2D.hpp
