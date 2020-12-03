@@ -25,8 +25,8 @@ struct grid_quad_2D_data
 
     program_type& prog;
     gl::vao va;
-    gl::attribuf<position_vec> position {prog, "quadPosition"};
-    gl::attribuf<color_vec> color {prog, "color"};
+    gl::attribuf<position_vec> position {program(), "quadPosition"};
+    gl::attribuf<color_vec> color {program(), "color"};
     gl::buffer<GLuint> elements;
 
     struct uniforms
@@ -38,7 +38,8 @@ struct grid_quad_2D_data
 
     program_type& program() { return prog; }
 
-    grid_quad_2D_data(program_type& p) : prog(p)
+    grid_quad_2D_data(program_type& p)
+        : prog(p)
     {
         position.enable(va);
         color.enable(va);
@@ -57,6 +58,7 @@ struct grid_quad_2D_data
     {
         position.storage.clear();
         color.storage.clear();
+        elements.storage.clear();
     }
 
     void draw()
@@ -67,6 +69,7 @@ struct grid_quad_2D_data
         glDrawElements(draw_mode, std::size(elements.storage), GL_UNSIGNED_INT, 0);
     }
 
+    // Push a full quad
     void push(position_vec p, size_vec s, color_vec c)
     {
         // Build a quad
