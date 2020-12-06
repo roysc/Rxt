@@ -5,56 +5,59 @@
 
 namespace Rxt
 {
-template <class FT>
-struct basic_viewport
+struct _viewport_base {};
+
+template <class Num>
+struct basic_viewport : _viewport_base
 {
     using float_vec = vec::fvec2;
-    using position_type = vec::tvec2<FT>;
-    using size_type = vec::tvec2<std::make_unsigned_t<FT>>;
+    using position_type = vec::tvec2<Num>;
+    using size_type = vec::tvec2<std::make_unsigned_t<Num>>;
 
-    size_type max_scale;
-    size_type scale_factor {1};
-    position_type _position {0};
-    const size_type size_px {max_scale * scale_factor};
+    const size_type m_max_scale;
+    size_type m_scale_factor;
+    position_type m_position {0};
+    const size_type size_px {m_max_scale * m_scale_factor};
     const float margin_size = .1;
 
-    basic_viewport(size_type max, size_type scale = size_type(1))
-        : max_scale{max}, scale_factor{scale}
+    basic_viewport(size_type max, size_type scale)
+        : m_max_scale{max}, m_scale_factor{scale}
     {
-        assert(all(lessThan(size_type(0), scale)));
-        assert(all(lessThan(size_type(0), max)));
+        // assert(all(lessThan(size_type(0), scale)));
+        // assert(all(lessThan(size_type(0), max)));
     }
 
-    virtual void set_position(position_type pos) { _position = pos; }
-    virtual void set_scale(size_type scale) { scale_factor = scale; }
+    virtual void set_position(position_type pos) { m_position = pos; }
+    virtual void set_scale(size_type scale) { m_scale_factor = scale; }
 
-    position_type position() const { return _position; }
+    position_type position() const { return m_position; }
+    size_type scale_factor() const { return m_scale_factor; }
+    size_type max_scale() const { return m_max_scale; }
+    size_type size_pixels() const { return size_px; }
 
     size_type scale_relative(float factor) const
     {
-        return scale_factor * factor;
+        return m_scale_factor * factor;
     }
 
     size_type scale_pow(int exp) const
     {
         const size_type min_scale{1};
         if (exp > 0) {
-            if (scale_factor.x > min_scale.x && scale_factor.y > min_scale.y)
-                return scale_factor / 2u;
+            if (m_scale_factor.x > min_scale.x && m_scale_factor.y > min_scale.y)
+                return m_scale_factor / 2u;
         } else {
-            if (scale_factor.x < max_scale.x && scale_factor.y < max_scale.y)
-                return scale_factor * 2u;
+            if (m_scale_factor.x < m_max_scale.x && m_scale_factor.y < m_max_scale.y)
+                return m_scale_factor * 2u;
         }
-        return scale_factor;
+        return m_scale_factor;
     }
 
     // size in number of cells
     size_type size_cells() const
     {
-        return size_type(vec::fvec2(size_pixels()) / vec::fvec2(scale_factor));
+        return size_type(vec::fvec2(size_pixels()) / vec::fvec2(m_scale_factor));
     }
-
-    size_type size_pixels() const { return size_px; }
 
     auto from_nds(float x, float y) const
     {
@@ -86,7 +89,7 @@ struct basic_viewport
 
     void translate(position_type d)
     {
-        position(position() + d);
+        set_position(position() + d);
     }
 
     // scale, adjusting to maintain position
@@ -94,9 +97,9 @@ struct basic_viewport
     {
         using vec::fvec2;
 
-        auto coefr = fvec2(coef) / fvec2(max_scale);
+        auto coefr = fvec2(coef) / fvec2(m_max_scale);
         position_type newpos = position_type(coefr * fvec2(position() - focw)) + focw;
-        position(newpos);
+        set_position(newpos);
         set_scale(coef);
     }
 
@@ -123,3 +126,22 @@ struct basic_viewport
     }
 };
 }
+
+template <class V>
+struct fmt::formatter<V, std::enable_if_t<std::is_base_of_v<Rxt::_viewport_base, V>, char>>
+{
+    template <class PC>
+    constexpr auto parse(PC& ctx)
+    {
+        return ctx.begin();
+    }
+
+    template <class FC>
+    auto format(const V& vp, FC& ctx)
+    {
+        return fmt::format_to(
+            ctx.out(), "viewport(scale={}, max={}, position={})",
+            vp.scale_factor(), vp.max_scale(), vp.position()
+        );
+    }
+};
