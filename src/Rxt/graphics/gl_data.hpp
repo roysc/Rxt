@@ -61,6 +61,34 @@ struct data_adaptor
 using namespace vec;
 
 template <>
+struct data_traits<GLint> : _det::data_adaptor<GL_INT>
+{
+    static void set(value_type id, GLint val)
+    {
+        glUniform1i(id, val);
+    }
+
+    static void set_array(value_type id, span<GLint const> val)
+    {
+        glUniform1iv(id, val.size(), val.data());
+    }
+};
+
+template <>
+struct data_traits<GLuint> : _det::data_adaptor<GL_UNSIGNED_INT>
+{
+    static void set(value_type id, GLint val)
+    {
+        glUniform1ui(id, val);
+    }
+
+    static void set_array(value_type id, span<GLuint const> val)
+    {
+        glUniform1uiv(id, val.size(), val.data());
+    }
+};
+
+template <>
 struct data_traits<fvec2> : _det::data_adaptor<GL_FLOAT, 2>
 {
     static void set(value_type id, fvec2 const& v)
@@ -155,20 +183,6 @@ struct data_traits<fmat4> : _det::data_adaptor<GL_FLOAT, 4, 4>
     static void set_array(value_type id, span<fmat4 const> ms)
     {
         glUniformMatrix4fv(id, ms.size(), GL_FALSE, _span_ptr(ms));
-    }
-};
-
-template <>
-struct data_traits<GLint> : _det::data_adaptor<GL_INT>
-{
-    static void set(value_type id, GLint val)
-    {
-        glUniform1i(id, val);
-    }
-
-    static void set_array(value_type id, span<GLint const> val)
-    {
-        glUniform1iv(id, val.size(), val.data());
     }
 };
 
