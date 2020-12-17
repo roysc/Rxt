@@ -25,7 +25,6 @@ endif()
 
 # Define base library
 set(_HEADERS
-    _debug.hpp
     _glm.hpp
     _fmt.hpp
     error.hpp

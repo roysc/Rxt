@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Rxt/_debug.hpp>
 #include <Rxt/range.hpp>
 
 #include <boost/graph/graph_traits.hpp>

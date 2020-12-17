@@ -2,8 +2,6 @@
 
 #include "gl_core.hpp"
 
-#include "../_debug.hpp"
-
 #include <utility>
 #include <vector>
 
@@ -18,7 +16,7 @@ template <class... T>
 static void log(T&&... args)
 {
     if (!debug_context::enable_logging) return;
-    dbg::print(std::forward<T>(args)...);
+    print(std::forward<T>(args)...);
 }
 
 template <class Tr>

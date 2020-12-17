@@ -1,6 +1,6 @@
 #include "gl_core.hpp"
 
-#include "../_debug.hpp"
+#include "Rxt/io.hpp"
 
 namespace Rxt::gl
 {
@@ -8,7 +8,7 @@ attrib_traits::value_type attrib_traits::create(const object<program_traits>& p,
 {
     value_type id = glGetAttribLocation(p, n);
     if (id == value_type(-1)) {
-        dbg::print("warning: attrib '{0}' is undefined\n", n);
+        print("warning: attrib '{0}' is undefined\n", n);
     }
     return id;
 }
@@ -17,7 +17,7 @@ uniform_traits::value_type uniform_traits::create(const object<program_traits>& 
 {
     value_type id = glGetUniformLocation(p, n);
     if (id == value_type(-1)) {
-        dbg::print("warning: uniform '{0}' is undefined\n", n);
+        print("warning: uniform '{0}' is undefined\n", n);
     }
     return id;
 }

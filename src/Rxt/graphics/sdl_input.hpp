@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../_debug.hpp"
+#include "Rxt/io.hpp"
 #include "sdl_core.hpp"
 
 #include <utility>
@@ -49,7 +49,7 @@ struct key_dispatcher
     void press(SDL_Keysym keysym)
     {
         if constexpr (echo) {
-            dbg::print("press: {}\n", key_descriptor(keysym));
+            print("press: {}\n", key_descriptor(keysym));
         }
         auto b = on_press.find(keysym);
         if (b != on_press.end()) {
@@ -65,7 +65,7 @@ struct key_dispatcher
         for (auto&& [k, func]: on_scan) {
             auto scancode = SDL_GetScancodeFromKey(k.code);
             if (state[scancode] && (mod == k.mod)) {
-                if constexpr (echo) { dbg::print("scan: {}\n", k); }
+                if constexpr (echo) { print("scan: {}\n", k); }
                 func();
             }
             else if (default_func) {

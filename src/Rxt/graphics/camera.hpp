@@ -1,5 +1,5 @@
 #pragma once
-#include "../_debug.hpp"
+
 #include "Rxt/math.hpp"
 #include "Rxt/vec.hpp"
 

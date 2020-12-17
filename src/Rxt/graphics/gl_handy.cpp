@@ -4,11 +4,13 @@
 #include "gl_error.hpp"
 #include "_gl_debug.hpp"
 
+#include <cstring>
+
 #ifndef glDebugMessageCallback  // OpenGL < 4.3
 #define glDebugMessageCallback(...)                                     \
-    ::Rxt::dbg::print("[Emscripten] glDebugMessageCallback not supported")
+    ::Rxt::print("[Emscripten] glDebugMessageCallback not supported")
 #define glDebugMessageControl(...)                                      \
-    ::Rxt::dbg::print("[Emscripten] glDebugMessageControl not supported")
+    ::Rxt::print("[Emscripten] glDebugMessageControl not supported")
 #endif
 
 namespace Rxt::gl
@@ -17,7 +19,7 @@ void setup_glew()
 {
     glewExperimental = GL_TRUE;
     if (auto err = glewInit(); err != GLEW_OK) {
-        dbg::print("{}\n", glewGetErrorString(err));
+        _fmt::print("{}\n", glewGetErrorString(err));
         throw std::runtime_error("glewInit");
     }
 }
@@ -27,7 +29,7 @@ void _debug_callback(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar*, con
 void setup_debug_output()
 {
 #ifdef __EMSCRIPTEN__
-    dbg::print("OpenGL debugging not supported\n");
+    _fmt::print("OpenGL debugging not supported\n");
 #else
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -36,7 +38,7 @@ void setup_debug_output()
 
     auto flags = get<GLint>(GL_CONTEXT_FLAGS);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
-        dbg::print("OpenGL debugging is enabled\n");
+        _fmt::print("OpenGL debugging is enabled\n");
     }
 #endif
 }
@@ -61,8 +63,13 @@ program make_program(file_asset_source const& assets, std::string name)
     return ret;
 }
 
-void _debug_callback(GLenum, GLenum type, GLuint, GLenum severity, GLsizei,
-                     const GLchar* message, void const*)
+void _debug_callback(GLenum source,
+                     GLenum type,
+                     GLuint id,
+                     GLenum severity,
+                     GLsizei length,
+                     const GLchar* message,
+                     void const*)
 {
     if (!debug_context::enable_logging) return;
 
@@ -77,7 +84,7 @@ void _debug_callback(GLenum, GLenum type, GLuint, GLenum severity, GLsizei,
         kind = "WARN";
         break;
     }
-    dbg::print("GL {0}: {1}\n", kind, message);
+    _fmt::print("GL {0}: {1}\n", kind, message);
 
     if (type == GL_DEBUG_TYPE_ERROR)
         throw message_error(message);
