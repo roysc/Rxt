@@ -75,7 +75,7 @@ endif()
 # For testing WebGL compatibility
 if(WEBGL_COMPAT)
     message(AUTHOR_WARNING "Building in WebGL compatibility mode")
-    target_compile_definitions(RxtGraphics PUBLIC RXT_WEBGL2)
+    target_compile_definitions(RxtGraphics PUBLIC RXT_USE_GLES3)
 endif()
 
 target_include_directories(RxtGraphics PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>)

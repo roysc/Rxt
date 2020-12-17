@@ -4,7 +4,7 @@
 
 #include <tuple>
 
-#ifdef RXT_WEBGL2
+#ifdef RXT_USE_GLES3
   #include "webgl_grid_quad_2D.hpp"
 #else
 
@@ -100,7 +100,7 @@ struct grid_quad_2D_data
 
 namespace Rxt::shader_programs::webcompat
 {
-#ifdef RXT_WEBGL2
+#ifdef RXT_USE_GLES3
 using Rxt::shader_programs::webgl::grid_quad_2D;
 #else
 using Rxt::shader_programs::grid_quad_2D;

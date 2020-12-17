@@ -23,7 +23,7 @@ struct sdl_context
             log_and_fail("SDL_Init");
         }
 
-#ifdef RXT_WEBGL2
+#ifdef RXT_USE_GLES3
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);

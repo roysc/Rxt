@@ -4,7 +4,7 @@
 #include "Rxt/graphics/gl.hpp"
 #include "Rxt/graphics/shader/texture_quad_2D.hpp"
 
-#ifdef RXT_WEBGL2
+#ifdef RXT_USE_GLES3
   #include "Rxt/graphics/shader/webgl_grid_quad_2D.hpp"
 #else
   #include "Rxt/graphics/shader/grid_quad_2D.hpp"
@@ -22,7 +22,7 @@ using grid_offset = glm::ivec2;
 namespace gl = Rxt::gl;
 
 using Rxt::shader_programs::texture_quad_2D;
-#ifdef RXT_WEBGL2
+#ifdef RXT_USE_GLES3
 using Rxt::shader_programs::webgl::grid_quad_2D;
 #else
 using Rxt::shader_programs::grid_quad_2D;

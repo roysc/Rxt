@@ -39,7 +39,7 @@ struct attribuf : public attrib<T>, public buffer<T>
 template <class T>
 void enable_attrib(attrib<T>& attr, vao& va)
 {
-#ifdef RXT_WEBGL2               // OpenGL < 4.5 compatibility
+#ifdef RXT_USE_GLES3               // OpenGL < 4.5 compatibility
     glBindVertexArray(va);
     glEnableVertexAttribArray(attr);
     glBindVertexArray(0);
