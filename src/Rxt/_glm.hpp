@@ -1,5 +1,7 @@
 #pragma once
 
+#include "_fmt.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,11 +17,26 @@
 namespace Rxt
 {
 namespace _glm  = ::glm;
+}
 
-namespace _det
-{
-// fixme: unused
 template <class T>
-using has_glm_to_string = decltype(::glm::to_string(std::declval<T const&>()));
-}
-}
+struct _fmt_glm_to_string
+{
+    template <class PC>
+    constexpr auto parse(PC& ctx)
+    {
+        return ctx.begin();
+    }
+
+    template <class FC>
+    auto format(const T& val, FC& ctx)
+    {
+        return fmt::format_to(ctx.out(), "{}", ::glm::to_string(val));
+    }
+};
+
+template <class T>
+struct fmt::formatter<glm::tvec2<T>> : _fmt_glm_to_string<glm::tvec2<T>> {};
+
+template <class T>
+struct fmt::formatter<glm::tvec3<T>> : _fmt_glm_to_string<glm::tvec3<T>> {};
