@@ -15,13 +15,15 @@ struct basic_viewport : _viewport_base
     using size_type = vec::tvec2<std::make_unsigned_t<Num>>;
 
     const size_type m_max_scale;
+    const size_type m_min_scale;
     size_type m_scale_factor;
     position_type m_position {0};
-    const size_type size_px {m_max_scale * m_scale_factor};
     const float margin_size = .1;
 
-    basic_viewport(size_type max, size_type scale)
-        : m_max_scale{max}, m_scale_factor{scale}
+    basic_viewport(size_type max, size_type min = size_type(1))
+        : m_max_scale(max)
+        , m_min_scale(min)
+        , m_scale_factor(min)
     {
         // assert(all(lessThan(size_type(0), scale)));
         // assert(all(lessThan(size_type(0), max)));
@@ -33,18 +35,12 @@ struct basic_viewport : _viewport_base
     position_type position() const { return m_position; }
     size_type scale_factor() const { return m_scale_factor; }
     size_type max_scale() const { return m_max_scale; }
-    size_type size_pixels() const { return size_px; }
-
-    size_type scale_relative(float factor) const
-    {
-        return m_scale_factor * factor;
-    }
+    size_type size_pixels() const { return m_min_scale * m_max_scale; }
 
     size_type scale_pow(int exp) const
     {
-        const size_type min_scale{1};
         if (exp > 0) {
-            if (m_scale_factor.x > min_scale.x && m_scale_factor.y > min_scale.y)
+            if (m_scale_factor.x > m_min_scale.x && m_scale_factor.y > m_min_scale.y)
                 return m_scale_factor / 2u;
         } else {
             if (m_scale_factor.x < m_max_scale.x && m_scale_factor.y < m_max_scale.y)
