@@ -9,31 +9,31 @@
 
 namespace Rxt
 {
-template <class FT>
+template <class Num>
 struct basic_cursor
 {
-    using position_type = vec::tvec2<FT>;
+    using position_type = vec::tvec2<Num>;
     position_type m_position{0};
 
     position_type position() const { return m_position; }
     void set_position(position_type pos) { this->m_position = pos; }
 };
 
-template <class Der, class FT>
-struct reactive_cursor : basic_cursor<FT>, reactive_base<Der>
+template <class Der, class Num>
+struct reactive_cursor : basic_cursor<Num>, reactive_base<Der>
 {
-    using super_type = basic_cursor<FT>;
+    using super_type = basic_cursor<Num>;
     using super_type::super_type;
     using super_type::position;
-    using position_type = FT;
+    using position_type = Num;
 
     void set_position(position_type pos) { super_type::set_position(pos); this->do_update(); }
 };
 
-template <class Der, class FT>
-struct reactive_viewport : basic_viewport<FT>, reactive_base<Der>
+template <class Der, class Num>
+struct reactive_viewport : basic_viewport<Num>, reactive_base<Der>
 {
-    using super_type = basic_viewport<FT>;
+    using super_type = basic_viewport<Num>;
     using super_type::super_type;
     using super_type::position;
 
