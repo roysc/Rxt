@@ -26,7 +26,7 @@ struct grid_quad_texture_2D_data
     program_type& prog;
     gl::vao va;
     gl::texture tex;
-    gl::attribuf<position_vec> position {program(), "quadPosition"};
+    gl::attribuf<position_vec> position {program(), "vertexPosition"};
     gl::attribuf<tex_coord_vec> tex_coord {program(), "texCoord"};
     gl::buffer<GLuint> elements;
 
@@ -35,7 +35,7 @@ struct grid_quad_texture_2D_data
         program_type& prog;
         gl::uniform<glm::ivec2> viewport_position{prog, "viewportPosition"};
         gl::uniform<glm::uvec2> viewport_size{prog, "viewportSize"};
-        // gl::uniform<gl::sampler2D> tex_unit{prog, 0};
+        gl::uniform<GLint> tex_unit{prog, "texUnit"};
     };
 
     program_type& program() { return prog; }
@@ -48,18 +48,12 @@ struct grid_quad_texture_2D_data
 
         position.enable(va);
         tex_coord.enable(va);
-
-        gl::set_uniform(program(), "texUnit", 0);
     }
 
     void update()
     {
         gl::use_guard _p(program());
         gl::bind_vao_guard _a(va);
-
-        position.storage = {{-1, 1}, {1, 1}, {1, -1}, {-1, -1}};
-        tex_coord.storage = {{0, 0}, {1, 0}, {1, 1}, {0, 1}};
-        elements.storage = {0, 1, 2, 2, 3, 0};
         gl::buffer_data(position);
         gl::buffer_data(tex_coord);
         gl::buffer_data(elements, GL_ELEMENT_ARRAY_BUFFER);
