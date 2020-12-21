@@ -36,16 +36,12 @@ set(_HEADERS
     util.hpp
     meta.hpp
     "macro.hpp"
-    demangle.hpp
     vec.hpp
     color.hpp
     span.hpp
     viewport.hpp
     reactive.hpp
     controls.hpp
-)
-set(_SOURCES
-    demangle.cpp
 )
 
 # Base library is installed by default; dependencies of other components should live here.
@@ -64,7 +60,7 @@ endif()
 target_link_libraries(RxtBase glm::glm)
 
 # Tests for base
-set(_TESTS meta io log time range "macro" demangle)
+set(_TESTS meta io log time range "macro")
 foreach(_TEST ${_TESTS})
     make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtBase)
 endforeach()
@@ -80,6 +76,7 @@ endif()
 add_subdirectory(data)
 add_subdirectory(geometry)
 add_subdirectory(graphics)
+add_subdirectory(reflect)
 
 # Packaging
 set(_config_file "${PROJECT_BINARY_DIR}/cmake/RxtConfig.cmake")
