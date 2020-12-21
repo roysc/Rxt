@@ -1,4 +1,4 @@
-# Rxt::Graphics component
+# Rxt::Graphics - OpenGL/SDL wrappers, utils
 
 if(EMSCRIPTEN)
     set(WEBGL_COMPAT ON)

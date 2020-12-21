@@ -1,4 +1,4 @@
-# Data structures library
+# Rxt::Data - data structures library
 
 set(_HEADERS
     graph.hpp

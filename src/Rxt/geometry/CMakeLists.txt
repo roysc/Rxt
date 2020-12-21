@@ -1,4 +1,4 @@
-# Rxt geometry
+# Rxt::Geometry - computational geometry
 
 if(EMSCRIPTEN)
     message(WARNING "Rxt::Geometry does not support Emscripten and will not be built")
