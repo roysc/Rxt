@@ -2,7 +2,7 @@
 # top-level CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.12)
-project(Rxt VERSION 0.2)
+project(Rxt VERSION 0.3)
 
 option(BUILD_DEMOS "Build example demos" OFF)
 option(BUILD_TESTING "Build tests" ON)
