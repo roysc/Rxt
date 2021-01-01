@@ -15,6 +15,7 @@ find_package(Threads REQUIRED)
 find_library(SOIL REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
 
 set(_HEADERS
+    gl.hpp
     gl_prelude.hpp
     gl_core.hpp
     gl_data.hpp
@@ -22,7 +23,6 @@ set(_HEADERS
     gl_handy.hpp
     gl_error.hpp
     _gl_debug.hpp
-    gl.hpp
 
     sdl.hpp
     sdl_core.hpp

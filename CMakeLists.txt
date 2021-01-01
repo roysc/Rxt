@@ -4,12 +4,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(Rxt VERSION 0.2)
 
-set(_INCLUDE_DEST "include")
-set(_LIB_DEST "lib/Rxt")
-set(_CMAKE_MODULE_DEST "lib/cmake/Rxt")
-
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-
 option(BUILD_DEMOS "Build example demos" OFF)
 option(BUILD_TESTING "Build tests" ON)
 option(DISABLE_BOOST "Purge projects requiring Boost" OFF) #todo USE_BOOST, USE_FMT
@@ -40,6 +34,13 @@ add_compile_options(-fno-omit-frame-pointer -fno-optimize-sibling-calls)
 if(EMSCRIPTEN)
     add_compile_options(-fno-diagnostics-color)
 endif()
+
+set(_INCLUDE_DEST "include")
+set(_LIB_DEST "lib/Rxt")
+set(_CMAKE_MODULE_DEST "lib/cmake/Rxt")
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" PARENT_SCOPE)
 
 add_subdirectory(src/Rxt)
 add_subdirectory(cmake)

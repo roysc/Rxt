@@ -20,7 +20,7 @@ endif()
 # Dependencies
 find_package(glm REQUIRED ${RXT_EMSCRIPTEN_FIND_ROOT_PATH_MODE})
 if(NOT DISABLE_FMT)
-    find_package(fmt 6.0 CONFIG REQUIRED)
+    find_dependency(fmt 6.0 CONFIG REQUIRED)
 endif()
 
 # Define base library
