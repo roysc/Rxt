@@ -25,7 +25,7 @@ struct reactive_cursor : basic_cursor<Num>, reactive_base<Der>
     using super_type = basic_cursor<Num>;
     using super_type::super_type;
     using super_type::position;
-    using position_type = Num;
+    using position_type = super_type::position_type;
 
     void set_position(position_type pos) { super_type::set_position(pos); this->do_update(); }
 };
