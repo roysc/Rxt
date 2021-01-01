@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Rxt/reactive.hpp"
-#include "sdl_gui.hpp"
+#include "Rxt/graphics/sdl_gui.hpp"
 
 // Convenient CRTP child with hook-based handlers
 namespace Rxt::sdl
