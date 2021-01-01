@@ -53,6 +53,7 @@ set(_SOURCES
     gl_handy.cpp
     sdl_input.cpp
     animation_util.cpp
+    image.cpp
 )
 
 add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER} ${_SOURCES})
