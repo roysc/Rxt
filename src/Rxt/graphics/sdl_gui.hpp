@@ -33,7 +33,7 @@ struct simple_gui
 };
 
 template <class T>
-struct gui_input_handler
+struct input_handler_crt
 {
     void handle_input(SDL_Event event)
     {
@@ -51,7 +51,7 @@ struct gui_input_handler
 };
 
 template <class T>
-struct gui_input_stubs : public gui_input_handler<T>
+struct input_handler_stubs_crt : public input_handler_crt<T>
 {
     void on_quit() {}
     void on_key_down(SDL_Keysym) {}

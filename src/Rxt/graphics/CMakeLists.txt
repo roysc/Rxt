@@ -24,13 +24,14 @@ set(_HEADERS
     _gl_debug.hpp
     gl.hpp
 
+    sdl.hpp
     sdl_core.hpp
     sdl_gl.hpp
     sdl_gui.hpp
     sdl_metronome.hpp
     sdl_input.hpp
     _sdl_debug.hpp
-    sdl.hpp
+    sdl/reactive.hpp
 
     asset.hpp
     image.hpp

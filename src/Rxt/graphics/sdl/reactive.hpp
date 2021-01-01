@@ -6,7 +6,7 @@
 // Convenient CRTP child with hook-based handlers
 namespace Rxt::sdl
 {
-struct gui_input_hooks : gui_input_handler<gui_input_hooks>
+struct input_hooks : input_handler_crt<input_hooks>
 {
     Rxt::hooks<> on_quit;
     Rxt::hooks<SDL_Keysym> on_key_down;
