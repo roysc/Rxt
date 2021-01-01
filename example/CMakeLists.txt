@@ -26,6 +26,9 @@ Rxt_demo(sdl_events FILES sdl_events.cpp LINK RxtGraphics)
 Rxt_demo(sdl_shader FILES sdl_shader.cpp LINK RxtGraphics)
 Rxt_demo(grid_viewer FILES grid_viewer.cpp LINK RxtGraphics)
 
+find_package(nlohmann_json 3.2.0 REQUIRED)
+Rxt_demo(sprites FILES sprites.cpp LINK RxtGraphics nlohmann_json::nlohmann_json)
+
 Rxt_demo(grid_world
     FILES
       grid_world.cpp
