@@ -83,10 +83,6 @@ struct grid_quad_texture_2D_data
         for (GLuint index: {0, 1, 2, 2, 3, 0}) {
             elements.storage.push_back(offset + index);
         }
-
-        for (auto i: elements.storage) {
-            _fmt::print("vertex: {} {}\n", position.storage[i], tex_coord.storage[i]);
-        }
     }
 
     // Set quad at a specific index
