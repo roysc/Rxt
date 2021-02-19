@@ -17,19 +17,19 @@ void calculate_face_normals(G const& g, NormalMap nm)
     using Hd     = typename GT::halfedge_descriptor;
     using Normal = typename boost::property_traits<NormalMap>::value_type;
 
-    auto pm = get(CGAL::vertex_point, g);
+    auto points = get(CGAL::vertex_point, g);
     for (auto [fb, fe] = faces(g); fb != fe; ++fb) {
         Hd edg = halfedge(*fb, g), edgb = edg;
-        auto p0 = pm[target(edg, g)];
+        auto p0 = points[target(edg, g)];
         edg = next(edg, g);
-        auto p1 = pm[target(edg, g)];
+        auto p1 = points[target(edg, g)];
         edg = next(edg, g);
-        auto p2 = pm[target(edg, g)];
+        auto p2 = points[target(edg, g)];
         edg = next(edg, g);
 
         // triangle or not?
         if (edg == edgb) {
-            nm[*fb] = CGAL::unit_normal(p1, p2, p0);
+            normals[*fb] = CGAL::unit_normal(p1, p2, p0);
         } else {
             Normal n{CGAL::NULL_VECTOR};
             do {
@@ -38,10 +38,10 @@ void calculate_face_normals(G const& g, NormalMap nm)
                 p1 = p2;
 
                 edg = next(edg, g);
-                p2 = pm[target(edg, g)];
+                p2 = points[target(edg, g)];
             } while (edg != edgb);
 
-            nm[*fb] = n / CGAL::sqrt(n.squared_length());
+            normals[*fb] = n / CGAL::sqrt(n.squared_length());
         }
     }
 }

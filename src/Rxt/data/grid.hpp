@@ -6,14 +6,14 @@
 namespace Rxt
 {
 template <unsigned size>
-struct clamp_axis : public std::integral_constant<unsigned, size>
+struct clamped_axis : public std::integral_constant<unsigned, size>
 {
     static constexpr bool is_wrapped = false;
     static constexpr unsigned extent = size;
 };
 
 template <unsigned size>
-struct wrap_axis : public std::integral_constant<unsigned, size>
+struct wrapped_axis : public std::integral_constant<unsigned, size>
 {
     static constexpr bool is_wrapped = true;
     static constexpr unsigned extent = size;

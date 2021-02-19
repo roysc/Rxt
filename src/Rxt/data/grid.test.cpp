@@ -4,9 +4,9 @@
 namespace Rxt
 {
 TEST_CASE("grid traits") {
-    using C10C10 = grid_spec<clamp_axis<10>, clamp_axis<10>>;
-    using W10W10 = grid_spec<wrap_axis<10>, wrap_axis<10>>;
-    using C10W10 = grid_spec<clamp_axis<10>, wrap_axis<10>>;
+    using C10C10 = grid_spec<clamped_axis<10>, clamped_axis<10>>;
+    using W10W10 = grid_spec<wrapped_axis<10>, wrapped_axis<10>>;
+    using C10W10 = grid_spec<clamped_axis<10>, wrapped_axis<10>>;
 
     REQUIRE( C10C10::extent[0] == 10 );
     REQUIRE( C10C10::extent[1] == 10 );
