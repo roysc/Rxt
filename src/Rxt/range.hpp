@@ -47,6 +47,8 @@ auto to_range(std::optional<T> const& p)
     return to_range(const_cast<std::optional<T>&>(p));
 }
 
+struct range_sentinel {};
+
 // Given a map M (k -> v) with iterator Mi, output pairs (k, r) for all equal-ranges r:(Mi, Mi) in M
 // TODO unit test
 template <class Map, class OutIt>
