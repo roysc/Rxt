@@ -4,5 +4,8 @@
 
 namespace Rxt
 {
-namespace vec = _glm;
+namespace vec
+{
+using namespace glm;
+}
 }

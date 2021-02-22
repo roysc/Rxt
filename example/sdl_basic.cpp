@@ -28,6 +28,6 @@ extern "C" void step_loop(void* c)
 int main()
 {
     sdl::simple_gui gui("demo: sdl_basic", 500, 500);
-    auto loop = sdl::make_looper(new loop_state(gui.window()), step_loop);
+    auto loop = sdl::make_looper(new loop_state(*gui.window()), step_loop);
     loop();
 }

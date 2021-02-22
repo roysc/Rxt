@@ -29,7 +29,7 @@ struct simple_gui
 
     virtual ~simple_gui() {}
 
-    auto& window() { return *_window; }
+    auto window() { return &*_window; }
 };
 
 template <class T>

@@ -15,7 +15,7 @@
 
 namespace Rxt::gl
 {
-void setup_glew()
+void init_glew()
 {
     glewExperimental = GL_TRUE;
     if (auto err = glewInit(); err != GLEW_OK) {
@@ -26,7 +26,7 @@ void setup_glew()
 
 void _debug_callback(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar*, const void*);
 
-void setup_debug_output()
+void init_debug_output()
 {
 #ifdef __EMSCRIPTEN__
     _fmt::print("OpenGL debugging not supported\n");

@@ -22,7 +22,7 @@ using Rxt::shader_programs::grid_quad_texture_2D;
 using Rxt::shader_programs::grid_quad_2D;
 using vec::ivec2;
 using vec::uvec2;
-using viewport = adapt_reactive_crt<reactive_viewport, hooks<>, int>;
+using viewport = adapt_reactive_helper<reactive_viewport, hooks<>, int>;
 
 struct sprite_sheet
 {
@@ -60,7 +60,7 @@ struct sprites_demo : sdl::simple_gui
 
     bool m_quit = false;
     sdl::key_dispatcher m_keys;
-    sdl::gui_input_hooks m_input;
+    sdl::input_hooks m_input;
     viewport m_viewport;
     // basic_cursor<ivec2> m_cursor;
 
@@ -167,7 +167,7 @@ void sprites_demo::draw()
     m_sprites_bufs.draw();
     m_debug_bufs.draw();
 
-    SDL_GL_SwapWindow(&window());
+    SDL_GL_SwapWindow(window());
 }
 
 void sprites_demo::advance(SDL_Event event)

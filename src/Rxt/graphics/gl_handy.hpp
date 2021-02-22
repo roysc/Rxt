@@ -16,8 +16,8 @@
 
 namespace Rxt::gl
 {
-void setup_glew();
-void setup_debug_output();
+void init_glew();
+void init_debug_output();
 
 program make_program(file_asset_source const&, std::string);
 

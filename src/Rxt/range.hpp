@@ -30,7 +30,7 @@ struct range_adaptor
 template <class I>
 auto to_range(std::pair<I, I> p)
 {
-    return range_adaptor<I> {p.first, p.second};
+    return range_adaptor<I>(p.first, p.second);
 }
 
 template <class T>
@@ -38,7 +38,7 @@ auto to_range(std::optional<T>& p)
 {
     T* ptr = nullptr;
     if (p) ptr = &*p;
-    return range_adaptor<T*> {ptr, (ptr ? ptr + 1 : ptr)};
+    return range_adaptor<T*>(ptr, (ptr ? ptr + 1 : ptr));
 }
 
 template <class T>

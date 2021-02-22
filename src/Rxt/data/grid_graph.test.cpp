@@ -3,9 +3,9 @@
 
 namespace Rxt
 {
-TEST_CASE("grid_2d[clamp]")
+TEST_CASE("grid_graph_2d[clamp]")
 {
-    using G = grid_2d<>;
+    using G = grid_graph_2d<grid_boundary::clamp>;
     G g{3, 3};
 
     G::vertex_type u{0u, 0u}, v{1u, 0u}, w{2u, 0u};
@@ -19,9 +19,10 @@ TEST_CASE("grid_2d[clamp]")
         REQUIRE(!ok);
     }
 }
-TEST_CASE("grid_2d[wrap]")
+
+TEST_CASE("grid_graph_2d[wrap]")
 {
-    using G = grid_2d<grid_boundary::wrap>;
+    using G = grid_graph_2d<grid_boundary::wrap>;
     G g{3, 3};
 
     G::vertex_type u{0u, 0u}, v{1u, 0u}, w{2u, 0u};

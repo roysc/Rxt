@@ -43,7 +43,7 @@ int main()
     glm::uvec2 total_size_px = tile_size_px * num_tiles;
 
     sdl::simple_gui gui("demo: grid viewer", total_size_px.x, total_size_px.y);
-    auto loop = sdl::make_looper(new run_context(&gui.window(), num_tiles.x, num_tiles.y), step_state);
+    auto loop = sdl::make_looper(new run_context(gui.window(), num_tiles.x, num_tiles.y), step_state);
     loop();
 }
 

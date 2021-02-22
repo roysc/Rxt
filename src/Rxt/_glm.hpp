@@ -14,11 +14,6 @@
 
 #include <type_traits>
 
-namespace Rxt
-{
-namespace _glm  = ::glm;
-}
-
 template <class T>
 struct _fmt_glm_to_string
 {

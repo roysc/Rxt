@@ -44,9 +44,10 @@ function(_add_component _COMP)
     _use_libstd_path(Rxt${_COMP} ${_LOCAL_PREFIX})
 endfunction()
 
-# Per-Component configuration
 # Collect a list of registered components
 set(RXT_AVAILABLE_COMPONENTS)
+
+# Handle per-Component configuration
 function(_install_component _COMP)
     list(APPEND RXT_AVAILABLE_COMPONENTS ${_COMP})
 

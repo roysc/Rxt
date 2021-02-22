@@ -11,7 +11,7 @@ namespace Rxt
 {
 // https://doc.cgal.org/latest/BGL/BGL_polyhedron_3_2normals_8cpp-example.html
 template<class G, class NormalMap>
-void calculate_face_normals(G const& g, NormalMap nm)
+void calculate_face_normals(G const& g, NormalMap normals)
 {
     using GT     = boost::graph_traits<G>;
     using Hd     = typename GT::halfedge_descriptor;

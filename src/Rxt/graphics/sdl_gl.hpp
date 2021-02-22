@@ -5,6 +5,7 @@
 #include "gl_handy.hpp"
 #include "_sdl_debug.hpp"
 
+#include <Rxt/log.hpp>
 #include <Rxt/macro.hpp>
 
 #ifdef __EMSCRIPTEN__
@@ -24,6 +25,7 @@ struct sdl_context
         }
 
 #ifdef RXT_USE_GLES3
+        RXT_info("Using ES3-compatible GL context\n");
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
@@ -57,8 +59,8 @@ struct gl_context
         SDL_GL_SetSwapInterval(1);
 #endif
 
-        gl::setup_glew();
-        gl::setup_debug_output();
+        gl::init_glew();
+        gl::init_debug_output();
     }
 
     ~gl_context()

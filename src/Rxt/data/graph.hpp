@@ -24,7 +24,7 @@ template <class... P>
 using undirected_adj_list = adjacency_list<vecS, vecS, undirectedS, P...>;
 }
 
-inline namespace data
+inline namespace graphs
 {
 using _det::directed_adj_list;
 using boost::property;
