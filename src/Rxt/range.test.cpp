@@ -54,21 +54,7 @@ TEST_CASE("index_ranges(multimap)")
     REQUIRE_EQ(mp[2], MIP{next(begin(m), 2), end(m)});
 }
 
-template <class R>
-bool equivalent(R r, std::vector<int> vec)
-{
-    // using std::experimental::ranges::copy;
-    // std::vector<int> rvec;
-    // copy(r, rvec);
-    // return rvec == vec;
-    auto vit = vec.begin();
-    bool ret = true;
-    for (auto&& val: r) {
-        if (vit == vec.end()) return false;
-        ret &= (val == *vit++);
-    }
-    return ret && (vit == vec.end());
-}
+using IntSeq = std::vector<int>;
 
 #ifndef RXT_DISABLE_RANGE_INDEXING
 TEST_CASE("make_indexed_range_map(map)")
@@ -79,8 +65,8 @@ TEST_CASE("make_indexed_range_map(map)")
 
     auto mr = make_indexed_range_map(m);
 
-    REQUIRE(equivalent(mr[1], {10}));
-    REQUIRE(equivalent(mr[2], {20}));
+    REQUIRE(range_equal(mr[1], IntSeq{10}));
+    REQUIRE(range_equal(mr[2], IntSeq{20}));
 }
 
 TEST_CASE("make_indexed_range_map(multimap)")
@@ -91,8 +77,8 @@ TEST_CASE("make_indexed_range_map(multimap)")
 
     auto mr = make_indexed_range_map(m);
 
-    REQUIRE(equivalent(mr[1], {10, 30}));
-    REQUIRE(equivalent(mr[2], {20}));
+    REQUIRE(range_equal(mr[1], IntSeq{10, 30}));
+    REQUIRE(range_equal(mr[2], IntSeq{20}));
 }
 #endif
 
