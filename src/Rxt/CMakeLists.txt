@@ -40,6 +40,7 @@ set(_HEADERS
     color.hpp
     span.hpp
     viewport.hpp
+    camera.hpp
     reactive.hpp
     controls.hpp
 )
@@ -60,7 +61,7 @@ endif()
 target_link_libraries(RxtBase glm::glm)
 
 # Tests for base
-set(_TESTS meta io log time range "macro")
+set(_TESTS meta io log time range "macro" camera)
 foreach(_TEST ${_TESTS})
     make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtBase)
 endforeach()

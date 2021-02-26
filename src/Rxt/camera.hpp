@@ -32,7 +32,7 @@ struct focused_camera
         , up(u)
     {}
 
-    virtual void position(P pos) { _position = pos; }
+    virtual void set_position(P pos) { _position = pos; }
 
     P position() const { return _position; }
 
@@ -40,21 +40,21 @@ struct focused_camera
     void orbit(vec::quat rot)
     {
         auto rotmat = mat4_cast(rot);
-        position(P(rotmat * H(position() - focus, 0)) + focus);
+        set_position(P(rotmat * H(position() - focus, 0)) + focus);
         up = P(rotmat * H(up, 0));
     }
 
     void translate(V t)
     {
         auto tmat = vec::translate(t);
-        position(P(tmat * H(position(), 1)));
+        set_position(P(tmat * H(position(), 1)));
         focus = P(tmat * H(focus, 1));
     }
 
     void forward(float d)
     {
         auto newpos = position() + d * orientation();
-        position(newpos);
+        set_position(newpos);
     }
 
     M model_matrix() const

@@ -1,5 +1,5 @@
 #include "camera.hpp"
-#include "../_testing.hpp"
+#include "Rxt/_testing.hpp"
 
 namespace Rxt
 {
@@ -19,7 +19,7 @@ TEST_CASE("extending focused_camera") {
         using focused_camera::focused_camera;
         using focused_camera::position;
         int* data;
-        void position(position_type) override { (*data)++; }
+        void set_position(position_type) override { (*data)++; }
     };
 
     using Pos = camera::position_type;
@@ -27,7 +27,7 @@ TEST_CASE("extending focused_camera") {
     camera c(p1); c.data = &data;
     REQUIRE(c.position() == p1);
 
-    c.position(p2);
+    c.set_position(p2);
     REQUIRE(c.position() == p2);
     REQUIRE(data == 1);
     c.forward(1);

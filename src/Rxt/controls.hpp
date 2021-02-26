@@ -3,7 +3,7 @@
 #include "viewport.hpp"
 #include "reactive.hpp"
 #include "vec.hpp"
-#include <Rxt/graphics/camera.hpp>
+#include <Rxt/camera.hpp>
 
 // FRP-style controls for 2-D input
 
@@ -52,9 +52,9 @@ struct reactive_camera : Cam, reactive_base<Der>
     using super_type::position;
     reactive_camera(super_type c) : super_type(c) {}
 
-    void position(super_type::position_type pos) override
+    void set_position(super_type::position_type pos) override
     {
-        super_type::position(pos);
+        super_type::set_position(pos);
         this->do_update();
     }
 };

@@ -35,7 +35,6 @@ set(_HEADERS
 
     asset.hpp
     image.hpp
-    camera.hpp
     animation.hpp
     animation_util.hpp
 )
@@ -61,7 +60,6 @@ add_library(RxtGraphics ${_HEADERS} ${_HEADERS_SHADER} ${_SOURCES})
 _add_component(Graphics)
 
 make_test(animation FILES animation.test.cpp LINK Rxt::Graphics)
-make_test(camera FILES camera.test.cpp LINK Rxt::Graphics)
 make_test(sdl FILES sdl.test.cpp LINK Rxt::Graphics)
 
 # Point to shader sources
