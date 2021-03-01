@@ -25,7 +25,10 @@ struct simple_gui
                                       SDL_WINDOW_OPENGL |
                                       SDL_WINDOW_RESIZABLE)))
         , _gl(_window)
-    { }
+    {
+        // TODO: not actually resizable
+        // SDL_SetWindowSize(_window.get(), w, h);
+    }
 
     virtual ~simple_gui() {}
 

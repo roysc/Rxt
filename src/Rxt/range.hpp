@@ -49,6 +49,24 @@ auto to_range(std::optional<T> const& p)
 
 struct range_sentinel {};
 
+// // copy container to range
+// // XXX results in singular iterator, why?
+// template <class C>
+// auto container_to_range(C&& ctr)
+// {
+//     struct Ret
+//     {
+//         C contents;
+//         decltype(ctr.begin()) iter;
+//         Ret(C c) : contents(c), iter(contents.begin()) {}
+//         Ret& operator++() { ++iter; return *this; }
+//         auto& operator*() { return *iter; }
+//         bool operator!=(_det::range_sentinel) { return iter != contents.end(); }
+//     };
+
+//     return range_adaptor<Ret, _det::range_sentinel>(Ret(ctr), _det::range_sentinel{});
+// }
+
 // Given a map M (k -> v) with iterator Mi, output pairs (k, r) for all equal-ranges r:(Mi, Mi) in M
 // TODO unit test
 template <class Map, class OutIt>

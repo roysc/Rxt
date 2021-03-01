@@ -35,6 +35,13 @@ struct sdl_context
 #endif
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+        // int major, minor;
+        // if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major) < 0)
+        //     log_and_fail("major version");
+        // if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor) < 0)
+        //     log_and_fail("minor version");
+        // RXT_debug("(SDL) GL version: {}.{}\n", major, minor);
     }
 
     RXT_def_ctors_move_only(sdl_context);

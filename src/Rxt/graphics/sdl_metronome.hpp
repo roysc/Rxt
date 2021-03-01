@@ -36,10 +36,10 @@ struct _metronome
     ~_metronome() { _thread.join(); }
 };
 
-// TODO figure out threads
 #ifndef __EMSCRIPTEN__
 using metronome = _metronome;
 #else
+// TODO figure out threads in wasm
 struct metronome { template <class... T> metronome(T&&...) {} };
 #endif
 }
