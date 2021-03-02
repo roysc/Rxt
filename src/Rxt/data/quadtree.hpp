@@ -1,3 +1,28 @@
+/*
+  MIT License
+
+  Copyright (c) 2019 Pierre Vigier
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+  Source: https://github.com/pvigier/Quadtree
+*/
 #pragma once
 
 #include "Rxt/vec.hpp"
@@ -17,7 +42,7 @@ using vec2 = vec::tvec2<FT>;
 // template <class T>
 // using bounding_box(vec2<T>, vec2<T>) -> bounding_box<T>;
 
-template<class T, class GetBox, class Equal = std::equal_to<T>, class FT = float>
+template<class T, class GetBox, class FT = float, class Equal = std::equal_to<T>>
 struct quadtree
 {
     using box_type = Rxt::bounding_box<FT>;
@@ -31,45 +56,45 @@ struct quadtree
     static constexpr auto threshold = std::size_t(16);
     static constexpr auto max_depth = std::size_t(8);
 
-    box_type m_box;
+    box_type m_bounds;
     std::unique_ptr<node_type> m_root;
     GetBox m_get_box;
     Equal m_equal;
 
     static_assert(std::is_convertible_v<std::invoke_result_t<GetBox, const T&>, box_type>,
-        "GetBox must be a callable of signature bounding_box<FT>(const T&)");
+        "GetBox must be a callable of signature quadtree::box_type(const T&)");
     static_assert(std::is_convertible_v<std::invoke_result_t<Equal, const T&, const T&>, bool>,
         "Equal must be a callable of signature bool(const T&, const T&)");
     static_assert(std::is_arithmetic_v<FT>);
 
     quadtree(const box_type& box,
-             const GetBox& get_box = GetBox(),
-             const Equal& equal = Equal())
-        : m_box(box),
+             const GetBox& get_box = GetBox{},
+             const Equal& equal = Equal{})
+        : m_bounds(box),
           m_root(std::make_unique<node_type>()),
           m_get_box(get_box), m_equal(equal)
     {}
 
     void add(const T& value)
     {
-        add(m_root.get(), 0, m_box, value);
+        add(m_root.get(), 0, m_bounds, value);
     }
 
     void remove(const T& value)
     {
-        remove(m_root.get(), nullptr, m_box, value);
+        remove(m_root.get(), nullptr, m_bounds, value);
     }
 
-    std::vector<T> query(const box_type& box) const
+    auto query(const box_type& box) const
     {
-        auto values = std::vector<T>();
-        query(m_root.get(), m_box, box, values);
+        std::vector<T> values;
+        query(m_root.get(), m_bounds, box, values);
         return values;
     }
 
-    std::vector<std::pair<T, T>> find_all_intersections() const
+    auto find_all_intersections() const
     {
-        auto intersections = std::vector<std::pair<T, T>>();
+        std::vector<std::pair<T, T>> intersections;
         find_all_intersections(m_root.get(), intersections);
         return intersections;
     }

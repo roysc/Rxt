@@ -8,7 +8,7 @@
 
 namespace Rxt
 {
-inline int GetParam() { return 100; }
+inline int get_param() { return 100; }
 
 using Box = bounding_box<float>;
 using Vec = typename Box::vec_type;
@@ -18,18 +18,18 @@ struct Node
     std::size_t id;
 };
 
-std::vector<Node> generateRandomNodes(std::size_t n)
+std::vector<Node> generate_random_nodes(std::size_t n)
 {
     auto generator = std::default_random_engine();
-    auto originDistribution = std::uniform_real_distribution(0.0f, 1.0f);
-    auto sizeDistribution = std::uniform_real_distribution(0.0f, 0.01f);
+    auto origin_distribution = std::uniform_real_distribution(0.0f, 1.0f);
+    auto size_distribution = std::uniform_real_distribution(0.0f, 0.01f);
     auto nodes = std::vector<Node>(n);
     for (auto i = std::size_t(0); i < n; ++i)
     {
-        auto mincorner = Vec(originDistribution(generator), originDistribution(generator));
+        auto mincorner = Vec(origin_distribution(generator), origin_distribution(generator));
         nodes[i].box = Box(
             mincorner,
-            min(1.0f - mincorner, Vec(sizeDistribution(generator), sizeDistribution(generator)))
+            min(1.0f - mincorner, Vec(size_distribution(generator), size_distribution(generator)))
         );
         nodes[i].id = i;
     }
@@ -50,7 +50,7 @@ std::vector<Node*> query(const Box& box, std::vector<Node>& nodes, const std::ve
     return intersections;
 }
 
-std::vector<std::pair<Node*, Node*>> findAllIntersections(std::vector<Node>& nodes, const std::vector<bool>& removed)
+std::vector<std::pair<Node*, Node*>> find_all_intersections(std::vector<Node>& nodes, const std::vector<bool>& removed)
 {
     auto intersections = std::vector<std::pair<Node*, Node*>>();
     for (auto i = std::size_t(0); i < nodes.size(); ++i)
@@ -70,7 +70,7 @@ std::vector<std::pair<Node*, Node*>> findAllIntersections(std::vector<Node>& nod
     return intersections;
 }
 
-bool checkIntersections(std::vector<Node*> nodes1, std::vector<Node*> nodes2)
+bool check_intersections(std::vector<Node*> nodes1, std::vector<Node*> nodes2)
 {
     if (nodes1.size() != nodes2.size())
         return false;
@@ -79,7 +79,7 @@ bool checkIntersections(std::vector<Node*> nodes1, std::vector<Node*> nodes2)
     return nodes1 == nodes2;
 }
 
-bool checkIntersections(std::vector<std::pair<Node*, Node*>> intersections1,
+bool check_intersections(std::vector<std::pair<Node*, Node*>> intersections1,
     std::vector<std::pair<Node*, Node*>> intersections2)
 {
     if (intersections1.size() != intersections2.size())
@@ -101,15 +101,15 @@ bool checkIntersections(std::vector<std::pair<Node*, Node*>> intersections1,
 
 TEST_CASE("quadtree: add and query")
 {
-    auto n = GetParam();
-    auto getBox = [](Node* node)
+    auto n = get_param();
+    auto get_box = [](Node* node)
     {
         return node->box;
     };
     auto box = Box(Vec(0.0f), Vec(1.0f));
-    auto nodes = generateRandomNodes(n);
+    auto nodes = generate_random_nodes(n);
     // Add nodes to quadtree
-    auto tree = quadtree<Node*, decltype(getBox)>(box, getBox);
+    auto tree = quadtree<Node*, decltype(get_box)>(box, get_box);
     for (auto& node : nodes)
         tree.add(&node);
     // Quadtree
@@ -122,49 +122,49 @@ TEST_CASE("quadtree: add and query")
         intersections2[node.id] = query(node.box, nodes, {});
     // Check
     for (const auto& node : nodes)
-        REQUIRE(checkIntersections(intersections1[node.id], intersections2[node.id]));
+        REQUIRE(check_intersections(intersections1[node.id], intersections2[node.id]));
 }
 
 TEST_CASE("quadtree: add and find all intersections")
 {
-    auto n = GetParam();
-    auto getBox = [](Node* node)
+    auto n = get_param();
+    auto get_box = [](Node* node)
     {
         return node->box;
     };
     auto box = Box(Vec(0.0f), Vec(1.0f));
-    auto nodes = generateRandomNodes(n);
+    auto nodes = generate_random_nodes(n);
     // Add nodes to quadtree
-    auto tree = quadtree<Node*, decltype(getBox)>(box, getBox);
+    auto tree = quadtree<Node*, decltype(get_box)>(box, get_box);
     for (auto& node : nodes)
         tree.add(&node);
     // Quadtree
     auto intersections1 = tree.find_all_intersections();
     // Brute force
-    auto intersections2 = findAllIntersections(nodes, {});
+    auto intersections2 = find_all_intersections(nodes, {});
     // Check
-    REQUIRE(checkIntersections(intersections1, intersections2));
+    REQUIRE(check_intersections(intersections1, intersections2));
 }
 
 TEST_CASE("quadtree: add remove and query")
 {
-    auto n = GetParam();
-    auto getBox = [](Node* node)
+    auto n = get_param();
+    auto get_box = [](Node* node)
     {
         return node->box;
     };
     auto box = Box(Vec(0.0f), Vec(1.0f));
-    auto nodes = generateRandomNodes(n);
+    auto nodes = generate_random_nodes(n);
     // Add nodes to quadtree
-    auto tree = quadtree<Node*, decltype(getBox)>(box, getBox);
+    auto tree = quadtree<Node*, decltype(get_box)>(box, get_box);
     for (auto& node : nodes)
         tree.add(&node);
     // Randomly remove some nodes
     auto generator = std::default_random_engine();
-    auto deathDistribution = std::uniform_int_distribution(0, 1);
+    auto death_distribution = std::uniform_int_distribution(0, 1);
     auto removed = std::vector<bool>(nodes.size());
     std::generate(std::begin(removed), std::end(removed),
-        [&generator, &deathDistribution](){ return deathDistribution(generator); });
+        [&generator, &death_distribution](){ return death_distribution(generator); });
     for (auto& node : nodes)
     {
         if (removed[node.id])
@@ -189,30 +189,30 @@ TEST_CASE("quadtree: add remove and query")
     {
         if (!removed[node.id])
         {
-            REQUIRE(checkIntersections(intersections1[node.id], intersections2[node.id]));
+            REQUIRE(check_intersections(intersections1[node.id], intersections2[node.id]));
         }
     }
 }
 
 TEST_CASE("quadtree: add remove and find all intersections")
 {
-    auto n = GetParam();
-    auto getBox = [](Node* node)
+    auto n = get_param();
+    auto get_box = [](Node* node)
     {
         return node->box;
     };
     auto box = Box(Vec(0.0f), Vec(1.0f));
-    auto nodes = generateRandomNodes(n);
+    auto nodes = generate_random_nodes(n);
     // Add nodes to quadtree
-    auto tree = quadtree<Node*, decltype(getBox)>(box, getBox);
+    auto tree = quadtree<Node*, decltype(get_box)>(box, get_box);
     for (auto& node : nodes)
         tree.add(&node);
     // Randomly remove some nodes
     auto generator = std::default_random_engine();
-    auto deathDistribution = std::uniform_int_distribution(0, 1);
+    auto death_distribution = std::uniform_int_distribution(0, 1);
     auto removed = std::vector<bool>(nodes.size());
     std::generate(std::begin(removed), std::end(removed),
-        [&generator, &deathDistribution](){ return deathDistribution(generator); });
+        [&generator, &death_distribution](){ return death_distribution(generator); });
     for (auto& node : nodes)
     {
         if (removed[node.id])
@@ -221,8 +221,8 @@ TEST_CASE("quadtree: add remove and find all intersections")
     // Quadtree
     auto intersections1 = tree.find_all_intersections();
     // Brute force
-    auto intersections2 = findAllIntersections(nodes, removed);
+    auto intersections2 = find_all_intersections(nodes, removed);
     // Check
-    REQUIRE(checkIntersections(intersections1, intersections2));
+    REQUIRE(check_intersections(intersections1, intersections2));
 }
 }
