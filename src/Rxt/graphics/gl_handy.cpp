@@ -4,13 +4,15 @@
 #include "gl_error.hpp"
 #include "_gl_debug.hpp"
 
+#include "Rxt/log.hpp"
+
 #include <cstring>
 
 #ifndef glDebugMessageCallback  // OpenGL < 4.3
 #define glDebugMessageCallback(...)                                     \
-    ::Rxt::print("[Emscripten] glDebugMessageCallback not supported")
+    RXT_warn("[Emscripten] glDebugMessageCallback not supported")
 #define glDebugMessageControl(...)                                      \
-    ::Rxt::print("[Emscripten] glDebugMessageControl not supported")
+    RXT_warn("[Emscripten] glDebugMessageControl not supported")
 #endif
 
 namespace Rxt::gl
@@ -19,7 +21,7 @@ void init_glew()
 {
     glewExperimental = GL_TRUE;
     if (auto err = glewInit(); err != GLEW_OK) {
-        _fmt::print("{}\n", glewGetErrorString(err));
+        RXT_error("{}\n", glewGetErrorString(err));
         throw std::runtime_error("glewInit");
     }
 }
@@ -29,7 +31,7 @@ void _debug_callback(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar*, con
 void init_debug_output()
 {
 #ifdef __EMSCRIPTEN__
-    _fmt::print("OpenGL debugging not supported\n");
+    RXT_warn("OpenGL debugging not supported\n");
 #else
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -38,7 +40,7 @@ void init_debug_output()
 
     auto flags = get<GLint>(GL_CONTEXT_FLAGS);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
-        _fmt::print("OpenGL debugging is enabled\n");
+        RXT_info("OpenGL debugging is enabled\n");
     }
 #endif
 }
@@ -74,6 +76,7 @@ void _debug_callback(GLenum source,
     if (!debug_context::enable_logging) return;
 
     const char* kind = "INFO";
+    bool severe = true;
     switch (severity)
     {
     case GL_DEBUG_SEVERITY_HIGH:
@@ -83,8 +86,13 @@ void _debug_callback(GLenum source,
     case GL_DEBUG_SEVERITY_MEDIUM:
         kind = "WARN";
         break;
+    default:
+        severe = false;
     }
-    _fmt::print("GL {0}: {1}\n", kind, message);
+    if (severe)
+        RXT_warn("GL {0}: {1}\n", kind, message);
+    else
+        RXT_info("GL {0}: {1}\n", kind, message);
 
     if (type == GL_DEBUG_TYPE_ERROR)
         throw message_error(message);
