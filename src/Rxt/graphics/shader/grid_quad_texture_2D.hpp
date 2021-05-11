@@ -24,11 +24,12 @@ struct grid_quad_texture_2D_data
     using size_type = std::size_t;
 
     program_type& prog;
-    gl::vao va;
     gl::texture tex;
+    gl::vao va;
     gl::attribuf<position_vec> position {program(), "vertexPosition"};
     gl::attribuf<tex_coord_vec> tex_coord {program(), "texCoord"};
     gl::buffer<GLuint> elements;
+    GLint texture_units[1] = {0}; // arbitrary ids
 
     struct uniforms
     {
@@ -39,6 +40,7 @@ struct grid_quad_texture_2D_data
     };
 
     program_type& program() { return prog; }
+    gl::texture& texture() { return tex; }
 
     grid_quad_texture_2D_data(program_type& p)
         : prog(p)
@@ -48,6 +50,7 @@ struct grid_quad_texture_2D_data
 
         position.enable(va);
         tex_coord.enable(va);
+        gl::set(program()->tex_unit, texture_units[0]);
     }
 
     void update()
@@ -63,7 +66,8 @@ struct grid_quad_texture_2D_data
     {
         gl::use_guard _p(program());
         gl::bind_vao_guard _a(va);
-        gl::bind_texture_guard _t(GL_TEXTURE_2D, tex);
+        glActiveTexture(GL_TEXTURE0 + texture_units[0]);
+        gl::bind_texture_guard _t(GL_TEXTURE_2D, texture());
         gl::bind_buffer_guard _b(GL_ELEMENT_ARRAY_BUFFER, elements.vbo);
         glDrawElements(draw_mode, std::size(elements.storage), GL_UNSIGNED_INT, 0);
     }

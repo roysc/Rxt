@@ -41,9 +41,8 @@ struct sprites_demo : sdl::simple_gui
     // basic_cursor<ivec2> m_cursor;
 
     gl::file_asset_source m_assets;
-    gl::texture m_sprites_tex;
     grid_quad_texture_2D m_sprites_prog;
-    grid_quad_texture_2D::buffers m_sprites_bufs{m_sprites_prog, m_sprites_tex};
+    grid_quad_texture_2D::buffers m_sprites_bufs{m_sprites_prog};
     grid_quad_2D m_debug_prog;
     grid_quad_2D::buffers m_debug_bufs{m_debug_prog};
 
@@ -115,7 +114,7 @@ sprites_demo::sprites_demo(viewport vp, const char* texture_name)
         set(m_debug_prog->viewport_position, m_viewport.position());
     };
     
-    auto sheet = load_sprite_sheet(m_assets.find_texture(texture_name), m_sprites_tex);
+    auto sheet = load_sprite_sheet(m_assets.find_texture(texture_name), m_sprites_bufs.texture());
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);

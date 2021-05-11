@@ -27,14 +27,17 @@ struct texture_quad_2D_data
     gl::attribuf<position_vec> position {program(), "position"};
     gl::attribuf<tex_coord_vec> tex_coord {program(), "texCoord"};
     gl::buffer<GLuint> elements;
+    GLint texture_units[1] = {0};
 
     struct uniforms
     {
         program_type& prog;
         gl::uniform<glm::mat4> view_matrix{prog, "viewMatrix"}; // todo ubo
+        gl::uniform<GLint> tex_unit{prog, "texUnit"};
     };
 
     program_type& program() { return prog; }
+    gl::texture& texture() { return tex; }
 
     texture_quad_2D_data(program_type& p)
         : prog(p)
@@ -45,7 +48,7 @@ struct texture_quad_2D_data
         position.enable(va);
         tex_coord.enable(va);
 
-        gl::set_uniform(program(), "texUnit", 0);
+        gl::set(program()->tex_unit, texture_units[0]);
     }
 
     void update()
