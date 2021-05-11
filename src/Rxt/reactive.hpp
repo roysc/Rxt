@@ -96,10 +96,10 @@ struct reactive_base
 };
 
 template <template <class...> class Crt, class Hook, class... T>
-struct adapt_reactive_helper
-    : Crt<adapt_reactive_helper<Crt, Hook, T...>, T...>
+struct adapt_reactive_template
+    : Crt<adapt_reactive_template<Crt, Hook, T...>, T...>
 {
-    using value_type = Crt<adapt_reactive_helper<Crt, Hook, T...>, T...>;
+    using value_type = Crt<adapt_reactive_template<Crt, Hook, T...>, T...>;
     using super_type = value_type;
     using super_type::super_type;
 

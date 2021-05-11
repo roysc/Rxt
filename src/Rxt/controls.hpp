@@ -13,7 +13,7 @@ template <class Num>
 struct basic_cursor
 {
     using position_type = vec::tvec2<Num>;
-    position_type m_position{0};
+    position_type m_position{};
 
     position_type position() const { return m_position; }
     void set_position(position_type pos) { this->m_position = pos; }
@@ -27,6 +27,7 @@ struct reactive_cursor : basic_cursor<Num>, reactive_base<Der>
     using super_type::position;
     using position_type = super_type::position_type;
 
+    reactive_cursor(super_type s) : super_type(s) {}
     void set_position(position_type pos) { super_type::set_position(pos); this->do_update(); }
 };
 
@@ -40,6 +41,7 @@ struct reactive_viewport : basic_viewport<Num>, reactive_base<Der>
     using position_type = typename super_type::position_type;
     using size_type = typename super_type::size_type;
 
+    reactive_viewport(super_type s) : super_type(s) {}
     void set_position(position_type p) override { super_type::set_position(p); this->do_update(); }
     void set_scale(size_type s) override { super_type::set_scale(s); this->do_update(); }
 };
