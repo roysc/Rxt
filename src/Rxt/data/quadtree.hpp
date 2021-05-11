@@ -39,9 +39,6 @@ namespace Rxt
 template <class FT>
 using vec2 = vec::tvec2<FT>;
 
-// template <class T>
-// using bounding_box(vec2<T>, vec2<T>) -> bounding_box<T>;
-
 template<class T, class GetBox, class FT = float, class Equal = std::equal_to<T>>
 struct quadtree
 {

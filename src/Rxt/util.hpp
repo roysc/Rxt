@@ -94,10 +94,4 @@ struct bounding_box
 
 template <class FT>
 bounding_box(vec::tvec2<FT>, vec::tvec2<FT>) -> bounding_box<FT>;
-
-template <class T>
-auto make_box(T a, T b)
-{
-    return bounding_box(a, b);
-}
 }

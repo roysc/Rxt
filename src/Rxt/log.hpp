@@ -9,4 +9,4 @@
 #define RXT_info RXT_log
 #define RXT_debug RXT_log
 
-#define RXT_show(var_) RXT_log( #var_ " = {}\n", (var_))
+#define RXT_show(var_) RXT_log(#var_ " = {}\n", (var_))

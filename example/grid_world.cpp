@@ -104,7 +104,7 @@ void grid_world::draw()
     this->b_quads.draw();
 
     {
-        auto& vp = quad_prog.u_.viewport_position;
+        auto& vp = quad_prog->viewport_position;
         set(vp, grid_coord{0});
         this->b_quads_sticky.draw();
         set(vp, viewport_position);
@@ -149,7 +149,7 @@ void grid_world::update_cursor()
 
 void grid_world::h_mouse_motion(SDL_MouseMotionEvent motion)
 {
-    auto [x, y] = sdl::nds_coords(*window(), motion.x, motion.y);
+    auto [x, y] = sdl::nds_coords(window(), motion.x, motion.y);
     cursor_position = floor(glm::vec2(x, y) * glm::vec2(viewport_size / 2u));
     update_cursor();
 }

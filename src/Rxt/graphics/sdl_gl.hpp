@@ -54,8 +54,12 @@ struct gl_context
 
     gl_context(window_ptr w)
         : window(w)
-        , _gl(SDL_GL_CreateContext(window.get()))
+        // , _gl(SDL_GL_CreateContext(window.get()))
     {
+        if (!w)
+            log_and_fail("gl_context::gl_context()");
+
+        _gl = SDL_GL_CreateContext(window.get());
         if (!_gl) {
             log_and_fail("SDL_GL_CreateContext");
         }
@@ -152,16 +156,16 @@ auto make_looper = [](auto* c, auto&& f) { return em_looper(c, f); };
 
 // SDL coords -> normalized device space
 inline
-std::pair<float, float> nds_coords(SDL_Window& window, int x, int y)
+std::pair<float, float> nds_coords(SDL_Window* window, int x, int y)
 {
     int w, h;
-    SDL_GetWindowSize(&window, &w, &h);
+    SDL_GetWindowSize(window, &w, &h);
     float nds_x = float(2 * x) / w - 1, nds_y = 1 - float(2 * y) / h;
     return {nds_x, nds_y};
 }
 
 inline
-auto nds_coords(SDL_Window& window)
+auto nds_coords(SDL_Window* window)
 {
     int x, y;
     SDL_GetMouseState(&x, &y);

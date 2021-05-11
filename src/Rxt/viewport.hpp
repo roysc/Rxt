@@ -20,6 +20,7 @@ struct basic_viewport : _viewport_base
     position_type m_position {0};
     const float margin_size = .1;
 
+    // Construct a viewport with max and min scalable size limits (in cells per window)
     basic_viewport(size_type max, size_type min = size_type(1))
         : m_max_scale(max)
         , m_min_scale(min)
@@ -27,6 +28,8 @@ struct basic_viewport : _viewport_base
     {
         // assert(all(lessThan(size_type(0), scale)));
         // assert(all(lessThan(size_type(0), max)));
+        // if (!all(lessThanEqual(m_min_scale, m_max_scale)))
+        //     throw std::invalid_argument("min scale > max scale");
     }
 
     virtual void set_position(position_type pos) { m_position = pos; }

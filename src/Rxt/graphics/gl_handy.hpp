@@ -98,7 +98,7 @@ struct program_buffer_registry
     P& _prog;
     map_type _map{};
 
-    buffer_type& operator[](key_type k)
+    buffer_type& operator()(key_type k)
     {
         auto it = _map.find(k);
         if (it == end(_map)) {
@@ -124,13 +124,14 @@ struct derived_program : public program
     using vertex = typename buffers::vertex;
     using uniforms = _det::uniforms_base<buffers>;
 
-    uniforms u_{*this};
+    uniforms m_uniforms{*this};
     program_buffer_registry<derived_program> buf{*this};
 
     derived_program(file_asset_source const& assets = file_asset_source::get_default())
         : program{make_program(assets, buffers::program_name())}
     {}
 
-    uniforms* operator->() { return &u_; }
+    uniforms* operator->() { return &m_uniforms; }
+
 };
 }

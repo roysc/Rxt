@@ -30,7 +30,7 @@ struct loop_state : public sdl::simple_gui
             { .5, -.5, 0},
             {-.5, -.5, 0}
         };
-        auto& b = line_prog.buf["lines"];
+        auto& b = line_prog.buf("lines");
         for (auto point: points) {
             b.push(point, color);
         }
@@ -57,7 +57,7 @@ struct loop_state : public sdl::simple_gui
     {
         glClearColor(0,0,0,0);
         glClear(GL_COLOR_BUFFER_BIT);
-        line_prog.buf["lines"].draw();
+        line_prog.buf("lines").draw();
         SDL_GL_SwapWindow(window());
     }
 };
