@@ -71,7 +71,7 @@ void buffer_data(buffer<T>& b, GLenum target = GL_ARRAY_BUFFER)
 template <class T>
 void attribuf<T>::enable(vao& va)
 {
-    use_guard _p{this->prog};
+    use_guard _p{this->program()};
     bind_vao_guard _a(va);
     attrib_buffer(*this);
     enable_attrib(*this, va);

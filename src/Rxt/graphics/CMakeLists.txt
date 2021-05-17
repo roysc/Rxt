@@ -50,6 +50,7 @@ set(_HEADERS_SHADER
 
 set(_SOURCES
     gl_core.cpp
+    gl_data.cpp
     gl_handy.cpp
     sdl_input.cpp
     animation_util.cpp

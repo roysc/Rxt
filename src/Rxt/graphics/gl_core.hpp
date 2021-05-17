@@ -117,24 +117,22 @@ struct texture_traits
     }
 };
 
-using program = object<program_traits>;
-using shader = object<shader_traits>;
-using vao = object<vao_traits>;
-using vbo = object<vbo_traits>;
-using texture = object<texture_traits>;
-
 template <class Traits, class T>
 struct property
 {
-    typename Traits::value_type _value;
-    program& prog;
+    object<program_traits>& m_prog;
+    typename Traits::value_type m_value;
+    const char* m_name;
 
-    template <class... Args>
-    property(program& p, Args&&... args)
-        : _value(Traits::create(p, std::forward<Args>(args)...))
-        , prog(p) {}
+    property(object<program_traits>& p, const char* n)
+        : m_prog(p)
+        , m_value(Traits::create(p, n))
+        , m_name(n)
+    {}
 
-    operator typename Traits::value_type() const { return _value; }
+    operator typename Traits::value_type() const { return m_value; }
+    auto& program() { return m_prog; }
+    auto name() { return m_name; }
 };
 
 struct attrib_traits
@@ -149,11 +147,6 @@ struct uniform_traits
     using value_type = GLuint;
     static value_type create(const object<program_traits>& p, const char* n);
 };
-
-template <class T>
-using attrib = property<attrib_traits, T>;
-template <class T>
-using uniform = property<uniform_traits, T>;
 
 // Reading GL parameters
 // Traits for scalar "simple state variables"
@@ -179,4 +172,15 @@ T get(GLenum pname)
     scalar_traits<T>::get(pname, &ret);
     return ret;
 }
+
+using program = object<program_traits>;
+using shader = object<shader_traits>;
+using vao = object<vao_traits>;
+using vbo = object<vbo_traits>;
+using texture = object<texture_traits>;
+
+template <class T>
+using attrib = property<attrib_traits, T>;
+template <class T>
+using uniform = property<uniform_traits, T>;
 }
