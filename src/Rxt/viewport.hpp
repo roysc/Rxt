@@ -52,7 +52,7 @@ struct basic_viewport : _viewport_base
         return m_scale_factor;
     }
 
-    // size in number of cells
+    // size in number of cells, rounded down
     size_type size_cells() const
     {
         return size_type(vec::fvec2(size_pixels()) / vec::fvec2(m_scale_factor));

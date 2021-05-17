@@ -17,7 +17,7 @@ using vec::ivec2;
 struct sprite_sheet
 {
     // gl::texture texture;
-    const uvec2 tile_size{16};
+    uvec2 tile_size{16};
     uvec2 frame_size;
     unsigned frame_count;
 

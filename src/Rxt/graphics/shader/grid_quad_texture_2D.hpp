@@ -34,8 +34,8 @@ struct grid_quad_texture_2D_data
     struct uniforms
     {
         program_type& prog;
-        gl::uniform<glm::ivec2> viewport_position{prog, "viewportPosition"};
-        gl::uniform<glm::uvec2> viewport_size{prog, "viewportSize"};
+        gl::uniform<position_vec> viewport_position{prog, "viewportPosition"};
+        gl::uniform<size_vec> viewport_size{prog, "viewportSize"};
         gl::uniform<GLint> tex_unit{prog, "texUnit"};
     };
 
@@ -60,6 +60,13 @@ struct grid_quad_texture_2D_data
         gl::buffer_data(position);
         gl::buffer_data(tex_coord);
         gl::buffer_data(elements, GL_ELEMENT_ARRAY_BUFFER);
+    }
+
+    void clear()
+    {
+        position.storage.clear();
+        tex_coord.storage.clear();
+        elements.storage.clear();
     }
 
     void draw()
