@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Rxt/io.hpp"
 #include "sdl_core.hpp"
+#include <Rxt/format.hpp>
 
 #include <utility>
 #include <map>

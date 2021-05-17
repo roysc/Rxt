@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Rxt/io.hpp"
 #include "Rxt/graphics/gl_handy.hpp"
 
 #include <tuple>

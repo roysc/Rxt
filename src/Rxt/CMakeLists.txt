@@ -29,6 +29,7 @@ set(_HEADERS
     _fmt.hpp
     error.hpp
     io.hpp
+    format.hpp
     log.hpp
     math.hpp
     range.hpp

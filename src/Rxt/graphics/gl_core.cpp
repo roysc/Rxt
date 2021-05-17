@@ -1,6 +1,6 @@
 #include "gl_core.hpp"
 
-#include "Rxt/io.hpp"
+#include "Rxt/format.hpp"
 
 namespace Rxt::gl
 {
