@@ -35,41 +35,42 @@ struct key_descriptor
 
 struct key_dispatcher
 {
-    static constexpr bool echo = true;
+    using handler = std::function<void()>;
+    using handler_map = std::map<key_descriptor, handler>;
+    using fallback_handler = std::function<void(key_descriptor)>;
 
-    using callback = std::function<void()>;
-    using fallback = std::function<void(key_descriptor)>;
-    using callback_map = std::map<key_descriptor, callback>;
+    handler_map on_press;
+    handler_map on_scan;
+    bool echo = false;
 
-    callback_map on_press;
-    callback_map on_scan;
-
-    ~key_dispatcher() {}        // fixme: breaks on clang?
+    fallback_handler m_fallback = [](key_descriptor key) { print("unhandled: {}\n", key); };
 
     void press(SDL_Keysym keysym)
     {
-        if constexpr (echo) {
+        // Defer to binding for held key
+        if (on_scan.contains(keysym)) {
+            return;
+        }
+        if (echo) {
             print("press: {}\n", key_descriptor(keysym));
         }
-        auto b = on_press.find(keysym);
-        if (b != on_press.end()) {
-            b->second();
+        if (auto it = on_press.find(keysym); it != on_press.end()) {
+            it->second();
+        } else if (m_fallback) {
+            m_fallback(keysym);
         }
     }
 
-    void scan(fallback default_func = {})
+    void scan()
     {
-        auto const* state = SDL_GetKeyboardState(nullptr);
+        auto state = SDL_GetKeyboardState(nullptr);
         int mod = simplify_modifiers(SDL_GetModState());
 
         for (auto&& [k, func]: on_scan) {
             auto scancode = SDL_GetScancodeFromKey(k.code);
             if (state[scancode] && (mod == k.mod)) {
-                if constexpr (echo) { print("scan: {}\n", k); }
+                if (echo) { print("scan: {}\n", k); }
                 func();
-            }
-            else if (default_func) {
-                default_func(k);
             }
         }
     }
