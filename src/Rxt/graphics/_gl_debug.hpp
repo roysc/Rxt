@@ -7,15 +7,10 @@
 
 namespace Rxt::gl
 {
-struct debug_context
-{
-    inline static thread_local bool enable_logging = true;
-};
-
 template <class... T>
 static void log(T&&... args)
 {
-    if (!debug_context::enable_logging) return;
+    if (!config().enable_logging) return;
     print(std::forward<T>(args)...);
 }
 

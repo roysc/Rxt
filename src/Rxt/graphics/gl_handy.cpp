@@ -33,13 +33,12 @@ void init_debug_output()
 #ifdef __EMSCRIPTEN__
     RXT_warn("OpenGL debugging not supported\n");
 #else
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(_debug_callback, nullptr);
-    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
-    auto flags = get<GLint>(GL_CONTEXT_FLAGS);
-    if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
+    if (get<GLint>(GL_CONTEXT_FLAGS) & GL_CONTEXT_FLAG_DEBUG_BIT) {
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageCallback(_debug_callback, nullptr);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         RXT_info("OpenGL debugging is enabled\n");
     }
 #endif
@@ -65,22 +64,21 @@ program make_program(file_asset_source const& assets, std::string name)
     return ret;
 }
 
-void _debug_callback(GLenum source,
+void _debug_callback(GLenum, // source,
                      GLenum type,
-                     GLuint id,
+                     GLuint, // id,
                      GLenum severity,
-                     GLsizei length,
+                     GLsizei, // length,
                      const GLchar* message,
                      void const*)
 {
-    if (!debug_context::enable_logging) return;
+    if (!config().enable_logging) return;
 
     const char* kind = "INFO";
     bool severe = true;
     switch (severity)
     {
     case GL_DEBUG_SEVERITY_HIGH:
-        // Print, log, whatever based on the enums and message
         kind = "ERROR";
         break;
     case GL_DEBUG_SEVERITY_MEDIUM:

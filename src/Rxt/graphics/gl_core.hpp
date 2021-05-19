@@ -9,6 +9,17 @@
 
 namespace Rxt::gl
 {
+struct config_context
+{
+    bool enable_logging = true;
+};
+
+inline config_context& config()
+{
+    thread_local config_context ctx;
+    return ctx;
+}
+
 // Ripped: https://stackoverflow.com/a/17161788/1325447
 template <class Traits>
 struct object
