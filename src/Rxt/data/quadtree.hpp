@@ -107,16 +107,16 @@ struct quadtree
         {
             // North West
             case 0:
-                return box_type(origin, child_size);
-            // Norst East
+                return box_type::with_length(origin, child_size);
+            // North East
             case 1:
-                return box_type(vec::tvec2<FT>(origin.x + child_size.x, origin.y), child_size);
+                return box_type::with_length(vec::tvec2<FT>(origin.x + child_size.x, origin.y), child_size);
             // South West
             case 2:
-                return box_type(vec::tvec2<FT>(origin.x, origin.y + child_size.y), child_size);
+                return box_type::with_length(vec::tvec2<FT>(origin.x, origin.y + child_size.y), child_size);
             // South East
             case 3:
-                return box_type(origin + child_size, child_size);
+                return box_type::with_length(origin + child_size, child_size);
             default:
                 assert(false && "Invalid child index");
                 return box_type();
@@ -160,7 +160,6 @@ struct quadtree
 
     void _insert(node_type* node, std::size_t depth, const box_type& box, const T& value)
     {
-        print("box={} box(value)={}\n", box, m_get_box(value));
         assert(node != nullptr);
         assert(box.contains(m_get_box(value)));
         if (is_leaf(node)) {
@@ -175,13 +174,13 @@ struct quadtree
         } else {
             auto i = get_quadrant(box, m_get_box(value));
             // Add the value in a child if the value is entirely contained in it
-            if (i != -1)
+            if (i != -1) {
                 _insert(node->children[static_cast<std::size_t>(i)].get(),
                     depth + 1,
                     compute_box(box, i),
                     value);
-            // Otherwise, we add the value in the current node
-            else
+            } else
+                // Otherwise, we add the value in the current node
                 node->values.push_back(value);
         }
     }
@@ -261,9 +260,9 @@ struct quadtree
     }
 
     void _query(node_type* node,
-               const box_type& box,
-               const box_type& query_box,
-               std::vector<T>& values) const
+                const box_type& box,
+                const box_type& query_box,
+                std::vector<T>& values) const
     {
         assert(node != nullptr);
         assert(query_box.intersects(box));

@@ -14,58 +14,56 @@ using Quadtree = quadtree<Node<FT>*, decltype(get_box), FT>;
 template <class FT>
 void test_insert_and_query(Quadtree<FT> tree, std::vector<Node<FT>>& nodes)
 {
-    auto intersections1 = std::vector<std::vector<Node<FT>*>>(nodes.size());
+    auto query_ixns = std::vector<std::vector<Node<FT>*>>(nodes.size());
     for (const auto& node : nodes)
-        intersections1[node.id] = tree.query(node.box);
-    auto intersections2 = std::vector<std::vector<Node<FT>*>>(nodes.size());
+        query_ixns[node.id] = tree.query(node.box);
+    auto brute_ixns = std::vector<std::vector<Node<FT>*>>(nodes.size());
     for (const auto& node : nodes)
-        intersections2[node.id] = brute_query(node.box, nodes, {});
+        brute_ixns[node.id] = brute_query(node.box, nodes, {});
     for (const auto& node : nodes)
-        REQUIRE(equal_intersections(intersections1[node.id], intersections2[node.id]));
+        REQUIRE(equal_intersections(query_ixns[node.id], brute_ixns[node.id]));
 }
 
 template <class FT>
 void test_find_all(Quadtree<FT> tree, std::vector<Node<FT>>& nodes)
 {
-    auto intersections1 = tree.find_all_intersections();
-    auto intersections2 = brute_find_all_intersections(nodes, {});
-    REQUIRE(equal_intersections(intersections1, intersections2));
+    auto query_ixns = tree.find_all_intersections();
+    auto brute_ixns = brute_find_all_intersections(nodes, {});
+    REQUIRE(equal_intersections(query_ixns, brute_ixns));
 }
 
 template <class FT>
 void test_insert_remove_query(Quadtree<FT> tree, std::vector<Node<FT>>& nodes)
 {
     // Randomly remove some nodes
-    auto generator = std::default_random_engine();
-    auto death_distribution = std::uniform_int_distribution(0, 1);
+    auto rng = std::default_random_engine();
+    auto death_dist = std::uniform_int_distribution(0, 1);
     auto removed = std::vector<bool>(nodes.size());
     std::generate(std::begin(removed), std::end(removed),
-        [&generator, &death_distribution](){ return death_distribution(generator); });
+        [&rng, &death_dist](){ return death_dist(rng); }
+    );
     for (auto& node : nodes)
     {
         if (removed[node.id])
             tree.erase(&node);
     }
-    // Quadtree
-    auto intersections1 = std::vector<std::vector<Node<FT>*>>(nodes.size());
+    auto query_ixns = std::vector<std::vector<Node<FT>*>>(nodes.size());
     for (const auto& node : nodes)
     {
         if (!removed[node.id])
-            intersections1[node.id] = tree.query(node.box);
+            query_ixns[node.id] = tree.query(node.box);
     }
-    // Brute force
-    auto intersections2 = std::vector<std::vector<Node<FT>*>>(nodes.size());
+    auto brute_ixns = std::vector<std::vector<Node<FT>*>>(nodes.size());
     for (const auto& node : nodes)
     {
         if (!removed[node.id])
-            intersections2[node.id] = brute_query(node.box, nodes, removed);
+            brute_ixns[node.id] = brute_query(node.box, nodes, removed);
     }
-    // Check
     for (const auto& node : nodes)
     {
         if (!removed[node.id])
         {
-            REQUIRE(equal_intersections(intersections1[node.id], intersections2[node.id]));
+            REQUIRE(equal_intersections(query_ixns[node.id], brute_ixns[node.id]));
         }
     }
 }
@@ -74,22 +72,19 @@ template <class FT>
 void test_insert_remove_find_all(Quadtree<FT> tree, std::vector<Node<FT>>& nodes)
 {
     // Randomly remove some nodes
-    auto generator = std::default_random_engine();
-    auto death_distribution = std::uniform_int_distribution(0, 1);
+    auto rng = std::default_random_engine();
+    auto death_dist = std::uniform_int_distribution(0, 1);
     auto removed = std::vector<bool>(nodes.size());
     std::generate(std::begin(removed), std::end(removed),
-        [&generator, &death_distribution](){ return death_distribution(generator); });
+        [&rng, &death_dist](){ return death_dist(rng); });
     for (auto& node : nodes)
     {
         if (removed[node.id])
             tree.erase(&node);
     }
-    // Quadtree
-    auto intersections1 = tree.find_all_intersections();
-    // Brute force
-    auto intersections2 = brute_find_all_intersections(nodes, removed);
-    // Check
-    REQUIRE(equal_intersections(intersections1, intersections2));
+    auto query_ixns = tree.find_all_intersections();
+    auto brute_ixns = brute_find_all_intersections(nodes, removed);
+    REQUIRE(equal_intersections(query_ixns, brute_ixns));
 }
 
 #define _run_testcase_FT(func_, FT_, maxsize_)                          \
