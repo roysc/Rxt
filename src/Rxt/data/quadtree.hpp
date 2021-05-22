@@ -25,8 +25,8 @@
 */
 #pragma once
 
+#include "bounding_box.hpp"
 #include "Rxt/vec.hpp"
-#include "Rxt/util.hpp"
 
 #include <cassert>
 #include <algorithm>
@@ -36,9 +36,6 @@
 
 namespace Rxt
 {
-template <class FT>
-using vec2 = vec::tvec2<FT>;
-
 template<class T, class GetBox, class FT = float, class Equal = std::equal_to<T>>
 struct quadtree
 {
@@ -50,8 +47,8 @@ struct quadtree
         std::vector<T> values;
     };
 
-    static constexpr auto threshold = std::size_t(16);
-    static constexpr auto max_depth = std::size_t(8);
+    static constexpr auto threshold = 16u;
+    static constexpr auto max_depth = 8u;
 
     box_type m_bounds;
     std::unique_ptr<node_type> m_root;
@@ -67,25 +64,26 @@ struct quadtree
     quadtree(const box_type& box,
              const GetBox& get_box = GetBox{},
              const Equal& equal = Equal{})
-        : m_bounds(box),
-          m_root(std::make_unique<node_type>()),
-          m_get_box(get_box), m_equal(equal)
+        : m_bounds(box)
+        , m_root(std::make_unique<node_type>())
+        , m_get_box(get_box)
+        , m_equal(equal)
     {}
 
-    void add(const T& value)
+    void insert(const T& value)
     {
-        add(m_root.get(), 0, m_bounds, value);
+        _insert(m_root.get(), 0, m_bounds, value);
     }
 
-    void remove(const T& value)
+    void erase(const T& value)
     {
-        remove(m_root.get(), nullptr, m_bounds, value);
+        _erase(m_root.get(), nullptr, m_bounds, value);
     }
 
     auto query(const box_type& box) const
     {
         std::vector<T> values;
-        query(m_root.get(), m_bounds, box, values);
+        _query(m_root.get(), m_bounds, box, values);
         return values;
     }
 
@@ -112,10 +110,10 @@ struct quadtree
                 return box_type(origin, child_size);
             // Norst East
             case 1:
-                return box_type(vec2<FT>(origin.x + child_size.x, origin.y), child_size);
+                return box_type(vec::tvec2<FT>(origin.x + child_size.x, origin.y), child_size);
             // South West
             case 2:
-                return box_type(vec2<FT>(origin.x, origin.y + child_size.y), child_size);
+                return box_type(vec::tvec2<FT>(origin.x, origin.y + child_size.y), child_size);
             // South East
             case 3:
                 return box_type(origin + child_size, child_size);
@@ -160,28 +158,25 @@ struct quadtree
             return -1;
     }
 
-    void add(node_type* node, std::size_t depth, const box_type& box, const T& value)
+    void _insert(node_type* node, std::size_t depth, const box_type& box, const T& value)
     {
+        print("box={} box(value)={}\n", box, m_get_box(value));
         assert(node != nullptr);
         assert(box.contains(m_get_box(value)));
-        if (is_leaf(node))
-        {
+        if (is_leaf(node)) {
             // Insert the value in this node if possible
             if (depth >= max_depth || node->values.size() < threshold)
                 node->values.push_back(value);
             // Otherwise, we split and we try again
-            else
-            {
+            else {
                 split(node, box);
-                add(node, depth, box, value);
+                _insert(node, depth, box, value);
             }
-        }
-        else
-        {
+        } else {
             auto i = get_quadrant(box, m_get_box(value));
             // Add the value in a child if the value is entirely contained in it
             if (i != -1)
-                add(node->children[static_cast<std::size_t>(i)].get(),
+                _insert(node->children[static_cast<std::size_t>(i)].get(),
                     depth + 1,
                     compute_box(box, i),
                     value);
@@ -200,8 +195,7 @@ struct quadtree
             child = std::make_unique<node_type>();
         // Assign values to children
         auto new_values = std::vector<T>(); // New values for this node
-        for (const auto& value : node->values)
-        {
+        for (const auto& value : node->values) {
             auto i = get_quadrant(box, m_get_box(value));
             if (i != -1)
                 node->children[static_cast<std::size_t>(i)]->values.push_back(value);
@@ -211,24 +205,21 @@ struct quadtree
         node->values = std::move(new_values);
     }
 
-    void remove(node_type* node, node_type* parent, const box_type& box, const T& value)
+    void _erase(node_type* node, node_type* parent, const box_type& box, const T& value)
     {
         assert(node != nullptr);
         assert(box.contains(m_get_box(value)));
-        if (is_leaf(node))
-        {
+        if (is_leaf(node)) {
             // Remove the value from node
             remove_value(node, value);
             // Try to merge the parent
             if (parent != nullptr)
                 try_merge(parent);
-        }
-        else
-        {
+        } else {
             // Remove the value in a child if the value is entirely contained in it
             auto i = get_quadrant(box, m_get_box(value));
             if (i != -1)
-                remove(node->children[static_cast<std::size_t>(i)].get(), node, compute_box(box, i), value);
+                _erase(node->children[static_cast<std::size_t>(i)].get(), node, compute_box(box, i), value);
             // Otherwise, we remove the value from the current node
             else
                 remove_value(node, value);
@@ -251,18 +242,15 @@ struct quadtree
         assert(node != nullptr);
         assert(!is_leaf(node) && "Only interior nodes can be merged");
         auto nbValues = node->values.size();
-        for (const auto& child : node->children)
-        {
+        for (const auto& child : node->children) {
             if (!is_leaf(child.get()))
                 return;
             nbValues += child->values.size();
         }
-        if (nbValues <= threshold)
-        {
+        if (nbValues <= threshold) {
             node->values.reserve(nbValues);
             // Merge the values of all the children
-            for (const auto& child : node->children)
-            {
+            for (const auto& child : node->children) {
                 for (const auto& value : child->values)
                     node->values.push_back(value);
             }
@@ -272,25 +260,22 @@ struct quadtree
         }
     }
 
-    void query(node_type* node,
+    void _query(node_type* node,
                const box_type& box,
                const box_type& query_box,
                std::vector<T>& values) const
     {
         assert(node != nullptr);
         assert(query_box.intersects(box));
-        for (const auto& value : node->values)
-        {
+        for (const auto& value : node->values) {
             if (query_box.intersects(m_get_box(value)))
                 values.push_back(value);
         }
-        if (!is_leaf(node))
-        {
-            for (auto i = std::size_t(0); i < node->children.size(); ++i)
-            {
+        if (!is_leaf(node)) {
+            for (auto i = std::size_t(0); i < node->children.size(); ++i) {
                 auto child_box = compute_box(box, static_cast<int>(i));
                 if (query_box.intersects(child_box))
-                    query(node->children[i].get(), child_box, query_box, values);
+                    _query(node->children[i].get(), child_box, query_box, values);
             }
         }
     }
