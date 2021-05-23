@@ -45,15 +45,12 @@ struct grid_hash_map
     // iterate all cells in [left, right]
     struct CellRangeIter
     {
-        // key_type curr, last;
-        // unsigned axis = 0;
         key_type left, right;
         key_type diff = right - left + 1u;
         int index = vec::product(diff) - 1;
 
         auto& operator++()
         {
-            // print("index={}, diff={} curr={}\n", index, diff, **this);
             --index;
             return *this;
         }
@@ -110,12 +107,14 @@ struct grid_hash_map
         }
     }
 
-    // void erase(iterator it)
-    // it.m_map_iter->second.erase(it);
     void erase(mapped_type val, box_type box)
     {
         for (auto cell: cell_range(box)) {
-            m_map[cell].erase(val);
+            if (auto it = m_map.find(cell); it != m_map.end()) {
+                it->second.remove(val); // todo - any way to use O(1) erase() ?
+                if (it->second.empty())
+                    m_map.erase(it);
+            }
         }
     }
 
@@ -128,22 +127,6 @@ struct grid_hash_map
     auto query(box_type qbox) const
     {
         std::set<mapped_type> ret;
-        // key_type
-        //     left(vec::ivec2(qbox.left()) / m_cell_size),
-        //     right(vec::ivec2(qbox.right()) / m_cell_size);
-
-        // // scan all intersected cells
-        // key_type adj = left;
-        // for (unsigned d = 0; d < dimension; ++d) {
-        //     do {
-        //         for (auto val: m_map.at(adj)) {
-        //             if (qbox.intersects(m_get_box(val)))
-        //                 ret.insert(val);
-        //         }
-        //         ++adj[d];
-        //     } while (adj[d] < right[d]);
-        // }
-
         for (auto cell: cell_range(qbox)) {
             for (auto val: m_map.at(cell)) {
                 if (qbox.intersects(m_get_box(val)))
@@ -159,7 +142,8 @@ struct grid_hash_map
         for (auto& [key, list]: m_map) {
             if (list.size() >= 2) {
                 for (auto it = list.begin(), last = list.end(); it != last; ++it) {
-                    for (auto jt = it; jt != last; ++jt) {
+                    auto jt = it;
+                    for (++jt; jt != last; ++jt) {
                         std::pair<mapped_type, mapped_type> pair{*it, *jt};
                         if (!m_get_box(pair.first).intersects(m_get_box(pair.second)))
                             continue;
@@ -167,7 +151,7 @@ struct grid_hash_map
                             using std::swap;
                             swap(pair.first, pair.second);
                         }
-                        ret.insert(ret);
+                        ret.insert(pair);
                     }
                 }
             }

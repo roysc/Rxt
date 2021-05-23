@@ -4,7 +4,8 @@ set(_HEADERS
     graph.hpp
     graph_search.hpp
     grid_graph.hpp
-#     quadtree.hpp
+    quadtree.hpp
+    grid_hash.hpp
 )
 set(_SOURCES _graph_dummy.cpp)
 
@@ -21,9 +22,12 @@ set(_TESTS
     grid_graph
     quadtree
     graph_search
+    grid_hash
 )
+set(_TEST_HEADERS
+    _test_spatial_map.hpp)
 foreach(_TEST ${_TESTS})
-    make_test(${_TEST} FILES ${_TEST}.test.cpp LINK RxtData)
+    make_test(${_TEST} FILES ${_TEST}.test.cpp ${_TEST_HEADERS} LINK RxtData)
 endforeach()
 
 _use_boost(test_graph)

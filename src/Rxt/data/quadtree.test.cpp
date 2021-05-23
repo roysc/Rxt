@@ -1,6 +1,6 @@
 #include "quadtree.hpp"
 #include "Rxt/_testing.hpp"
-#include "_test_util.hpp"
+#include "_test_spatial_map.hpp"
 
 #include <utility>
 
@@ -40,5 +40,4 @@ _define_testcase("quadtree: insert and query", test_insert_and_query)
 _define_testcase("quadtree: insert and find all intersections", test_find_all)
 _define_testcase("quadtree: insert remove and query", test_insert_remove_query)
 _define_testcase("quadtree: insert remove and find all intersections", test_insert_remove_find_all)
-
 }

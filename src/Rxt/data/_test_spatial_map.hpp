@@ -1,6 +1,7 @@
 #pragma once
 
 #include "bounding_box.hpp"
+#include "Rxt/format.hpp"
 
 #include <vector>
 #include <random>
@@ -160,15 +161,12 @@ void test_insert_remove_query(SpatialMap space, vector<Node<FT>>& nodes)
             copy_range(space.query(node.box), query_ixns[node.id]);
     }
     auto brute_ixns = vector<vector<Node<FT>*>>(nodes.size());
-    for (const auto& node : nodes)
-    {
+    for (const auto& node : nodes) {
         if (!removed[node.id])
             brute_ixns[node.id] = brute_query(node.box, nodes, removed);
     }
-    for (const auto& node : nodes)
-    {
-        if (!removed[node.id])
-        {
+    for (const auto& node : nodes) {
+        if (!removed[node.id]) {
             REQUIRE(equal_intersections(query_ixns[node.id], brute_ixns[node.id]));
         }
     }
@@ -183,8 +181,7 @@ void test_insert_remove_find_all(SpatialMap space, vector<Node<FT>>& nodes)
     auto removed = vector<bool>(nodes.size());
     std::generate(std::begin(removed), std::end(removed),
         [&rng, &death_dist](){ return death_dist(rng); });
-    for (auto& node : nodes)
-    {
+    for (auto& node : nodes) {
         if (removed[node.id])
             space.erase(&node);
     }
