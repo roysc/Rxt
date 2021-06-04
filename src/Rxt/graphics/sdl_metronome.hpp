@@ -9,31 +9,31 @@ namespace Rxt::sdl
 // Wraps a thread which pushes a custom SDL event at a specified frequency
 struct _metronome
 {
-    unsigned tick_event_type;
-    std::thread _thread;
+    unsigned m_event_type;
+    std::thread m_thread;
 
     // _metronome(Dur dur, std::invocable auto pred)
     template <class Dur, class Pred>
     _metronome(Dur dur, Pred pred)
-        : tick_event_type{SDL_RegisterEvents(1)}
+        : m_event_type{SDL_RegisterEvents(1)}
     {
-        if (tick_event_type == (unsigned)-1) {
+        if (m_event_type == (unsigned)-1) {
             log_and_fail("SDL_RegisterEvents");
         }
 
-        _thread = std::thread{[=, this] {
+        m_thread = std::thread([=, this] {
             SDL_Event event;
             SDL_zero(event);
-            event.type = tick_event_type;
+            event.type = m_event_type;
 
             while (pred()) {
                 SDL_PushEvent(&event);
                 std::this_thread::sleep_for(dur);
             }
-        }};
+        });
     }
 
-    ~_metronome() { _thread.join(); }
+    ~_metronome() { m_thread.join(); }
 };
 
 #ifndef __EMSCRIPTEN__

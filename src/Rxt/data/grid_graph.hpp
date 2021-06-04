@@ -12,15 +12,15 @@
 
 namespace Rxt
 {
-using dim_t = std::uint8_t;
+using dim_type = std::uint8_t;
 
 enum class grid_boundary { clamp, wrap };
 
-template <dim_t D>
+template <dim_type D>
 constexpr auto axis_indices()
 {
-    std::array<dim_t, D> ret{};
-    for (dim_t axis = 0; axis < std::size(ret); ++axis)
+    std::array<dim_type, D> ret{};
+    for (dim_type axis = 0; axis < D; ++axis)
         ret[axis] = axis;
     return ret;
 }
@@ -29,13 +29,14 @@ constexpr auto axis_indices()
 template <grid_boundary Bound = grid_boundary::clamp>
 struct grid_graph_2d
 {
-    static constexpr dim_t D = 2;
+    static constexpr dim_type dimension = 2;
 
     using size_type = std::int32_t;
-    using key_type = Rxt::vec::vec<D, size_type>;
+    using key_type = Rxt::vec::vec<dimension, size_type>;
 
-    // using wall_map = std::unordered_map<std::array<size_type, D>, std::array<bool,2>>;
-    using wall_map = boost::multi_array<std::array<bool,2>, D>;
+    // sparse walls
+    // using wall_map = std::unordered_map<std::array<size_type, dimension>, std::array<bool,2>>;
+    using wall_map = boost::multi_array<std::array<bool,2>, dimension>;
     using gap_map = std::unordered_set<key_type>;
 
     key_type m_size;
@@ -45,9 +46,9 @@ struct grid_graph_2d
     struct edge_type
     {
         key_type indices;
-        dim_t axis;
+        dim_type axis;
 
-        edge_type(key_type k, dim_t a)
+        edge_type(key_type k, dim_type a)
             : indices{k}
             , axis{a}
         {}
@@ -102,10 +103,10 @@ struct grid_graph_2d
         if (!g.validate_vertex(u) || !g.validate_vertex(v) || u == v)
             return {zero, false};
 
-        dim_t edge_axis;        // which axis is the edge along?
+        dim_type edge_axis;        // which axis is the edge along?
         bool forward;           // pointing from u to v?
         // check the difference along each axis (cardinal adjacency only)
-        for (auto axis: axis_indices<D>()) {
+        for (auto axis: axis_indices<dimension>()) {
             auto diff = std::abs(v[axis] - u[axis]);
             if (diff == 0) {
                 continue;
@@ -125,55 +126,55 @@ struct grid_graph_2d
         return {zero, false};
     }
 
+    struct AdjVertIter
+    {
+        grid_graph_2d const* self;
+        vertex_type from;
+        dim_type axis = 0;
+        bool ahead = false;
+        vertex_type next{};
+
+        AdjVertIter(grid_graph_2d const* g, vertex_type v)
+            : self(g), from(v)
+        {
+            if (!self->validate_vertex(from))
+                axis = dimension;
+            satisfy_invariant();
+        }
+
+        void advance()
+        {
+            if (ahead) ++axis;
+            ahead = !ahead;
+        }
+
+        // advance until we find a valid vertex
+        void satisfy_invariant()
+        {
+            while (axis < dimension) {
+                next = from;
+                next[axis] += (ahead ? 1 : -1);
+                if (self->validate_vertex(next) &&
+                    !self->wall(edge_type(ahead ? from : next, axis)))
+                    break;
+                advance();
+            }
+        }
+
+        auto& operator++()
+        {
+            advance();
+            satisfy_invariant();
+            return *this;
+        }
+
+        vertex_type operator*() const { return next; }
+        bool operator!=(range_sentinel) const { return axis < dimension; }
+    };
+
     friend auto adjacent_vertices(vertex_type v, grid_graph_2d const& g)
     {
-        struct Iter
-        {
-            grid_graph_2d const* self;
-            vertex_type from;
-            dim_t current_axis = 0;
-            bool ahead = false;
-            vertex_type next{};
-
-            Iter(grid_graph_2d const* g, vertex_type v)
-                : self(g), from(v)
-            {
-                if (!self->validate_vertex(from))
-                    current_axis = D;
-                satisfy_invariant();
-            }
-
-            void advance()
-            {
-                if (ahead) ++current_axis;
-                ahead = !ahead;
-            }
-
-            // advance until we find a valid vertex
-            void satisfy_invariant()
-            {
-                while (current_axis < D) {
-                    next = from;
-                    next[current_axis] += (ahead ? 1 : -1);
-                    if (self->validate_vertex(next) &&
-                        !self->wall(edge_type(ahead ? from : next, current_axis)))
-                        break;
-                    advance();
-                }
-            }
-
-            auto& operator++()
-            {
-                advance();
-                satisfy_invariant();
-                return *this;
-            }
-
-            vertex_type operator*() { return next; }
-
-            bool operator!=(range_sentinel) { return current_axis < D; }
-        };
-        return range_adaptor<Iter, range_sentinel>(Iter{&g, v}, range_sentinel{});
+        return range_adaptor<AdjVertIter, range_sentinel>(AdjVertIter{&g, v}, {});
     }
 };
 }
