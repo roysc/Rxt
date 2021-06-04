@@ -110,10 +110,10 @@ struct quadtree
                 return box_type::with_length(origin, child_size);
             // North East
             case 1:
-                return box_type::with_length(vec::tvec2<FT>(origin.x + child_size.x, origin.y), child_size);
+                return box_type::with_length(box_type::vec_type(origin.x + child_size.x, origin.y), child_size);
             // South West
             case 2:
-                return box_type::with_length(vec::tvec2<FT>(origin.x, origin.y + child_size.y), child_size);
+                return box_type::with_length(box_type::vec_type(origin.x, origin.y + child_size.y), child_size);
             // South East
             case 3:
                 return box_type::with_length(origin + child_size, child_size);

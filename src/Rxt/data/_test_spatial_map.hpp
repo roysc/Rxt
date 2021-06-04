@@ -2,6 +2,7 @@
 
 #include "bounding_box.hpp"
 #include "Rxt/format.hpp"
+#include "Rxt/_testing.hpp"
 
 #include <vector>
 #include <random>
@@ -130,6 +131,7 @@ void test_insert_and_query(SpatialMap space, vector<Node<FT>>& nodes)
         brute_ixns[node.id] = brute_query(node.box, nodes, {});
     for (const auto& node : nodes)
         REQUIRE(equal_intersections(query_ixns[node.id], brute_ixns[node.id]));
+    // todo: null query!!
 }
 
 template <class FT, class SpatialMap>

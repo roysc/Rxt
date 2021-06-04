@@ -1,5 +1,4 @@
 #include "quadtree.hpp"
-#include "Rxt/_testing.hpp"
 #include "_test_spatial_map.hpp"
 
 #include <utility>
@@ -33,6 +32,9 @@ using Quadtree = quadtree<Node<FT>*, decltype(get_box), FT>;
         }                                           \
         SUBCASE("with int") {                       \
             _run_testcase_FT(func_, int, 10);       \
+        }                                           \
+        SUBCASE("with uint") {                      \
+            _run_testcase_FT(func_, unsigned, 10);  \
         }                                           \
     }
 
