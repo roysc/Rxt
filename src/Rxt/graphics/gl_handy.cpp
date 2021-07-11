@@ -72,7 +72,7 @@ void _debug_callback(GLenum, // source,
                      const GLchar* message,
                      void const*)
 {
-    if (!config().enable_logging) return;
+    if (!get_config().enable_logging) return;
 
     const char* kind = "INFO";
     bool severe = true;

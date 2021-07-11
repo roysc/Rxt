@@ -10,7 +10,7 @@ namespace Rxt::gl
 template <class... T>
 static void log(T&&... args)
 {
-    if (!config().enable_logging) return;
+    if (!get_config().enable_logging) return;
     print(std::forward<T>(args)...);
 }
 

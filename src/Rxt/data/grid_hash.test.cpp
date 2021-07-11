@@ -13,7 +13,7 @@ auto get_box = [](auto* node) { return node->box; };
         using Map = grid_hash_map<Node<FT_>*, decltype(get_box), FT_>;  \
         auto n = get_param();                                           \
         auto nodes = generate_random_nodes<FT_>(n, 100*cellsize_, 2*cellsize_); \
-        auto map = Map(Map::cell_size_type(cellsize_), get_box);                 \
+        auto map = Map(Map::point_type(cellsize_), get_box);            \
         for (auto& node : nodes)                                        \
             map.insert(&node);                                          \
         func_<FT_>(std::move(map), nodes);                              \

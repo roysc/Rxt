@@ -72,7 +72,7 @@ struct grid_hash_map
     auto cell_range(bounds_type box) const
     {
         auto dest_box = _box_cells(box);
-        return range_adaptor<CellRangeIter, range_sentinel>(
+        return range_adaptor<cell_iter, range_sentinel>(
             cell_iter{dest_box.left(), dest_box.right()}, {}
         );
     }

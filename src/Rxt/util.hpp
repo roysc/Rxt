@@ -47,15 +47,45 @@ struct lazy_action
     }
 };
 
-struct runtime //todo nix
+struct runnable //todo nix?
 {
     bool _running = true;
 
-    bool is_stopped() const { return !_running; }
-    void is_stopped(bool v) { _running = !v; }
+    bool running() const { return _running; }
+    void set_running(bool v) { _running = v; }
 
-    virtual ~runtime() {}
+    virtual ~runnable() {}
 };
 
-using simple_runtime = runtime;
+// WIP https://gamedev.stackexchange.com/questions/151877/handling-variable-frame-rate-in-sdl2
+template <class C>
+void loop(C& ctx)
+{
+    // Uint32 time_step_ms = 1000 / fps_the_game_was_designed_for;
+    auto next_step = Clock::now(); // initial value
+
+    while(ctx.is_running()) {
+        auto now =         Clock::now();
+
+        // Check so we don't render for no reason (unless vsync is enabled)
+        if (next_step <= now || vsync_enabled){
+
+            // max number of advances per render, adjust this according to your minimum playable fps
+            int computer_is_too_slow_limit = 10;
+
+            // Loop until all steps are executed or computer_is_too_slow_limit is reached
+            while ((next_step <= now) && (computer_is_too_slow_limit--)){
+                advance(ctx);
+                next_game_step += time_step_ms; // count 1 game tick done
+            }
+
+            render(ctx);
+        } else {
+            // we're too fast, wait a bit.
+            if (be_nice_and_dont_burn_the_cpu) {
+                SDL_Delay(next_game_tick - now);
+            }
+        }
+    }    
+}
 }

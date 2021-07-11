@@ -110,16 +110,18 @@ struct quadtree
                 return box_type::with_length(origin, child_size);
             // North East
             case 1:
-                return box_type::with_length(box_type::vec_type(origin.x + child_size.x, origin.y), child_size);
+                origin.x += child_size.x;
+                return box_type::with_length(origin, child_size);
             // South West
             case 2:
-                return box_type::with_length(box_type::vec_type(origin.x, origin.y + child_size.y), child_size);
+                origin.y += child_size.y;
+                return box_type::with_length(origin, child_size);
             // South East
             case 3:
-                return box_type::with_length(origin + child_size, child_size);
+                origin += child_size;
+                return box_type::with_length(origin, child_size);
             default:
-                assert(false && "Invalid child index");
-                return box_type();
+                throw std::domain_error("invalid child index");
         }
     }
 
@@ -240,14 +242,14 @@ struct quadtree
     {
         assert(node != nullptr);
         assert(!is_leaf(node) && "Only interior nodes can be merged");
-        auto nbValues = node->values.size();
+        auto nb_values = node->values.size();
         for (const auto& child : node->children) {
             if (!is_leaf(child.get()))
                 return;
-            nbValues += child->values.size();
+            nb_values += child->values.size();
         }
-        if (nbValues <= threshold) {
-            node->values.reserve(nbValues);
+        if (nb_values <= threshold) {
+            node->values.reserve(nb_values);
             // Merge the values of all the children
             for (const auto& child : node->children) {
                 for (const auto& value : child->values)

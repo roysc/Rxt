@@ -10,7 +10,7 @@ struct TestCtx : simple_gui
 {
     TestCtx() : simple_gui("test", 10,10) {}
     bool is_stopped() const { return true; }
-    void advance(SDL_Event e) {}
+    void advance(SDL_Event) {}
 };
 
 TEST_CASE("simple_gui")

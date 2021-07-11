@@ -14,7 +14,7 @@ struct config_context
     bool enable_logging = true;
 };
 
-inline config_context& config()
+inline config_context& get_config()
 {
     thread_local config_context ctx;
     return ctx;

@@ -11,6 +11,7 @@ struct _metronome
 {
     unsigned m_event_type;
     std::thread m_thread;
+    unsigned m_tick = 0;
 
     // _metronome(Dur dur, std::invocable auto pred)
     template <class Dur, class Pred>
@@ -27,12 +28,21 @@ struct _metronome
             event.type = m_event_type;
 
             while (pred()) {
+                event.user.data1 = reinterpret_cast<void*>(m_tick++);
                 SDL_PushEvent(&event);
                 std::this_thread::sleep_for(dur);
             }
         });
     }
 
+bool get_event_tick(SDL_Event e, unsigned* out) const
+    {
+        Rxt::print("metronome tick = {}\n", m_tick);
+        if (e.type != m_event_type)
+            return false;
+        *out = static_cast<unsigned>(reinterpret_cast<unsigned long>(e.user.data1));
+        return true;
+    }
     ~_metronome() { m_thread.join(); }
 };
 
